@@ -23,12 +23,19 @@ task sourceJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
 }
 
-afterEvaluate {
-    publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                from components.java
-                artifact sourceJar
+publishing {
+    publications {
+        jazon(MavenPublication) {
+            from components.java
+            artifact sourceJar
+        }
+    }
+    repositories {
+        maven {
+            url baseMavenRepoAllUrl
+            credentials {
+                username baseMavenRepoAllUser
+                password baseMavenRepoAllPassword
             }
         }
     }
@@ -39,5 +46,3 @@ dependencies {
     compile group: 'com.google.guava', name: 'guava', version: '21.0'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.6.7'
 }
-
-
