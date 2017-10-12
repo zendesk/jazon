@@ -1,5 +1,4 @@
 group 'com.getbase.jazon'
-version '1.0-SNAPSHOT'
 
 apply plugin: 'groovy'
 apply plugin: 'maven-publish'
