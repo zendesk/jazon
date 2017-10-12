@@ -32,13 +32,22 @@ publishing {
     }
     repositories {
         maven {
-            url baseMavenRepoAllUrl
-            credentials {
-                username baseMavenRepoAllUser
-                password baseMavenRepoAllPassword
+            if (version.toString().endsWith('-SNAPSHOT')) {
+                url baseMavenRepoSnapshotsUrl
+                credentials {
+                    username baseMavenRepoSnapshotsUser
+                    password baseMavenRepoSnapshotsPassword
+                }
+            } else {
+                url baseMavenRepoInternalUrl
+                credentials {
+                    username baseMavenRepoInternalUser
+                    password baseMavenRepoInternalPassword
+                }
             }
         }
     }
+
 }
 
 dependencies {
