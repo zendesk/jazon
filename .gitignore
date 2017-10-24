@@ -1,0 +1,25 @@
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+.ideaDataSources/
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Gradle
+build/
+.gradle/
+
+# Misc
+bin/
+log/
+*.log
+out/
+.DS_Store
+
+# Does not ignore anything is source folders
+!**/src/**

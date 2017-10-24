@@ -1,0 +1,56 @@
+group 'com.getbase.jazon'
+
+apply plugin: 'groovy'
+apply plugin: 'maven-publish'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenLocal()
+    maven {
+        url baseMavenRepoAllUrl
+        credentials {
+            username baseMavenRepoAllUser
+            password baseMavenRepoAllPassword
+        }
+    }
+    jcenter()
+}
+
+task sourceJar(type: Jar, dependsOn: classes) {
+    classifier 'sources'
+    from sourceSets.main.allSource
+}
+
+publishing {
+    publications {
+        jazon(MavenPublication) {
+            from components.java
+            artifact sourceJar
+        }
+    }
+    repositories {
+        maven {
+            if (version.toString().endsWith('-SNAPSHOT')) {
+                url baseMavenRepoSnapshotsUrl
+                credentials {
+                    username baseMavenRepoSnapshotsUser
+                    password baseMavenRepoSnapshotsPassword
+                }
+            } else {
+                url baseMavenRepoInternalUrl
+                credentials {
+                    username baseMavenRepoInternalUser
+                    password baseMavenRepoInternalPassword
+                }
+            }
+        }
+    }
+
+}
+
+dependencies {
+    compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.12'
+    compile group: 'com.google.guava', name: 'guava', version: '21.0'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.6.7'
+}
