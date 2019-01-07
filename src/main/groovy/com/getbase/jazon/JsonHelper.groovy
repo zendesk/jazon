@@ -1,23 +1,18 @@
 package com.getbase.jazon
 
-import com.fasterxml.jackson.databind.ObjectMapper
+
 import com.google.common.base.Charsets
 import com.google.common.io.Resources
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
 
 class JsonHelper {
-
-    private final static ObjectMapper MAPPER = ObjectMapper.newInstance()
 
     private final static ESCAPE = ['{', '}', '[', ']', '(', ')', '?']
 
     private final static REPLACE = ['>': '}', '<': '{', '\\\\': '\\', '@\\(': '(', '\\)@': ')']
 
     private final static REMOVE = ['"@', '@"']
-
-    static {
-        MAPPER.configure(com.fasterxml.jackson.databind.SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
-        MAPPER.configure(com.fasterxml.jackson.databind.DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS, true) //this prevents scientific notation in re-serialized json
-    }
 
     static String fixture(String fileName) {
         URL url = Resources.getResource(fileName)
@@ -46,15 +41,15 @@ class JsonHelper {
      * @return formatted json with keys sorted alphabetically
      */
     static String normalized(String json) {
-        MAPPER.writeValueAsString(MAPPER.readValue(json, Object.class))
+        JsonOutput.toJson(json)
     }
 
     static Map jsonAsMap(String json) {
-        MAPPER.readValue(json, Map.class)
+        new JsonSlurper().parseText(json) as Map
     }
 
     static String mapAsJson(Map map) {
-        MAPPER.writeValueAsString(map)
+        JsonOutput.toJson(map)
     }
 
 //    static String jsonFixtureInterpolated(String fileName, Map values) {

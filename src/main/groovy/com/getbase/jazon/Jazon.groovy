@@ -1,23 +1,15 @@
 package com.getbase.jazon
 
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.SerializationFeature
 import com.google.common.collect.Lists
+import groovy.json.JsonSlurper
 
 import static java.lang.String.join
 
 class Jazon {
-    private final static ObjectMapper MAPPER = ObjectMapper.newInstance()
     private final Object actual;
 
-    static {
-        MAPPER.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true)
-        MAPPER.configure(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS, true) //this prevents scientific notation in re-serialized json
-    }
-
-    static Jazon jazon(json) {
-        return new Jazon(JsonHelper.jsonAsMap(json))
+    static Jazon jazon(String json) {
+        return new Jazon(new JsonSlurper().parseText(json))
     }
 
     private Jazon(Object object) {
