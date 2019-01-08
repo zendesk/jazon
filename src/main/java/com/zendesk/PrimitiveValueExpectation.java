@@ -25,6 +25,15 @@ class PrimitiveValueExpectation<T> implements JsonExpectation {
     }
 
     @Override
+    public JazonMatchResult match(ActualJsonString actualString) {
+        //FIXME copy-paste
+        if (expectedValue.equals(actualString.string())) {
+            return success();
+        }
+        return failure(new PrimitiveValueMismatch<>(expectedValue, actualString.string()));
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

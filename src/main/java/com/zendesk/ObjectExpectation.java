@@ -33,13 +33,26 @@ public class ObjectExpectation implements JsonExpectation {
         for (Map.Entry<String, JsonExpectation> entry : expectationMap.entrySet()) {
             // "what is expected" responsibility used here
             JsonExpectation fieldExpectation = entry.getValue();
-            // "what is actual" responsibility used here
-            JazonMatchResult matchResult = fieldExpectation.match((ActualJsonNumber) jsonAsMap.get(entry.getKey()));
+
+            //FIXME below if-else need to ba a visitor call
+            JazonMatchResult matchResult = null;
+            Actual actual = jsonAsMap.get(entry.getKey());
+            if (actual instanceof ActualJsonNumber) {
+                matchResult = fieldExpectation.match((ActualJsonNumber) actual);
+            } else if (actual instanceof ActualJsonString) {
+                matchResult = fieldExpectation.match((ActualJsonString) actual);
+            }
+
             if (!matchResult.ok()) {
                 return failure(matchResult.mismatch());
             }
         }
         return success();
+    }
+
+    @Override
+    public JazonMatchResult match(ActualJsonString actualString) {
+        return null;
     }
 
     @Override
