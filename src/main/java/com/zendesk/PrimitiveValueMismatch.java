@@ -2,25 +2,25 @@ package com.zendesk;
 
 import java.util.Objects;
 
-public class NumberMismatch implements JsonMismatch {
-    private final Number expected;
-    private final Number actual;
+public class PrimitiveValueMismatch<T> implements JsonMismatch {
+    private final T expected;
+    private final T actual;
 
-    public NumberMismatch(Number expected, Number actual) {
+    public PrimitiveValueMismatch(T expected, T actual) {
         this.expected = expected;
         this.actual = actual;
     }
 
     @Override
     public String message() {
-        return "ale beka number mismacz";   //FIXME
+        return "ale beka primitive mismacz";   //FIXME
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        NumberMismatch that = (NumberMismatch) o;
+        PrimitiveValueMismatch that = (PrimitiveValueMismatch) o;
         return Objects.equals(expected, that.expected) &&
                 Objects.equals(actual, that.actual);
     }
@@ -32,7 +32,7 @@ public class NumberMismatch implements JsonMismatch {
 
     @Override
     public String toString() {
-        return "NumberMismatch{" +
+        return "PrimitiveValueMismatch{" +
                 "expected=" + expected +
                 ", actual=" + actual +
                 '}';

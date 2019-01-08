@@ -1,6 +1,7 @@
 package com.getbase.jazon.spock
 
-import com.zendesk.JsonExpectation
+
+import com.zendesk.FacadeExpectation
 
 class JazonSpockAdapter {
     private final String json
@@ -10,7 +11,7 @@ class JazonSpockAdapter {
     }
 
     boolean matches(Map jsonAsMap) {
-        def matchResult = new JsonExpectation(jsonAsMap).match(json)
+        def matchResult = new FacadeExpectation(jsonAsMap).match(json)
         if (matchResult.ok()) {
             return true
         }
