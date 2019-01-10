@@ -12,4 +12,9 @@ class ActualJsonObject implements Actual {
     public Map<String, Actual> map() {
         return map;
     }
+
+    @Override
+    public JazonMatchResult accept(JsonExpectation expectation) {
+        return expectation.match(this);
+    }
 }

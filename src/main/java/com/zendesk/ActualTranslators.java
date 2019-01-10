@@ -22,7 +22,7 @@ final class ActualTranslators {
     }
 
     private static Actual actual(Object object) {
-        // TODO visitor
+        // TODO make this customisable+overridable with configuration
         if (object instanceof Map) {
             return actualObject((Map<String, Object>) object);
         } else if (object instanceof Number) {

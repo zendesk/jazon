@@ -10,4 +10,9 @@ class ActualJsonNumber implements Actual {
     public Number number() {
         return number;
     }
+
+    @Override
+    public JazonMatchResult accept(JsonExpectation expectation) {
+        return expectation.match(this);
+    }
 }

@@ -10,4 +10,9 @@ class ActualJsonString implements Actual {
     public String string() {
         return string;
     }
+
+    @Override
+    public JazonMatchResult accept(JsonExpectation expectation) {
+        return expectation.match(this);
+    }
 }

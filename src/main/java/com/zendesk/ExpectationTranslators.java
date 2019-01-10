@@ -21,7 +21,7 @@ final class ExpectationTranslators {
     }
 
     private static JsonExpectation expectation(Object object) {
-        // TODO visitor
+        // TODO make this customisable+overridable with configuration
         if (object instanceof Map) {
             return objectExpectation((Map<String, Object>) object);
         } else if (object instanceof Number) {
