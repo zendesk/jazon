@@ -25,9 +25,9 @@ final class ExpectationTranslators {
         if (object instanceof Map) {
             return objectExpectation((Map<String, Object>) object);
         } else if (object instanceof Number) {
-            return new PrimitiveValueExpectation<>((Number) object);
+            return new PrimitiveValueExpectation<>((Number) object, ActualJsonNumber.class);
         } else if (object instanceof String) {
-            return new PrimitiveValueExpectation<>((String) object);
+            return new PrimitiveValueExpectation<>((String) object, ActualJsonString.class);
         }
         throw new IllegalArgumentException();
     }

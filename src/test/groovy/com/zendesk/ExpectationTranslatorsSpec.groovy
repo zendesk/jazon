@@ -20,13 +20,13 @@ class ExpectationTranslatorsSpec extends Specification {
                 [
                         [a: 123],
                         new ObjectExpectation([
-                                a: new PrimitiveValueExpectation<>(123)
+                                a: new PrimitiveValueExpectation<>(123, expectedJsonType)
                         ])
                 ],
                 [
                         [a: 'ale beka'],
                         new ObjectExpectation([
-                                a: new PrimitiveValueExpectation<>('ale beka')
+                                a: new PrimitiveValueExpectation<>('ale beka', expectedJsonType)
                         ])
                 ],
         ]

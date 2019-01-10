@@ -2,35 +2,41 @@ package com.zendesk;
 
 import java.util.Objects;
 
-import static com.zendesk.JazonMatchResult.*;
+import static com.zendesk.JazonMatchResult.failure;
+import static com.zendesk.JazonMatchResult.success;
 
 class PrimitiveValueExpectation<T> implements JsonExpectation {
     private final T expectedValue;
+    private final Class<? extends Actual> expectedJsonType;
 
-    PrimitiveValueExpectation(T expectedValue) {
+    PrimitiveValueExpectation(T expectedValue, Class<? extends Actual> expectedJsonType) {
         this.expectedValue = expectedValue;
+        this.expectedJsonType = expectedJsonType;
     }
 
     @Override
     public JazonMatchResult match(ActualJsonNumber actualNumber) {
-        if (expectedValue.equals(actualNumber.number())) {
-            return success();
-        }
-        return failure(new PrimitiveValueMismatch<>(expectedValue, actualNumber.number()));
+        return matchPrimitive(actualNumber.number(), ActualJsonNumber.class);
     }
 
     @Override
     public JazonMatchResult match(ActualJsonObject actualObject) {
-        return null;
+        return failure(new TypeMismatch(expectedJsonType, ActualJsonObject.class));
     }
 
     @Override
     public JazonMatchResult match(ActualJsonString actualString) {
-        //FIXME copy-paste
-        if (expectedValue.equals(actualString.string())) {
+        return matchPrimitive(actualString.string(), ActualJsonString.class);
+    }
+
+    private <ActualType extends Actual> JazonMatchResult matchPrimitive(Object actualValue, Class<ActualType> actualTypeClass) {
+        if (actualTypeClass != expectedJsonType) {
+            return failure(new TypeMismatch(expectedJsonType, actualTypeClass));
+        }
+        if (expectedValue.equals(actualValue)) {
             return success();
         }
-        return failure(new PrimitiveValueMismatch<>(expectedValue, actualString.string()));
+        return failure(new PrimitiveValueMismatch<>(expectedValue, actualValue));
     }
 
     @Override

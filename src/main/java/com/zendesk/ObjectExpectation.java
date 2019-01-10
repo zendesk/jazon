@@ -44,7 +44,7 @@ public class ObjectExpectation implements JsonExpectation {
 
     @Override
     public JazonMatchResult match(ActualJsonString actualString) {
-        return null;
+        return failure(new TypeMismatch(ActualJsonObject.class, ActualJsonString.class));
     }
 
     @Override
