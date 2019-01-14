@@ -29,6 +29,8 @@ final class ActualTranslators {
             return new ActualJsonNumber((Number) object);
         } else if (object instanceof String) {
             return new ActualJsonString((String) object);
+        } else if (object == null) {
+            return new ActualJsonNull();
         }
         throw new IllegalArgumentException();
     }

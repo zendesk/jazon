@@ -1,25 +1,47 @@
 package com.zendesk
 
 import spock.lang.Specification
+import spock.lang.Unroll
 
 class FacadeExpectationSpec extends Specification {
 
-    def "simple number mismatch"() {
+    @Unroll
+    def "primitive value mismatch (expected: #expected, actual: #actual)"() {
         when:
-        def result = new FacadeExpectation([a: 123]).match([a: 10])
+        def result = new FacadeExpectation([a: expected]).match([a: actual])
 
         then:
         !result.ok()
-        result.mismatch() == new PrimitiveValueMismatch(123, 10)
-    }
+        result.mismatch() == new PrimitiveValueMismatch(expected, actual)
 
-    def "simple string mismatch"() {
-        when:
-        def result = new FacadeExpectation([a: 'something serious']).match([a: 'lol'])
-
-        then:
-        !result.ok()
-        result.mismatch() == new PrimitiveValueMismatch('something serious', 'lol')
+        where:
+        expected                | actual
+        123                     | 10
+        123                     | 130.1f
+        123                     | 1500.13d
+        123                     | new BigDecimal("11.05")
+        123                     | 12345l
+        130.1f                  | 10
+        130.1f                  | 133.3f
+        130.1f                  | 1500.13d
+        130.1f                  | new BigDecimal("11.05")
+        130.1f                  | 12345l
+        1500.13d                | 10
+        1500.13d                | 130.1f
+        1500.13d                | 1555.55d
+        1500.13d                | new BigDecimal("11.05")
+        1500.13d                | 12345l
+        new BigDecimal("11.05") | 10
+        new BigDecimal("11.05") | 130.1f
+        new BigDecimal("11.05") | 1500.13d
+        new BigDecimal("11.05") | new BigDecimal("11.11")
+        new BigDecimal("11.05") | 12345l
+        12345l                  | 10
+        12345l                  | 130.1f
+        12345l                  | 1500.13d
+        12345l                  | new BigDecimal("11.05")
+        12345l                  | 1234567l
+        'something serious'     | 'lol'
     }
 
     def "simple primitive type mismatch"() {
@@ -38,5 +60,23 @@ class FacadeExpectationSpec extends Specification {
         [a: 'ww']     | [a: [bb: 10]] | ActualJsonString.class | ActualJsonObject.class
         [a: [bb: 10]] | [a: 88]       | ActualJsonObject.class | ActualJsonNumber.class
         [a: [bb: 10]] | [a: 'lol']    | ActualJsonObject.class | ActualJsonString.class
+    }
+
+    def "finds null instead of primitive value"() {
+        when:
+        def result = new FacadeExpectation([a: expected]).match([a: null])
+
+        then:
+        !result.ok()
+        result.mismatch() == new NullMismatch(expectedType, expected)
+
+        where:
+        expected                | expectedType
+        123                     | ActualJsonNumber
+        130.1f                  | ActualJsonNumber
+        1500.13d                | ActualJsonNumber
+        new BigDecimal("11.05") | ActualJsonNumber
+        12345l                  | ActualJsonNumber
+        "sting"                 | ActualJsonString
     }
 }
