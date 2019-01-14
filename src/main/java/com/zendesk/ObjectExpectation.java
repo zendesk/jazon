@@ -2,9 +2,10 @@ package com.zendesk;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.zendesk.JazonMatchResult.failure;
-import static com.zendesk.JazonMatchResult.success;
+import static java.util.Optional.empty;
 
 public class ObjectExpectation implements JsonExpectation {
     private final Map<String, JsonExpectation> expectationMap;
@@ -24,22 +25,22 @@ public class ObjectExpectation implements JsonExpectation {
     }
 
     private JazonMatchResult matchMap(Map<String, Actual> jsonAsMap) {
-        boolean sizesMatch = expectationMap.size() == jsonAsMap.size();
-        if (!sizesMatch) {
-            return failure(
-                    new SizesJsonMismatch(expectationMap.size(), jsonAsMap.size())
-            );
-        }
+        Optional<JsonMismatch> jsonMismatch = matchExpectedFields(jsonAsMap);
+        return jsonMismatch.map(JazonMatchResult::failure)
+                .orElseGet(JazonMatchResult::success);
+    }
+
+    private Optional<JsonMismatch> matchExpectedFields(Map<String, Actual> jsonAsMap) {
         for (Map.Entry<String, JsonExpectation> entry : expectationMap.entrySet()) {
             JsonExpectation fieldExpectation = entry.getValue();
             Actual actual = jsonAsMap.get(entry.getKey());
             JazonMatchResult matchResult = actual.accept(fieldExpectation);
 
             if (!matchResult.ok()) {
-                return failure(matchResult.mismatch());
+                return Optional.of(matchResult.mismatch());
             }
         }
-        return success();
+        return empty();
     }
 
     @Override

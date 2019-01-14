@@ -79,4 +79,31 @@ class FacadeExpectationSpec extends Specification {
         12345l                  | ActualJsonNumber
         "sting"                 | ActualJsonString
     }
+
+    @Unroll
+    def "mismatch in object field (expected: #expectedFieldValue, actual: #actualFieldValue)"() {
+        given:
+        def expected = [
+                a: 103,
+                b: expectedFieldValue
+        ]
+        def actual = [
+                a: 103,
+                b: actualFieldValue,
+        ]
+
+        when:
+        def result = new FacadeExpectation(expected).match(actual)
+
+        then:
+        !result.ok()
+        result.mismatch() == foundMismatch
+
+        where:
+        expectedFieldValue | actualFieldValue || foundMismatch
+        'vegetable'        | 'meat'           || new PrimitiveValueMismatch('vegetable', 'meat')
+        'vegetable'        | null             || new NullMismatch<>(ActualJsonString, 'vegetable')
+        'vegetable'        | 150              || new TypeMismatch(ActualJsonString, ActualJsonNumber)
+        77                 | 'rosemary'       || new TypeMismatch(ActualJsonNumber, ActualJsonString)
+    }
 }
