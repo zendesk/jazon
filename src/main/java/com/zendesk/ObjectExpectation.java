@@ -3,9 +3,10 @@ package com.zendesk;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
+import static com.google.common.collect.Sets.difference;
 import static com.zendesk.JazonMatchResult.failure;
-import static java.util.Optional.empty;
 
 public class ObjectExpectation implements JsonExpectation {
     private final Map<String, JsonExpectation> expectationMap;
@@ -21,26 +22,11 @@ public class ObjectExpectation implements JsonExpectation {
 
     @Override
     public JazonMatchResult match(ActualJsonObject actualObject) {
-        return matchMap(actualObject.map());
-    }
-
-    private JazonMatchResult matchMap(Map<String, Actual> jsonAsMap) {
-        Optional<JsonMismatch> jsonMismatch = matchExpectedFields(jsonAsMap);
-        return jsonMismatch.map(JazonMatchResult::failure)
+        Optional<JsonMismatch> mismatchFromExpectedFields = mismatchFromExpectedFields(actualObject);
+        Optional<JsonMismatch> mismatchFromUnexpected = mismatchFromUnexpected(actualObject);
+        return firstOf(mismatchFromExpectedFields, mismatchFromUnexpected)
+                .map(JazonMatchResult::failure)
                 .orElseGet(JazonMatchResult::success);
-    }
-
-    private Optional<JsonMismatch> matchExpectedFields(Map<String, Actual> jsonAsMap) {
-        for (Map.Entry<String, JsonExpectation> entry : expectationMap.entrySet()) {
-            JsonExpectation fieldExpectation = entry.getValue();
-            Actual actual = jsonAsMap.get(entry.getKey());
-            JazonMatchResult matchResult = actual.accept(fieldExpectation);
-
-            if (!matchResult.ok()) {
-                return Optional.of(matchResult.mismatch());
-            }
-        }
-        return empty();
     }
 
     @Override
@@ -71,5 +57,38 @@ public class ObjectExpectation implements JsonExpectation {
         return "ObjectExpectation{" +
                 "expectationMap=" + expectationMap +
                 '}';
+    }
+
+    private Optional<JsonMismatch> mismatchFromExpectedFields(ActualJsonObject actualObject) {
+        return expectationMap.entrySet()
+                .stream()
+                .map(
+                        e -> actual(actualObject, e.getKey())
+                                .accept(e.getValue())
+                )
+                .filter(matchResult -> !matchResult.ok())
+                .map(JazonMatchResult::mismatch)
+                .findFirst();
+    }
+
+    private Optional<JsonMismatch> mismatchFromUnexpected(ActualJsonObject actualObject) {
+        Set<String> unexpectedFields = difference(actualObject.keys(), expectationMap.keySet());
+        return unexpectedFields.stream()
+                .map(actualObject::actualPresentField)
+                .map(actualField -> new UnexpectedFieldMismatch<>(actualField.getClass()))
+                .map(JsonMismatch.class::cast)
+                .findFirst();
+    }
+
+    private Optional<JsonMismatch> firstOf(Optional<JsonMismatch> first, Optional<JsonMismatch> second) {
+        if (first.isPresent()) {
+            return first;
+        }
+        return second;
+    }
+
+    private Actual actual(ActualJsonObject jsonObject, String fieldName) {
+        return jsonObject.actualField(fieldName)
+                .orElseGet(ActualJsonNull::new);
     }
 }

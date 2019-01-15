@@ -1,6 +1,8 @@
 package com.zendesk;
 
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 class ActualJsonObject implements Actual {
     private final Map<String, Actual> map;
@@ -9,8 +11,20 @@ class ActualJsonObject implements Actual {
         this.map = map;
     }
 
-    public Map<String, Actual> map() {
-        return map;
+    public Optional<Actual> actualField(String fieldName) {
+        return Optional.ofNullable(map.get(fieldName));
+    }
+
+    public Actual actualPresentField(String fieldName) {
+        if (map.containsKey(fieldName)) {
+            return map.get(fieldName);
+        }
+        throw new IllegalStateException("Field " + fieldName +
+                " not found. To use this method you have to be sure the field exists.");
+    }
+
+    public Set<String> keys() {
+        return map.keySet();
     }
 
     @Override

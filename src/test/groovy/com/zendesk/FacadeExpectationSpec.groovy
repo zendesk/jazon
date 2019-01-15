@@ -106,4 +106,57 @@ class FacadeExpectationSpec extends Specification {
         'vegetable'        | 150              || new TypeMismatch(ActualJsonString, ActualJsonNumber)
         77                 | 'rosemary'       || new TypeMismatch(ActualJsonNumber, ActualJsonString)
     }
+
+    def "catches lacking field in Object"() {
+        given:
+        def expected = [
+                a: 103,
+                b: 'some value',
+        ]
+
+        when:
+        def result = new FacadeExpectation(expected).match(actual)
+
+        then:
+        !result.ok()
+        result.mismatch() == new NullMismatch(ActualJsonString, 'some value');
+
+        where:
+        actual << [
+                [a: 103],
+                [a: 103, c: 'kek']
+        ]
+    }
+
+    @Unroll
+    def "catches unexpected field in Object: #unexpectedFieldValue"() {
+        given:
+        def expected = [
+                a: 103,
+                c: 'Chicago',
+        ]
+        def actual = [
+                a: 103,
+                b: unexpectedFieldValue,
+                c: 'Chicago',
+        ]
+
+        when:
+        def result = new FacadeExpectation(expected).match(actual)
+
+        then:
+        !result.ok()
+        result.mismatch() == new UnexpectedFieldMismatch(unexpectedFieldType);
+
+        where:
+        unexpectedFieldValue    | unexpectedFieldType
+        'act of vandalism'      | ActualJsonString
+        123                     | ActualJsonNumber
+        1999l                   | ActualJsonNumber
+        20.14f                  | ActualJsonNumber
+        44.999d                 | ActualJsonNumber
+        new BigDecimal("80.92") | ActualJsonNumber
+        [a: 1, b: 'lol']        | ActualJsonObject
+        null                    | ActualJsonNull
+    }
 }

@@ -17,7 +17,7 @@ class NullMismatch<T> implements JsonMismatch {
         this(expectedType, empty());
     }
 
-    public NullMismatch(Class<? extends Actual> expectedType, Optional<T> expectedValue) {
+    private NullMismatch(Class<? extends Actual> expectedType, Optional<T> expectedValue) {
         this.expectedType = expectedType;
         this.expectedValue = expectedValue;
     }
