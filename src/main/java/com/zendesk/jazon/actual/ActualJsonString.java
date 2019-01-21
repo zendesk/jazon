@@ -1,6 +1,9 @@
-package com.zendesk;
+package com.zendesk.jazon.actual;
 
-class ActualJsonString implements Actual {
+import com.zendesk.jazon.JazonMatchResult;
+import com.zendesk.jazon.expectation.JsonExpectation;
+
+public class ActualJsonString implements Actual {
     private final String string;
 
     ActualJsonString(String string) {

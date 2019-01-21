@@ -3,7 +3,7 @@ package com.getbase.jazon
 import spock.lang.Ignore
 import spock.lang.Specification
 
-import static com.getbase.jazon.spock.JazonSpockAdapter.jazon
+import static com.zendesk.jazon.spock.JazonSpockAdapter.jazon
 
 @Ignore
 class ExampleSpec extends Specification {

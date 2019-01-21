@@ -1,10 +1,13 @@
-package com.zendesk;
+package com.zendesk.jazon.actual;
+
+import com.zendesk.jazon.JazonMatchResult;
+import com.zendesk.jazon.expectation.JsonExpectation;
 
 import java.util.List;
 
 import static java.util.Collections.unmodifiableList;
 
-class ActualJsonArray implements Actual {
+public class ActualJsonArray implements Actual {
     private final List<Actual> list;
 
     ActualJsonArray(List<Actual> list) {

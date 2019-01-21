@@ -1,4 +1,4 @@
-package com.zendesk;
+package com.zendesk.jazon.actual;
 
 import java.util.List;
 import java.util.Map;
@@ -6,11 +6,11 @@ import java.util.Map;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
-final class ActualTranslators {
+public final class ActualTranslators {
     private ActualTranslators() {
     }
 
-    static ActualJsonObject actualObject(Map<String, Object> objectsMap) {
+    public static ActualJsonObject actualObject(Map<String, Object> objectsMap) {
         // "what is actual" responsibility used in iteration
         Map<String, Actual> map = objectsMap.entrySet()
                 .stream()

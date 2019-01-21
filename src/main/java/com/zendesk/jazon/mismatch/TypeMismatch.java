@@ -1,12 +1,14 @@
-package com.zendesk;
+package com.zendesk.jazon.mismatch;
+
+import com.zendesk.jazon.actual.Actual;
 
 import java.util.Objects;
 
-class TypeMismatch implements JsonMismatch {
+public class TypeMismatch implements JsonMismatch {
     private final Class<? extends Actual> expectedType;
     private final Class<? extends Actual> actualType;
 
-    TypeMismatch(Class<? extends Actual> expectedType, Class<? extends Actual> actualType) {
+    public TypeMismatch(Class<? extends Actual> expectedType, Class<? extends Actual> actualType) {
         this.expectedType = expectedType;
         this.actualType = actualType;
     }

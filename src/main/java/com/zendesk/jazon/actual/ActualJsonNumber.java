@@ -1,6 +1,9 @@
-package com.zendesk;
+package com.zendesk.jazon.actual;
 
-class ActualJsonNumber implements Actual {
+import com.zendesk.jazon.JazonMatchResult;
+import com.zendesk.jazon.expectation.JsonExpectation;
+
+public class ActualJsonNumber implements Actual {
     private final Number number;
 
     ActualJsonNumber(Number number) {

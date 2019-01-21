@@ -1,19 +1,21 @@
-package com.zendesk;
+package com.zendesk.jazon.mismatch;
+
+import com.zendesk.jazon.actual.Actual;
 
 import java.util.Objects;
 import java.util.Optional;
 
 import static java.util.Optional.empty;
 
-class NullMismatch<T> implements JsonMismatch {
+public class NullMismatch<T> implements JsonMismatch {
     private final Class<? extends Actual> expectedType;
     private final Optional<T> expectedValue;
 
-    NullMismatch(Class<? extends Actual> expectedType, T expectedValue) {
+    public NullMismatch(Class<? extends Actual> expectedType, T expectedValue) {
         this(expectedType, Optional.of(expectedValue));
     }
 
-    NullMismatch(Class<? extends Actual> expectedType) {
+    public NullMismatch(Class<? extends Actual> expectedType) {
         this(expectedType, empty());
     }
 

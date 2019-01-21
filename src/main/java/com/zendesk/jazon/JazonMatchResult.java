@@ -1,4 +1,6 @@
-package com.zendesk;
+package com.zendesk.jazon;
+
+import com.zendesk.jazon.mismatch.JsonMismatch;
 
 import java.util.Optional;
 
@@ -8,11 +10,11 @@ import static java.util.Optional.of;
 public class JazonMatchResult {
     private final Optional<JsonMismatch> mismatch;
 
-    static JazonMatchResult success() {
+    public static JazonMatchResult success() {
         return new JazonMatchResult(empty());
     }
 
-    static JazonMatchResult failure(JsonMismatch mismatch) {
+    public static JazonMatchResult failure(JsonMismatch mismatch) {
         return new JazonMatchResult(of(mismatch));
     }
 

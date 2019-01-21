@@ -1,15 +1,18 @@
-package com.zendesk;
+package com.zendesk.jazon.expectation;
+
+import com.zendesk.jazon.actual.ActualJsonNumber;
+import com.zendesk.jazon.actual.ActualJsonString;
 
 import java.util.List;
 import java.util.Map;
 
 import static java.util.stream.Collectors.toMap;
 
-final class ExpectationTranslators {
+public final class ExpectationTranslators {
     private ExpectationTranslators() {
     }
 
-    static ObjectExpectation objectExpectation(Map<String, Object> objectsMap) {
+    public static ObjectExpectation objectExpectation(Map<String, Object> objectsMap) {
         Map<String, JsonExpectation> expectationsMap = objectsMap.entrySet()
                 .stream()
                 .collect(

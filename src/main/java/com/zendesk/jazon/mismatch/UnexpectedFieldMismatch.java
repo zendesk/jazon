@@ -1,11 +1,13 @@
-package com.zendesk;
+package com.zendesk.jazon.mismatch;
+
+import com.zendesk.jazon.actual.Actual;
 
 import java.util.Objects;
 
-class UnexpectedFieldMismatch<T> implements JsonMismatch {
+public class UnexpectedFieldMismatch<T> implements JsonMismatch {
     private final Class<? extends Actual> actualType;
 
-    UnexpectedFieldMismatch(Class<? extends Actual> actualType) {
+    public UnexpectedFieldMismatch(Class<? extends Actual> actualType) {
         this.actualType = actualType;
     }
 

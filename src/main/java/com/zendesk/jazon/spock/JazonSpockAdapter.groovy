@@ -1,7 +1,6 @@
-package com.getbase.jazon.spock
+package com.zendesk.jazon.spock
 
-
-import com.zendesk.FacadeExpectation
+import com.zendesk.jazon.FacadeExpectation
 
 class JazonSpockAdapter {
     private final String json

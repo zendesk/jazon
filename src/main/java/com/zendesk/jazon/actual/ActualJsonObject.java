@@ -1,10 +1,13 @@
-package com.zendesk;
+package com.zendesk.jazon.actual;
+
+import com.zendesk.jazon.JazonMatchResult;
+import com.zendesk.jazon.expectation.JsonExpectation;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-class ActualJsonObject implements Actual {
+public class ActualJsonObject implements Actual {
     private final Map<String, Actual> map;
 
     ActualJsonObject(Map<String, Actual> map) {

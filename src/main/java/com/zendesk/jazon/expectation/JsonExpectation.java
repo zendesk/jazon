@@ -1,6 +1,9 @@
-package com.zendesk;
+package com.zendesk.jazon.expectation;
 
-interface JsonExpectation {
+import com.zendesk.jazon.JazonMatchResult;
+import com.zendesk.jazon.actual.*;
+
+public interface JsonExpectation {
     JazonMatchResult match(ActualJsonNumber actualNumber);
     JazonMatchResult match(ActualJsonObject actualObject);
     JazonMatchResult match(ActualJsonString actualString);

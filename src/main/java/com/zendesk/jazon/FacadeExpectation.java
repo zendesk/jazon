@@ -1,11 +1,13 @@
-package com.zendesk;
+package com.zendesk.jazon;
 
+import com.zendesk.jazon.actual.ActualJsonObject;
+import com.zendesk.jazon.expectation.ObjectExpectation;
 import groovy.json.JsonSlurper;
 
 import java.util.Map;
 
-import static com.zendesk.ActualTranslators.actualObject;
-import static com.zendesk.ExpectationTranslators.objectExpectation;
+import static com.zendesk.jazon.actual.ActualTranslators.actualObject;
+import static com.zendesk.jazon.expectation.ExpectationTranslators.objectExpectation;
 
 public class FacadeExpectation {
     private final ObjectExpectation objectExpectation;

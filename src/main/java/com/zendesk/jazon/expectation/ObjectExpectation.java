@@ -1,4 +1,11 @@
-package com.zendesk;
+package com.zendesk.jazon.expectation;
+
+import com.zendesk.jazon.JazonMatchResult;
+import com.zendesk.jazon.actual.*;
+import com.zendesk.jazon.mismatch.JsonMismatch;
+import com.zendesk.jazon.mismatch.NullMismatch;
+import com.zendesk.jazon.mismatch.TypeMismatch;
+import com.zendesk.jazon.mismatch.UnexpectedFieldMismatch;
 
 import java.util.Map;
 import java.util.Objects;
@@ -6,7 +13,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static com.google.common.collect.Sets.difference;
-import static com.zendesk.JazonMatchResult.failure;
+import static com.zendesk.jazon.JazonMatchResult.failure;
 
 public class ObjectExpectation implements JsonExpectation {
     private final Map<String, JsonExpectation> expectationMap;

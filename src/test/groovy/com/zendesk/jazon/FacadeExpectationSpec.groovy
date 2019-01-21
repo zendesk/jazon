@@ -1,5 +1,13 @@
-package com.zendesk
+package com.zendesk.jazon
 
+import com.zendesk.jazon.actual.ActualJsonNull
+import com.zendesk.jazon.actual.ActualJsonNumber
+import com.zendesk.jazon.actual.ActualJsonObject
+import com.zendesk.jazon.actual.ActualJsonString
+import com.zendesk.jazon.mismatch.NullMismatch
+import com.zendesk.jazon.mismatch.PrimitiveValueMismatch
+import com.zendesk.jazon.mismatch.TypeMismatch
+import com.zendesk.jazon.mismatch.UnexpectedFieldMismatch
 import spock.lang.Specification
 import spock.lang.Unroll
 

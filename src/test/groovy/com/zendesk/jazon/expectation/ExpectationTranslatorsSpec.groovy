@@ -1,9 +1,11 @@
-package com.zendesk
+package com.zendesk.jazon.expectation
 
+import com.zendesk.jazon.actual.ActualJsonNumber
+import com.zendesk.jazon.actual.ActualJsonString
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import static com.zendesk.ExpectationTranslators.*
+import static com.zendesk.jazon.expectation.ExpectationTranslators.objectExpectation
 
 class ExpectationTranslatorsSpec extends Specification {
 

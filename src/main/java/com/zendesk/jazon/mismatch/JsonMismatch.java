@@ -1,4 +1,4 @@
-package com.zendesk;
+package com.zendesk.jazon.mismatch;
 
 public interface JsonMismatch {
 //    String path();

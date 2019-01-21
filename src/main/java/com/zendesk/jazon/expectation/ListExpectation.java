@@ -1,10 +1,15 @@
-package com.zendesk;
+package com.zendesk.jazon.expectation;
+
+import com.zendesk.jazon.JazonMatchResult;
+import com.zendesk.jazon.actual.*;
+import com.zendesk.jazon.mismatch.NullMismatch;
+import com.zendesk.jazon.mismatch.TypeMismatch;
 
 import java.util.List;
 import java.util.Objects;
 
-import static com.zendesk.JazonMatchResult.failure;
-import static com.zendesk.JazonMatchResult.success;
+import static com.zendesk.jazon.JazonMatchResult.failure;
+import static com.zendesk.jazon.JazonMatchResult.success;
 
 class ListExpectation implements JsonExpectation {
     private final List<JsonExpectation> expectationList;
