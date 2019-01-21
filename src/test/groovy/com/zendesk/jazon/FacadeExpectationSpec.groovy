@@ -1,5 +1,6 @@
 package com.zendesk.jazon
 
+import com.zendesk.jazon.actual.ActualJsonArray
 import com.zendesk.jazon.actual.ActualJsonNull
 import com.zendesk.jazon.actual.ActualJsonNumber
 import com.zendesk.jazon.actual.ActualJsonObject
@@ -112,6 +113,8 @@ class FacadeExpectationSpec extends Specification {
         'vegetable'        | null             || new NullMismatch<>(ActualJsonString, 'vegetable')
         'vegetable'        | 150              || new TypeMismatch(ActualJsonString, ActualJsonNumber)
         77                 | 'rosemary'       || new TypeMismatch(ActualJsonNumber, ActualJsonString)
+        []                 | 'kek'            || new TypeMismatch(ActualJsonArray, ActualJsonString)
+        [20, 30]           | [20, 77]         || new ArrayElementMismatch(1, new PrimitiveValueMismatch(30, 77))
     }
 
     def "catches lacking field in Object"() {
@@ -165,6 +168,7 @@ class FacadeExpectationSpec extends Specification {
         new BigDecimal("80.92") | ActualJsonNumber
         [a: 1, b: 'lol']        | ActualJsonObject
         null                    | ActualJsonNull
+        [5, 4, 3]               | ActualJsonArray
     }
 
     @Unroll
