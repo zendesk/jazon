@@ -5,5 +5,5 @@ interface JsonExpectation {
     JazonMatchResult match(ActualJsonObject actualObject);
     JazonMatchResult match(ActualJsonString actualString);
     JazonMatchResult match(ActualJsonNull actualNull);
-//    JazonMatchResult match(JsonNull object);
+    JazonMatchResult match(ActualJsonArray actualArray);
 }

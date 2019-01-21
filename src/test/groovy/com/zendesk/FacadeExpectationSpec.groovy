@@ -159,4 +159,18 @@ class FacadeExpectationSpec extends Specification {
         [a: 1, b: 'lol']        | ActualJsonObject
         null                    | ActualJsonNull
     }
+
+    @Unroll
+    def "ordered-list-expectation"() {
+        when:
+        def result = new FacadeExpectation([a: expected]).match([a: actual])
+
+        then:
+        !result.ok()
+//        result.mismatch() == new UnexpectedFieldMismatch(null);
+
+        where:
+        expected  | actual
+        [1, 2, 3] | [3, 2, 1]
+    }
 }

@@ -1,5 +1,6 @@
 package com.zendesk;
 
+import java.util.List;
 import java.util.Map;
 
 import static java.util.stream.Collectors.toMap;
@@ -28,6 +29,8 @@ final class ExpectationTranslators {
             return new PrimitiveValueExpectation<>((Number) object, ActualJsonNumber.class);
         } else if (object instanceof String) {
             return new PrimitiveValueExpectation<>((String) object, ActualJsonString.class);
+        } else if (object instanceof List) {
+            return new ListExpectation((List<JsonExpectation>) object);
         }
         throw new IllegalArgumentException();
     }

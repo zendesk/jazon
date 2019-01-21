@@ -1,7 +1,9 @@
 package com.zendesk;
 
+import java.util.List;
 import java.util.Map;
 
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 final class ActualTranslators {
@@ -31,7 +33,16 @@ final class ActualTranslators {
             return new ActualJsonString((String) object);
         } else if (object == null) {
             return new ActualJsonNull();
+        } else if (object instanceof List) {
+            return actualArray((List<Object>) object);
         }
         throw new IllegalArgumentException();
+    }
+
+    private static ActualJsonArray actualArray(List<Object> objects) {
+        List<Actual> actuals = objects.stream()
+                .map(ActualTranslators::actual)
+                .collect(toList());
+        return new ActualJsonArray(actuals);
     }
 }
