@@ -1,20 +1,22 @@
 package com.zendesk.jazon.expectation;
 
+import com.google.common.collect.Iterators;
 import com.zendesk.jazon.JazonMatchResult;
 import com.zendesk.jazon.actual.*;
-import com.zendesk.jazon.mismatch.NullMismatch;
-import com.zendesk.jazon.mismatch.TypeMismatch;
+import com.zendesk.jazon.mismatch.*;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
 import static com.zendesk.jazon.JazonMatchResult.failure;
 import static com.zendesk.jazon.JazonMatchResult.success;
 
-class ListExpectation implements JsonExpectation {
+class OrderedArrayExpectation implements JsonExpectation {
     private final List<JsonExpectation> expectationList;
 
-    ListExpectation(List<JsonExpectation> expectationList) {
+    OrderedArrayExpectation(List<JsonExpectation> expectationList) {
         this.expectationList = expectationList;
     }
 
@@ -40,14 +42,44 @@ class ListExpectation implements JsonExpectation {
 
     @Override
     public JazonMatchResult match(ActualJsonArray actualArray) {
-        return success(); //TODO: implement seriously
+        int index = 0;
+        Iterator<JsonExpectation> expectationIterator = expectationList.iterator();
+        Iterator<Actual> actualIterator = actualArray.list().iterator();
+
+        while (expectationIterator.hasNext() && actualIterator.hasNext()) {
+            JsonExpectation expectation = expectationIterator.next();
+            Actual actual = actualIterator.next();
+            JazonMatchResult matchResult = actual.accept(expectation);
+            if (!matchResult.ok()) {
+                return failure(new ArrayElementMismatch(index, matchResult.mismatch()));
+            }
+            index += 1;
+        }
+
+        if (expectationIterator.hasNext()) {
+            List<JsonExpectation> lackingElements = remainingItems(expectationIterator);
+            return failure(new ArrayLackingElementsMismatch(lackingElements));
+        }
+
+        if (actualIterator.hasNext()) {
+            List<Actual> unexpectedElements = remainingItems(actualIterator);
+            return failure(new ArrayUnexpectedElementsMismatch(unexpectedElements));
+        }
+
+        return success();
+    }
+
+    private <T> List<T> remainingItems(Iterator<T> iterator) {
+        ArrayList<T> result = new ArrayList<>();
+        Iterators.addAll(result, iterator);
+        return result;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ListExpectation that = (ListExpectation) o;
+        OrderedArrayExpectation that = (OrderedArrayExpectation) o;
         return Objects.equals(expectationList, that.expectationList);
     }
 
@@ -58,7 +90,7 @@ class ListExpectation implements JsonExpectation {
 
     @Override
     public String toString() {
-        return "ListExpectation{" +
+        return "OrderedArrayExpectation{" +
                 "expectationList=" + expectationList +
                 '}';
     }

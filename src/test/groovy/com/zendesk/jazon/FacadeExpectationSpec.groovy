@@ -4,10 +4,9 @@ import com.zendesk.jazon.actual.ActualJsonNull
 import com.zendesk.jazon.actual.ActualJsonNumber
 import com.zendesk.jazon.actual.ActualJsonObject
 import com.zendesk.jazon.actual.ActualJsonString
-import com.zendesk.jazon.mismatch.NullMismatch
-import com.zendesk.jazon.mismatch.PrimitiveValueMismatch
-import com.zendesk.jazon.mismatch.TypeMismatch
-import com.zendesk.jazon.mismatch.UnexpectedFieldMismatch
+import com.zendesk.jazon.actual.ActualTranslators
+import com.zendesk.jazon.expectation.ExpectationTranslators
+import com.zendesk.jazon.mismatch.*
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -169,16 +168,57 @@ class FacadeExpectationSpec extends Specification {
     }
 
     @Unroll
-    def "ordered-list-expectation"() {
+    def "ordered list expectation - exact element mismatch"() {
         when:
         def result = new FacadeExpectation([a: expected]).match([a: actual])
 
         then:
         !result.ok()
-//        result.mismatch() == new UnexpectedFieldMismatch(null);
+        result.mismatch() == new ArrayElementMismatch(elementIndex, elementMismatch)
 
         where:
-        expected  | actual
-        [1, 2, 3] | [3, 2, 1]
+        expected  | actual    || elementIndex | elementMismatch
+        [1, 2, 3] | [3, 2, 1] || 0            | new PrimitiveValueMismatch<>(1, 3)
+        [1, 2, 3] | [1, 7, 3] || 1            | new PrimitiveValueMismatch<>(2, 7)
+    }
+
+    @Unroll
+    def "ordered list expectation - lacking elements (expected: #expected, actual: #actual)"() {
+        when:
+        def result = new FacadeExpectation([a: expected]).match([a: actual])
+
+        then:
+        !result.ok()
+        result.mismatch() == new ArrayLackingElementsMismatch(
+                lackingElements.collect(ExpectationTranslators.&expectation)
+        )
+
+        where:
+        expected                  | actual          || lackingElements
+        [1, 2, 3]                 | [1, 2]          || [3]
+        [1, 2, 'lalala']          | [1, 2]          || ['lalala']
+        [1, 2, 'lalala', 5, 6, 7] | [1, 2]          || ['lalala', 5, 6, 7]
+//        [1, 2, null, 5, 6, 7]     | [1, 2, null, 5] || [6, 7]
+//        [1, null]                 | [1]             || [null]
+//        [9]                       | []               | [9]
+//        [null]                    | []               | [null]
+//        [null, 'kek', 17]         | []               | [null, 'kek', 17]
+    }
+
+    def "ordered list expectation - unexpected elements"() {
+        when:
+        def result = new FacadeExpectation([a: expected]).match([a: actual])
+
+        then:
+        !result.ok()
+        result.mismatch() == new ArrayUnexpectedElementsMismatch(
+                unexpectedElements.collect(ActualTranslators.&actual)
+        )
+
+        where:
+        expected | actual            || unexpectedElements
+        [1, 2]   | [1, 2, 3]         || [3]
+        []       | [1, 2, 3]         || [1, 2, 3]
+        ['beka'] | ['beka', 'czeka'] || ['czeka']
     }
 }
