@@ -225,4 +225,73 @@ class FacadeExpectationSpec extends Specification {
         []       | [1, 2, 3]         || [1, 2, 3]
         ['beka'] | ['beka', 'czeka'] || ['czeka']
     }
+
+    def "unordered list expectation: success"() {
+        when:
+        def result = new FacadeExpectation([a: expected]).match([a: actual])
+
+        then:
+        result.ok()
+
+        where:
+        expected                         | actual
+        [1, 2, 3] as Set                 | [1, 3, 2]
+        [1, 2, 3] as Set                 | [3, 1, 2]
+        [1, 2, 'lalala'] as Set          | ['lalala', 1, 2]
+        [1, 2, 'lalala', 5, 6, 7] as Set | [6, 7, 2, 5, 'lalala', 1]
+    }
+
+    @Unroll
+    def "unordered list expectation: lacking elements (actual: #actual)"() {
+        when:
+        def result = new FacadeExpectation([a: expected]).match([a: actual])
+
+        then:
+        !result.ok()
+        result.mismatch() == new ArrayLackingElementsMismatch(
+                lackingElements.collect(ExpectationTranslators.&expectation)
+        )
+
+        where:
+        expected                         | actual                 || lackingElements
+        [1, 2, 3] as Set                 | [1, 3]                 || [2]
+        [1, 2, 3] as Set                 | [1, 3, 1]              || [2]
+        [1, 2, 3] as Set                 | [3, 1, 1, 88]          || [2]
+        [1, 2, 3] as Set                 | [3, 1, 3, 1]           || [2]
+        [1, 2, 'lalala'] as Set          | ['lalala', 11, 2]      || [1]
+        [1, 2, 'lalala', 5, 6, 7] as Set | [6, 7, 2, 5, 'rob', 1] || ['lalala']
+        [3, 4, 2, 1] as Set              | [11, 2, 3, 55]         || [1, 4]
+    }
+
+    def "unordered list expectation: unexpected elements"() {
+        when:
+        def result = new FacadeExpectation([a: expected]).match([a: actual])
+
+        then:
+        !result.ok()
+        result.mismatch() == new ArrayUnexpectedElementsMismatch(
+                unexpectedElements.collect(ActualTranslators.&actual)
+        )
+
+        where:
+        expected                      | actual                     || unexpectedElements
+        [1, 2, 3] as Set              | [1, 3, 2, 8]               || [8]
+        [1, 2, 3] as Set              | [1, 3, 2, 'sushi']         || ['sushi']
+        [1, 2, 3] as Set              | [1, 'sushi', 2, 3]         || ['sushi']
+        [1, 2, 3] as Set              | [1, 3, 2, null]            || [null]
+        ['what', 'is', 'love'] as Set | ['love', 'is', 10, 'what'] || [10]
+    }
+
+    def "unordered list expectation: fails for unsupported expectation types"() {
+        given:
+        def unsupportedExpectation = [1, 2, 3] as Set
+        def unorderedArrayExpectationWrapping = ['fish', 'chips', unsupportedExpectation] as Set
+        def theWholeExpectation = [a: unorderedArrayExpectationWrapping]
+
+        when:
+        new FacadeExpectation(theWholeExpectation)
+
+        then:
+        thrown(IllegalStateException)
+    }
 }

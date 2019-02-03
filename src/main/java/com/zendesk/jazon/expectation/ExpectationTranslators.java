@@ -1,12 +1,15 @@
 package com.zendesk.jazon.expectation;
 
-import com.zendesk.jazon.actual.*;
+import com.zendesk.jazon.actual.ActualJsonNumber;
+import com.zendesk.jazon.actual.ActualJsonString;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toSet;
 
 public final class ExpectationTranslators {
     private ExpectationTranslators() {
@@ -34,6 +37,8 @@ public final class ExpectationTranslators {
             return new PrimitiveValueExpectation<>((String) object, ActualJsonString.class);
         } else if (object instanceof List) {
             return expectedOrderedArray((List<Object>) object);
+        } else if (object instanceof Set) {
+            return expectedUnorderedArray((Set<Object>) object);
         }
         throw new IllegalArgumentException();
     }
@@ -43,5 +48,12 @@ public final class ExpectationTranslators {
                 .map(ExpectationTranslators::expectation)
                 .collect(toList());
         return new OrderedArrayExpectation(expectations);
+    }
+
+    private static JsonExpectation expectedUnorderedArray(Set<Object> objectsSet) {
+        Set<JsonExpectation> expectations = objectsSet.stream()
+                .map(ExpectationTranslators::expectation)
+                .collect(toSet());
+        return new UnorderedArrayExpectation(expectations);
     }
 }

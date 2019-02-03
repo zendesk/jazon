@@ -8,4 +8,19 @@ public class ActualJsonNull implements Actual {
     public JazonMatchResult accept(JsonExpectation expectation) {
         return expectation.match(this);
     }
+
+    @Override
+    public int hashCode() {
+        return ActualJsonNull.class.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return getClass().equals(obj.getClass());
+    }
+
+    @Override
+    public String toString() {
+        return "ActualJsonNull{}";
+    }
 }
