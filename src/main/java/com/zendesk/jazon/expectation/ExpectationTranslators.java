@@ -39,6 +39,8 @@ public final class ExpectationTranslators {
             return expectedOrderedArray((List<Object>) object);
         } else if (object instanceof Set) {
             return expectedUnorderedArray((Set<Object>) object);
+        } else if (object == null) {
+            return new NullExpectation();
         }
         throw new IllegalArgumentException();
     }

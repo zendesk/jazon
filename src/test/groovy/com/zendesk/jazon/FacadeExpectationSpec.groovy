@@ -294,4 +294,33 @@ class FacadeExpectationSpec extends Specification {
         then:
         thrown(IllegalStateException)
     }
+
+    def "null expectation: fails for any present value"() {
+        when:
+        def result = new FacadeExpectation([a: null]).match([a: actual])
+
+        then:
+        !result.ok()
+        result.mismatch() == new NotNullMismatch(ActualTranslators.actual(actual))
+
+        where:
+        actual << [
+                'something',
+                10,
+                130.1f,
+                1555.55d,
+                new BigDecimal("11.05"),
+                12345l,
+                [x: 123],
+                [1, 2, 3]
+        ]
+    }
+
+    def "null expectation: succeeds for null"() {
+        when:
+        def result = new FacadeExpectation([a: null]).match([a: null])
+
+        then:
+        result.ok()
+    }
 }

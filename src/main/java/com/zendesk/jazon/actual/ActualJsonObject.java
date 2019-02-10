@@ -4,6 +4,7 @@ import com.zendesk.jazon.JazonMatchResult;
 import com.zendesk.jazon.expectation.JsonExpectation;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -33,5 +34,25 @@ public class ActualJsonObject implements Actual {
     @Override
     public JazonMatchResult accept(JsonExpectation expectation) {
         return expectation.match(this);
+    }
+
+    @Override
+    public String toString() {
+        return "ActualJsonObject{" +
+                "map=" + map +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ActualJsonObject that = (ActualJsonObject) o;
+        return Objects.equals(map, that.map);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(map);
     }
 }
