@@ -58,19 +58,31 @@ class FacadeExpectationSpec extends Specification {
         result.mismatch() == new TypeMismatch(mismatchExpectedType, mismatchActualType)
 
         where:
-        expected      | actual        | mismatchExpectedType    | mismatchActualType
-        [a: 123]      | [a: 'lol']    | ActualJsonNumber.class  | ActualJsonString.class
-        [a: 123]      | [a: [bb: 10]] | ActualJsonNumber.class  | ActualJsonObject.class
-        [a: 123]      | [a: true]     | ActualJsonNumber.class  | ActualJsonBoolean.class
-        [a: 'ww']     | [a: 88]       | ActualJsonString.class  | ActualJsonNumber.class
-        [a: 'ww']     | [a: [bb: 10]] | ActualJsonString.class  | ActualJsonObject.class
-        [a: 'ww']     | [a: true]     | ActualJsonString.class  | ActualJsonBoolean.class
-        [a: [bb: 10]] | [a: 88]       | ActualJsonObject.class  | ActualJsonNumber.class
-        [a: [bb: 10]] | [a: 'lol']    | ActualJsonObject.class  | ActualJsonString.class
-        [a: [bb: 10]] | [a: true]     | ActualJsonObject.class  | ActualJsonBoolean.class
-        [a: true]     | [a: 'lol']    | ActualJsonBoolean.class | ActualJsonString.class
-        [a: true]     | [a: 88]       | ActualJsonBoolean.class | ActualJsonNumber.class
-        [a: true]     | [a: [bb: 10]] | ActualJsonBoolean.class | ActualJsonObject.class
+        expected           | actual        | mismatchExpectedType    | mismatchActualType
+        [a: 123]           | [a: 'lol']    | ActualJsonNumber.class  | ActualJsonString.class
+        [a: 123]           | [a: [bb: 10]] | ActualJsonNumber.class  | ActualJsonObject.class
+        [a: 123]           | [a: true]     | ActualJsonNumber.class  | ActualJsonBoolean.class
+        [a: 123]           | [a: [1, 2]]   | ActualJsonNumber.class  | ActualJsonArray.class
+        [a: 'ww']          | [a: 88]       | ActualJsonString.class  | ActualJsonNumber.class
+        [a: 'ww']          | [a: [bb: 10]] | ActualJsonString.class  | ActualJsonObject.class
+        [a: 'ww']          | [a: true]     | ActualJsonString.class  | ActualJsonBoolean.class
+        [a: 'ww']          | [a: [1, 2]]   | ActualJsonString.class  | ActualJsonArray.class
+        [a: [bb: 10]]      | [a: 88]       | ActualJsonObject.class  | ActualJsonNumber.class
+        [a: [bb: 10]]      | [a: 'lol']    | ActualJsonObject.class  | ActualJsonString.class
+        [a: [bb: 10]]      | [a: true]     | ActualJsonObject.class  | ActualJsonBoolean.class
+        [a: [bb: 10]]      | [a: [1, 2]]   | ActualJsonObject.class  | ActualJsonArray.class
+        [a: true]          | [a: 'lol']    | ActualJsonBoolean.class | ActualJsonString.class
+        [a: true]          | [a: 88]       | ActualJsonBoolean.class | ActualJsonNumber.class
+        [a: true]          | [a: [bb: 10]] | ActualJsonBoolean.class | ActualJsonObject.class
+        [a: true]          | [a: [1, 2]]   | ActualJsonBoolean.class | ActualJsonArray.class
+        [a: [1, 2]]        | [a: 123]      | ActualJsonArray.class   | ActualJsonNumber.class
+        [a: [1, 2]]        | [a: 'lol']    | ActualJsonArray.class   | ActualJsonString.class
+        [a: [1, 2]]        | [a: 88]       | ActualJsonArray.class   | ActualJsonNumber.class
+        [a: [1, 2]]        | [a: [bb: 10]] | ActualJsonArray.class   | ActualJsonObject.class
+        [a: [1, 2] as Set] | [a: 123]      | ActualJsonArray.class   | ActualJsonNumber.class
+        [a: [1, 2] as Set] | [a: 'lol']    | ActualJsonArray.class   | ActualJsonString.class
+        [a: [1, 2] as Set] | [a: 88]       | ActualJsonArray.class   | ActualJsonNumber.class
+        [a: [1, 2] as Set] | [a: [bb: 10]] | ActualJsonArray.class   | ActualJsonObject.class
     }
 
     def "finds null instead of primitive value"() {
@@ -89,6 +101,7 @@ class FacadeExpectationSpec extends Specification {
         new BigDecimal("11.05") | ActualJsonNumber
         12345l                  | ActualJsonNumber
         "sting"                 | ActualJsonString
+        true                    | ActualJsonBoolean
     }
 
     @Unroll
@@ -172,6 +185,8 @@ class FacadeExpectationSpec extends Specification {
         [a: 1, b: 'lol']        | ActualJsonObject
         null                    | ActualJsonNull
         [5, 4, 3]               | ActualJsonArray
+        true                    | ActualJsonBoolean
+        false                   | ActualJsonBoolean
     }
 
     @Unroll
@@ -184,9 +199,14 @@ class FacadeExpectationSpec extends Specification {
         result.mismatch() == new ArrayElementMismatch(elementIndex, elementMismatch)
 
         where:
-        expected  | actual    || elementIndex | elementMismatch
-        [1, 2, 3] | [3, 2, 1] || 0            | new PrimitiveValueMismatch<>(1, 3)
-        [1, 2, 3] | [1, 7, 3] || 1            | new PrimitiveValueMismatch<>(2, 7)
+        expected     | actual       || elementIndex | elementMismatch
+        [1, 2, 3]    | [3, 2, 1]    || 0            | new PrimitiveValueMismatch<>(1, 3)
+        [1, 2, 3]    | [1, 7, 3]    || 1            | new PrimitiveValueMismatch<>(2, 7)
+        [1, 2, true] | [1, 2, 3]    || 2            | new TypeMismatch(ActualJsonBoolean, ActualJsonNumber)
+        [1, 2, 3]    | [1, 2, true] || 2            | new TypeMismatch(ActualJsonNumber, ActualJsonBoolean)
+        [1, null, 3] | [1, 2, 3]    || 1            | new NotNullMismatch(new ActualJsonNumber(2))
+        [1, 2, 3]    | [1, null, 3] || 1            | new NullMismatch<>(ActualJsonNumber, 2)
+        [1, 2, 3]    | [1, 2, 4, 5] || 2            | new PrimitiveValueMismatch<>(3, 4)
     }
 
     @Unroll
@@ -201,15 +221,15 @@ class FacadeExpectationSpec extends Specification {
         )
 
         where:
-        expected                  | actual || lackingElements
-        [1, 2, 3]                 | [1, 2] || [3]
-        [1, 2, 'lalala']          | [1, 2] || ['lalala']
-        [1, 2, 'lalala', 5, 6, 7] | [1, 2] || ['lalala', 5, 6, 7]
-//        [1, 2, null, 5, 6, 7]     | [1, 2, null, 5] || [6, 7]
-//        [1, null]                 | [1]             || [null]
-//        [9]                       | []               | [9]
-//        [null]                    | []               | [null]
-//        [null, 'kek', 17]         | []               | [null, 'kek', 17]
+        expected                  | actual          || lackingElements
+        [1, 2, 3]                 | [1, 2]          || [3]
+        [1, 2, 'lalala']          | [1, 2]          || ['lalala']
+        [1, 2, 'lalala', 5, 6, 7] | [1, 2]          || ['lalala', 5, 6, 7]
+        [1, 2, null, 5, 6, 7]     | [1, 2, null, 5] || [6, 7]
+        [1, null]                 | [1]             || [null]
+        [9]                       | []              || [9]
+        [null]                    | []              || [null]
+        [null, 'kek', 17]         | []              || [null, 'kek', 17]
     }
 
     def "ordered list expectation - unexpected elements"() {
@@ -223,10 +243,14 @@ class FacadeExpectationSpec extends Specification {
         )
 
         where:
-        expected | actual            || unexpectedElements
-        [1, 2]   | [1, 2, 3]         || [3]
-        []       | [1, 2, 3]         || [1, 2, 3]
-        ['beka'] | ['beka', 'czeka'] || ['czeka']
+        expected       | actual                || unexpectedElements
+        [1, 2]         | [1, 2, 3]             || [3]
+        []             | [1, 2, 3]             || [1, 2, 3]
+        ['beka']       | ['beka', 'czeka']     || ['czeka']
+        []             | [null]                || [null]
+        []             | [null, null]          || [null, null]
+        [1, 2]         | [1, 2, null]          || [null]
+        [true, 'bike'] | [true, 'bike', false] || [false]
     }
 
     def "unordered list expectation: success"() {

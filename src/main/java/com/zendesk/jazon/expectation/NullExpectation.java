@@ -37,4 +37,19 @@ class NullExpectation implements JsonExpectation {
     public JazonMatchResult match(ActualJsonBoolean actualBoolean) {
         return null;
     }
+
+    @Override
+    public int hashCode() {
+        return JsonExpectation.class.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return getClass().equals(obj.getClass());
+    }
+
+    @Override
+    public String toString() {
+        return "NullExpectation{}";
+    }
 }
