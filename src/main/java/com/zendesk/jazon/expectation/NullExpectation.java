@@ -32,4 +32,9 @@ class NullExpectation implements JsonExpectation {
     public JazonMatchResult match(ActualJsonArray actualArray) {
         return failure(new NotNullMismatch(actualArray));
     }
+
+    @Override
+    public JazonMatchResult match(ActualJsonBoolean actualBoolean) {
+        return null;
+    }
 }

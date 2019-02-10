@@ -1,11 +1,6 @@
 package com.zendesk.jazon
 
-import com.zendesk.jazon.actual.ActualJsonArray
-import com.zendesk.jazon.actual.ActualJsonNull
-import com.zendesk.jazon.actual.ActualJsonNumber
-import com.zendesk.jazon.actual.ActualJsonObject
-import com.zendesk.jazon.actual.ActualJsonString
-import com.zendesk.jazon.actual.ActualTranslators
+import com.zendesk.jazon.actual.*
 import com.zendesk.jazon.expectation.ExpectationTranslators
 import com.zendesk.jazon.mismatch.*
 import spock.lang.Specification
@@ -50,6 +45,8 @@ class FacadeExpectationSpec extends Specification {
         12345l                  | new BigDecimal("11.05")
         12345l                  | 1234567l
         'something serious'     | 'lol'
+        true                    | false
+        false                   | true
     }
 
     def "simple primitive type mismatch"() {
@@ -61,13 +58,19 @@ class FacadeExpectationSpec extends Specification {
         result.mismatch() == new TypeMismatch(mismatchExpectedType, mismatchActualType)
 
         where:
-        expected      | actual        | mismatchExpectedType   | mismatchActualType
-        [a: 123]      | [a: 'lol']    | ActualJsonNumber.class | ActualJsonString.class
-        [a: 'ww']     | [a: 88]       | ActualJsonString.class | ActualJsonNumber.class
-        [a: 123]      | [a: [bb: 10]] | ActualJsonNumber.class | ActualJsonObject.class
-        [a: 'ww']     | [a: [bb: 10]] | ActualJsonString.class | ActualJsonObject.class
-        [a: [bb: 10]] | [a: 88]       | ActualJsonObject.class | ActualJsonNumber.class
-        [a: [bb: 10]] | [a: 'lol']    | ActualJsonObject.class | ActualJsonString.class
+        expected      | actual        | mismatchExpectedType    | mismatchActualType
+        [a: 123]      | [a: 'lol']    | ActualJsonNumber.class  | ActualJsonString.class
+        [a: 123]      | [a: [bb: 10]] | ActualJsonNumber.class  | ActualJsonObject.class
+        [a: 123]      | [a: true]     | ActualJsonNumber.class  | ActualJsonBoolean.class
+        [a: 'ww']     | [a: 88]       | ActualJsonString.class  | ActualJsonNumber.class
+        [a: 'ww']     | [a: [bb: 10]] | ActualJsonString.class  | ActualJsonObject.class
+        [a: 'ww']     | [a: true]     | ActualJsonString.class  | ActualJsonBoolean.class
+        [a: [bb: 10]] | [a: 88]       | ActualJsonObject.class  | ActualJsonNumber.class
+        [a: [bb: 10]] | [a: 'lol']    | ActualJsonObject.class  | ActualJsonString.class
+        [a: [bb: 10]] | [a: true]     | ActualJsonObject.class  | ActualJsonBoolean.class
+        [a: true]     | [a: 'lol']    | ActualJsonBoolean.class | ActualJsonString.class
+        [a: true]     | [a: 88]       | ActualJsonBoolean.class | ActualJsonNumber.class
+        [a: true]     | [a: [bb: 10]] | ActualJsonBoolean.class | ActualJsonObject.class
     }
 
     def "finds null instead of primitive value"() {
@@ -198,10 +201,10 @@ class FacadeExpectationSpec extends Specification {
         )
 
         where:
-        expected                  | actual          || lackingElements
-        [1, 2, 3]                 | [1, 2]          || [3]
-        [1, 2, 'lalala']          | [1, 2]          || ['lalala']
-        [1, 2, 'lalala', 5, 6, 7] | [1, 2]          || ['lalala', 5, 6, 7]
+        expected                  | actual || lackingElements
+        [1, 2, 3]                 | [1, 2] || [3]
+        [1, 2, 'lalala']          | [1, 2] || ['lalala']
+        [1, 2, 'lalala', 5, 6, 7] | [1, 2] || ['lalala', 5, 6, 7]
 //        [1, 2, null, 5, 6, 7]     | [1, 2, null, 5] || [6, 7]
 //        [1, null]                 | [1]             || [null]
 //        [9]                       | []               | [9]

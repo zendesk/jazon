@@ -52,6 +52,11 @@ public class ObjectExpectation implements JsonExpectation {
     }
 
     @Override
+    public JazonMatchResult match(ActualJsonBoolean actualBoolean) {
+        return failure(new TypeMismatch(ActualJsonObject.class, ActualJsonBoolean.class));
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

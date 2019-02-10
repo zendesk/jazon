@@ -86,6 +86,11 @@ class UnorderedArrayExpectation implements JsonExpectation {
     }
 
     @Override
+    public JazonMatchResult match(ActualJsonBoolean actualBoolean) {
+        return null;
+    }
+
+    @Override
     public String toString() {
         return "UnorderedArrayExpectation{" +
                 "expectationSet=" + expectationSet +

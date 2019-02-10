@@ -9,4 +9,5 @@ public interface JsonExpectation {
     JazonMatchResult match(ActualJsonString actualString);
     JazonMatchResult match(ActualJsonNull actualNull);
     JazonMatchResult match(ActualJsonArray actualArray);
+    JazonMatchResult match(ActualJsonBoolean actualBoolean);
 }

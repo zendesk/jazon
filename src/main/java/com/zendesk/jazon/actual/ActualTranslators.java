@@ -35,6 +35,8 @@ public final class ActualTranslators {
             return new ActualJsonNull();
         } else if (object instanceof List) {
             return actualArray((List<Object>) object);
+        } else if (object instanceof Boolean) {
+            return new ActualJsonBoolean((Boolean) object);
         }
         throw new IllegalArgumentException();
     }

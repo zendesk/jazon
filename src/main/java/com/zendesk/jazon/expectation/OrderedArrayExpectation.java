@@ -69,6 +69,11 @@ class OrderedArrayExpectation implements JsonExpectation {
         return success();
     }
 
+    @Override
+    public JazonMatchResult match(ActualJsonBoolean actualBoolean) {
+        return null;
+    }
+
     private <T> List<T> remainingItems(Iterator<T> iterator) {
         ArrayList<T> result = new ArrayList<>();
         Iterators.addAll(result, iterator);

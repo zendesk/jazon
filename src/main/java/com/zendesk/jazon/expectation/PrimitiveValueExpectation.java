@@ -45,6 +45,11 @@ class PrimitiveValueExpectation<T> implements JsonExpectation {
         return failure(new TypeMismatch(expectedJsonType, ActualJsonArray.class));
     }
 
+    @Override
+    public JazonMatchResult match(ActualJsonBoolean actualBoolean) {
+        return matchPrimitive(actualBoolean.value(), ActualJsonBoolean.class);
+    }
+
     private <ActualType extends Actual> JazonMatchResult matchPrimitive(Object actualValue, Class<ActualType> actualTypeClass) {
         if (actualTypeClass != expectedJsonType) {
             return failure(new TypeMismatch(expectedJsonType, actualTypeClass));
