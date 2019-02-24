@@ -1,11 +1,10 @@
-package com.getbase.jazon
+package com.zendesk.jazon
 
-import spock.lang.Ignore
+import spock.lang.FailsWith
 import spock.lang.Specification
 
 import static com.zendesk.jazon.spock.JazonSpockAdapter.jazon
 
-@Ignore
 class ExampleSpec extends Specification {
 
     def "smoke test"() {
@@ -13,6 +12,7 @@ class ExampleSpec extends Specification {
         jazon('{"wegorz": "elektryczny"}').matches([wegorz: 'elektryczny'])
     }
 
+    @FailsWith(AssertionError)
     def "failure format test"() {
         expect:
         jazon('{"wegorz": "elektryczny", "ryba": "pila"}').matches([wegorz: 'elektryczny'])
