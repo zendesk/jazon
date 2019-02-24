@@ -1,17 +1,25 @@
 package com.zendesk.jazon
 
 import com.zendesk.jazon.actual.*
-import com.zendesk.jazon.expectation.ExpectationTranslators
+import com.zendesk.jazon.expectation.DefaultExpectationFactory
+import com.zendesk.jazon.expectation.ExpectationFactory
 import com.zendesk.jazon.mismatch.*
 import spock.lang.Specification
 import spock.lang.Unroll
 
 class FacadeExpectationSpec extends Specification {
 
+    ActualFactory actualFactory = new DefaultActualFactory()
+    ExpectationFactory expectationFactory = new DefaultExpectationFactory()
+    FacadeExpectationFactory facadeExpectationFactory = new FacadeExpectationFactory(
+            expectationFactory,
+            actualFactory
+    )
+
     @Unroll
     def "primitive value mismatch (expected: #expected, actual: #actual)"() {
         when:
-        def result = new FacadeExpectation([a: expected]).match([a: actual])
+        def result = match([a: expected], [a: actual])
 
         then:
         !result.ok()
@@ -51,7 +59,7 @@ class FacadeExpectationSpec extends Specification {
 
     def "simple primitive type mismatch"() {
         when:
-        def result = new FacadeExpectation(expected).match(actual)
+        def result = match(expected, actual)
 
         then:
         !result.ok()
@@ -87,7 +95,7 @@ class FacadeExpectationSpec extends Specification {
 
     def "finds null instead of primitive value"() {
         when:
-        def result = new FacadeExpectation([a: expected]).match([a: null])
+        def result = match([a: expected], [a: null])
 
         then:
         !result.ok()
@@ -117,7 +125,7 @@ class FacadeExpectationSpec extends Specification {
         ]
 
         when:
-        def result = new FacadeExpectation(expected).match(actual)
+        def result = match(expected, actual)
 
         then:
         !result.ok()
@@ -141,7 +149,7 @@ class FacadeExpectationSpec extends Specification {
         ]
 
         when:
-        def result = new FacadeExpectation(expected).match(actual)
+        def result = match(expected, actual)
 
         then:
         !result.ok()
@@ -168,7 +176,7 @@ class FacadeExpectationSpec extends Specification {
         ]
 
         when:
-        def result = new FacadeExpectation(expected).match(actual)
+        def result = match(expected, actual)
 
         then:
         !result.ok()
@@ -192,7 +200,7 @@ class FacadeExpectationSpec extends Specification {
     @Unroll
     def "ordered list expectation - exact element mismatch"() {
         when:
-        def result = new FacadeExpectation([a: expected]).match([a: actual])
+        def result = match([a: expected], [a: actual])
 
         then:
         !result.ok()
@@ -212,12 +220,12 @@ class FacadeExpectationSpec extends Specification {
     @Unroll
     def "ordered list expectation - lacking elements (expected: #expected, actual: #actual)"() {
         when:
-        def result = new FacadeExpectation([a: expected]).match([a: actual])
+        def result = match([a: expected], [a: actual])
 
         then:
         !result.ok()
         result.mismatch() == new ArrayLackingElementsMismatch(
-                lackingElements.collect(ExpectationTranslators.&expectation)
+                lackingElements.collect(expectationFactory.&expectation)
         )
 
         where:
@@ -234,12 +242,12 @@ class FacadeExpectationSpec extends Specification {
 
     def "ordered list expectation - unexpected elements"() {
         when:
-        def result = new FacadeExpectation([a: expected]).match([a: actual])
+        def result = match([a: expected], [a: actual])
 
         then:
         !result.ok()
         result.mismatch() == new ArrayUnexpectedElementsMismatch(
-                unexpectedElements.collect(ActualTranslators.&actual)
+                unexpectedElements.collect(actualFactory.&actual)
         )
 
         where:
@@ -255,7 +263,7 @@ class FacadeExpectationSpec extends Specification {
 
     def "unordered list expectation: success"() {
         when:
-        def result = new FacadeExpectation([a: expected]).match([a: actual])
+        def result = match([a: expected], [a: actual])
 
         then:
         result.ok()
@@ -271,12 +279,12 @@ class FacadeExpectationSpec extends Specification {
     @Unroll
     def "unordered list expectation: lacking elements (actual: #actual)"() {
         when:
-        def result = new FacadeExpectation([a: expected]).match([a: actual])
+        def result = match([a: expected], [a: actual])
 
         then:
         !result.ok()
         result.mismatch() == new ArrayLackingElementsMismatch(
-                lackingElements.collect(ExpectationTranslators.&expectation)
+                lackingElements.collect(expectationFactory.&expectation)
         )
 
         where:
@@ -292,12 +300,12 @@ class FacadeExpectationSpec extends Specification {
 
     def "unordered list expectation: unexpected elements"() {
         when:
-        def result = new FacadeExpectation([a: expected]).match([a: actual])
+        def result = match([a: expected], [a: actual])
 
         then:
         !result.ok()
         result.mismatch() == new ArrayUnexpectedElementsMismatch(
-                unexpectedElements.collect(ActualTranslators.&actual)
+                unexpectedElements.collect(actualFactory.&actual)
         )
 
         where:
@@ -316,7 +324,7 @@ class FacadeExpectationSpec extends Specification {
         def theWholeExpectation = [a: unorderedArrayExpectationWrapping]
 
         when:
-        new FacadeExpectation(theWholeExpectation)
+        expectationFactory.expectation(theWholeExpectation)
 
         then:
         thrown(IllegalStateException)
@@ -324,11 +332,11 @@ class FacadeExpectationSpec extends Specification {
 
     def "null expectation: fails for any present value"() {
         when:
-        def result = new FacadeExpectation([a: null]).match([a: actual])
+        def result = match([a: null], [a: actual])
 
         then:
         !result.ok()
-        result.mismatch() == new NotNullMismatch(ActualTranslators.actual(actual))
+        result.mismatch() == new NotNullMismatch(actualFactory.actual(actual))
 
         where:
         actual << [
@@ -345,9 +353,14 @@ class FacadeExpectationSpec extends Specification {
 
     def "null expectation: succeeds for null"() {
         when:
-        def result = new FacadeExpectation([a: null]).match([a: null])
+        def result = match([a: null], [a: null])
 
         then:
         result.ok()
+    }
+
+    JazonMatchResult match(Map expected, Map actual) {
+        def facadeExpectation = facadeExpectationFactory.facadeExpectation(expected)
+        facadeExpectation.match(actual)
     }
 }

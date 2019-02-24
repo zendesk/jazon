@@ -5,14 +5,14 @@ import com.zendesk.jazon.actual.ActualJsonString
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import static com.zendesk.jazon.expectation.ExpectationTranslators.objectExpectation
-
 class ExpectationTranslatorsSpec extends Specification {
+
+    ExpectationFactory factory = new DefaultExpectationFactory()
 
     @Unroll
     def "simple object from #inputMap"() {
         when:
-        ObjectExpectation expectation = objectExpectation(inputMap)
+        ObjectExpectation expectation = factory.expectation(inputMap)
 
         then:
         expectation == expectedOutput

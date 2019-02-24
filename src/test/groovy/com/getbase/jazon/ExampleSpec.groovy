@@ -1,11 +1,11 @@
 package com.getbase.jazon
 
-import spock.lang.Ignore
+
 import spock.lang.Specification
 
 import static com.zendesk.jazon.spock.JazonSpockAdapter.jazon
 
-@Ignore
+//@Ignore
 class ExampleSpec extends Specification {
 
     def "smoke test"() {
@@ -16,5 +16,13 @@ class ExampleSpec extends Specification {
     def "failure format test"() {
         expect:
         jazon('{"wegorz": "elektryczny", "ryba": "pila"}').matches([wegorz: 'elektryczny'])
+    }
+
+    def "predicate expectation test"() {
+        expect:
+        jazon('{"wegorz": "elektryczny"}').matches(
+                [wegorz: { it.startsWith('ele') }]
+        )
+        // Predicate<T>, should not accept JSON Object
     }
 }

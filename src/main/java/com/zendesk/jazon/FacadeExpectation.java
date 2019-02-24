@@ -1,31 +1,29 @@
 package com.zendesk.jazon;
 
-import com.zendesk.jazon.actual.ActualJsonObject;
+import com.zendesk.jazon.actual.Actual;
+import com.zendesk.jazon.actual.ActualFactory;
 import com.zendesk.jazon.expectation.ObjectExpectation;
 import groovy.json.JsonSlurper;
 
 import java.util.Map;
 
-import static com.zendesk.jazon.actual.ActualTranslators.actualObject;
-import static com.zendesk.jazon.expectation.ExpectationTranslators.objectExpectation;
-
 public class FacadeExpectation {
     private final ObjectExpectation objectExpectation;
+    private final ActualFactory actualFactory;
 
-    public FacadeExpectation(Map<String, Object> expectationMap) {
-        this.objectExpectation = objectExpectation(expectationMap);
+    public FacadeExpectation(ObjectExpectation objectExpectation, ActualFactory actualFactory) {
+        this.objectExpectation = objectExpectation;
+        this.actualFactory = actualFactory;
     }
 
     public JazonMatchResult match(String jsonAsString) {
         Object parsed = new JsonSlurper().parse(jsonAsString.getBytes());
-        // here is "what is actual" responsibility
-        ActualJsonObject actualJsonObject = actualObject((Map<String, Object>) parsed);
-        return objectExpectation.match(actualJsonObject);
+        Actual actual = actualFactory.actual(parsed);
+        return actual.accept(objectExpectation);
     }
 
     public JazonMatchResult match(Map<String, Object> jsonAsMap) {
-        // here is "what is actual" responsibility
-        ActualJsonObject actualJsonObject = actualObject(jsonAsMap);
-        return objectExpectation.match(actualJsonObject);
+        Actual actual = actualFactory.actual(jsonAsMap);
+        return actual.accept(objectExpectation);
     }
 }
