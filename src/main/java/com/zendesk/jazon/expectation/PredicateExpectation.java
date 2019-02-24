@@ -6,6 +6,7 @@ import com.zendesk.jazon.mismatch.PredicateMismatch;
 
 import java.util.function.Predicate;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.zendesk.jazon.JazonMatchResult.failure;
 import static com.zendesk.jazon.JazonMatchResult.success;
 
@@ -13,7 +14,7 @@ class PredicateExpectation implements JsonExpectation {
     private final Predicate<Object> predicate;
 
     PredicateExpectation(Predicate<Object> predicate) {
-        this.predicate = predicate;
+        this.predicate = checkNotNull(predicate);
     }
 
     @Override

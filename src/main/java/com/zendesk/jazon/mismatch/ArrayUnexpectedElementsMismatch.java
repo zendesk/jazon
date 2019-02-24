@@ -5,11 +5,13 @@ import com.zendesk.jazon.actual.Actual;
 import java.util.List;
 import java.util.Objects;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class ArrayUnexpectedElementsMismatch implements JsonMismatch {
     private final List<Actual> unexpectedElements;
 
     public ArrayUnexpectedElementsMismatch(List<Actual> unexpectedElements) {
-        this.unexpectedElements = unexpectedElements;
+        this.unexpectedElements = checkNotNull(unexpectedElements);
     }
 
     @Override

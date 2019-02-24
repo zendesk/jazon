@@ -2,13 +2,15 @@ package com.zendesk.jazon.mismatch;
 
 import java.util.Objects;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class PrimitiveValueMismatch<T> implements JsonMismatch {
     private final T expected;
     private final T actual;
 
     public PrimitiveValueMismatch(T expected, T actual) {
-        this.expected = expected;
-        this.actual = actual;
+        this.expected = checkNotNull(expected);
+        this.actual = checkNotNull(actual);
     }
 
     @Override

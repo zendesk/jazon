@@ -2,13 +2,15 @@ package com.zendesk.jazon.mismatch;
 
 import java.util.Objects;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class ArrayElementMismatch implements JsonMismatch {
     private final int elementIndex;
     private final JsonMismatch elementMismatch;
 
     public ArrayElementMismatch(int elementIndex, JsonMismatch elementMismatch) {
         this.elementIndex = elementIndex;
-        this.elementMismatch = elementMismatch;
+        this.elementMismatch = checkNotNull(elementMismatch);
     }
 
     @Override

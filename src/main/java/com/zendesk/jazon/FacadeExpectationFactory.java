@@ -7,13 +7,15 @@ import com.zendesk.jazon.expectation.ObjectExpectation;
 
 import java.util.Map;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class FacadeExpectationFactory {
     private final ExpectationFactory expectationFactory;
     private final ActualFactory actualFactory;
 
     public FacadeExpectationFactory(ExpectationFactory expectationFactory, ActualFactory actualFactory) {
-        this.expectationFactory = expectationFactory;
-        this.actualFactory = actualFactory;
+        this.expectationFactory = checkNotNull(expectationFactory);
+        this.actualFactory = checkNotNull(actualFactory);
     }
 
     public FacadeExpectation facadeExpectation(Map<String, Object> expectationMap) {

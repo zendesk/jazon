@@ -8,6 +8,7 @@ import com.zendesk.jazon.mismatch.TypeMismatch;
 
 import java.util.Objects;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.zendesk.jazon.JazonMatchResult.failure;
 import static com.zendesk.jazon.JazonMatchResult.success;
 
@@ -16,8 +17,8 @@ class PrimitiveValueExpectation<T> implements JsonExpectation {
     private final Class<? extends Actual> expectedJsonType;
 
     PrimitiveValueExpectation(T expectedValue, Class<? extends Actual> expectedJsonType) {
-        this.expectedValue = expectedValue;
-        this.expectedJsonType = expectedJsonType;
+        this.expectedValue = checkNotNull(expectedValue);
+        this.expectedJsonType = checkNotNull(expectedJsonType);
     }
 
     @Override

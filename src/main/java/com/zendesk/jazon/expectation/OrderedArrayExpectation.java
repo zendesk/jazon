@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.zendesk.jazon.JazonMatchResult.failure;
 import static com.zendesk.jazon.JazonMatchResult.success;
 
@@ -17,7 +18,7 @@ class OrderedArrayExpectation implements JsonExpectation {
     private final List<JsonExpectation> expectationList;
 
     OrderedArrayExpectation(List<JsonExpectation> expectationList) {
-        this.expectationList = expectationList;
+        this.expectationList = checkNotNull(expectationList);
     }
 
     @Override

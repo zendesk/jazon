@@ -5,6 +5,7 @@ import com.zendesk.jazon.actual.Actual;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.Optional.empty;
 
 public class NullMismatch<T> implements JsonMismatch {
@@ -20,8 +21,8 @@ public class NullMismatch<T> implements JsonMismatch {
     }
 
     private NullMismatch(Class<? extends Actual> expectedType, Optional<T> expectedValue) {
-        this.expectedType = expectedType;
-        this.expectedValue = expectedValue;
+        this.expectedType = checkNotNull(expectedType);
+        this.expectedValue = checkNotNull(expectedValue);
     }
 
     @Override

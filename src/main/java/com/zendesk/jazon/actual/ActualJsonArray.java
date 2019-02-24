@@ -6,13 +6,14 @@ import com.zendesk.jazon.expectation.JsonExpectation;
 import java.util.List;
 import java.util.Objects;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.Collections.unmodifiableList;
 
 public class ActualJsonArray implements Actual {
     private final List<Actual> list;
 
     ActualJsonArray(List<Actual> list) {
-        this.list = list;
+        this.list = checkNotNull(list);
     }
 
     public List<Actual> list() {

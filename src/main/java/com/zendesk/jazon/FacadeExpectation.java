@@ -7,13 +7,15 @@ import groovy.json.JsonSlurper;
 
 import java.util.Map;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class FacadeExpectation {
     private final ObjectExpectation objectExpectation;
     private final ActualFactory actualFactory;
 
     public FacadeExpectation(ObjectExpectation objectExpectation, ActualFactory actualFactory) {
-        this.objectExpectation = objectExpectation;
-        this.actualFactory = actualFactory;
+        this.objectExpectation = checkNotNull(objectExpectation);
+        this.actualFactory = checkNotNull(actualFactory);
     }
 
     public JazonMatchResult match(String jsonAsString) {

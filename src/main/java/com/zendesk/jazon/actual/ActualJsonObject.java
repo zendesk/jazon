@@ -8,11 +8,13 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class ActualJsonObject implements Actual {
     private final Map<String, Actual> map;
 
     ActualJsonObject(Map<String, Actual> map) {
-        this.map = map;
+        this.map = checkNotNull(map);
     }
 
     public Optional<Actual> actualField(String fieldName) {

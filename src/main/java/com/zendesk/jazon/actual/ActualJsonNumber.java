@@ -5,11 +5,13 @@ import com.zendesk.jazon.expectation.JsonExpectation;
 
 import java.util.Objects;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class ActualJsonNumber implements Actual {
     private final Number number;
 
     ActualJsonNumber(Number number) {
-        this.number = number;
+        this.number = checkNotNull(number);
     }
 
     public Number number() {

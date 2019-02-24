@@ -4,13 +4,15 @@ import com.zendesk.jazon.actual.Actual;
 
 import java.util.Objects;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class TypeMismatch implements JsonMismatch {
     private final Class<? extends Actual> expectedType;
     private final Class<? extends Actual> actualType;
 
     public TypeMismatch(Class<? extends Actual> expectedType, Class<? extends Actual> actualType) {
-        this.expectedType = expectedType;
-        this.actualType = actualType;
+        this.expectedType = checkNotNull(expectedType);
+        this.actualType = checkNotNull(actualType);
     }
 
     @Override

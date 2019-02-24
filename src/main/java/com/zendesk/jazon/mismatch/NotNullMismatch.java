@@ -4,11 +4,13 @@ import com.zendesk.jazon.actual.Actual;
 
 import java.util.Objects;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class NotNullMismatch implements JsonMismatch {
     private final Actual actual;
 
     public NotNullMismatch(Actual actual) {
-        this.actual = actual;
+        this.actual = checkNotNull(actual);
     }
 
     @Override

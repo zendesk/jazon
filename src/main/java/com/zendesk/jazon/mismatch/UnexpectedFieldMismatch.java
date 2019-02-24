@@ -4,11 +4,13 @@ import com.zendesk.jazon.actual.Actual;
 
 import java.util.Objects;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class UnexpectedFieldMismatch<T> implements JsonMismatch {
     private final Class<? extends Actual> actualType;
 
     public UnexpectedFieldMismatch(Class<? extends Actual> actualType) {
-        this.actualType = actualType;
+        this.actualType = checkNotNull(actualType);
     }
 
     @Override

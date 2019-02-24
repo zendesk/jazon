@@ -12,6 +12,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Sets.difference;
 import static com.zendesk.jazon.JazonMatchResult.failure;
 
@@ -19,7 +20,7 @@ public class ObjectExpectation implements JsonExpectation {
     private final Map<String, JsonExpectation> expectationMap;
 
     public ObjectExpectation(Map<String, JsonExpectation> expectationMap) {
-        this.expectationMap = expectationMap;
+        this.expectationMap = checkNotNull(expectationMap);
     }
 
     @Override
