@@ -6,7 +6,7 @@ import java.util.Map;
 import static com.zendesk.jazon.actual.ActualFactory.actualArray;
 import static com.zendesk.jazon.actual.ActualFactory.actualObject;
 
-class DefaultActualFactory implements ActualFactory {
+public class DefaultActualFactory implements ActualFactory {
 
     @Override
     public Actual actual(Object object) {

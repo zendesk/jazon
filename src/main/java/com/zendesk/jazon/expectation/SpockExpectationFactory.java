@@ -11,7 +11,7 @@ import java.util.Set;
 
 import static com.zendesk.jazon.expectation.ExpectationFactory.*;
 
-class SpockExpectationFactory implements ExpectationFactory {
+public class SpockExpectationFactory implements ExpectationFactory {
 
     @Override
     public JsonExpectation expectation(Object object) {

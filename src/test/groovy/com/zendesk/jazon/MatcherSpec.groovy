@@ -7,11 +7,11 @@ import com.zendesk.jazon.mismatch.*
 import spock.lang.Specification
 import spock.lang.Unroll
 
-class FacadeExpectationSpec extends Specification {
+class MatcherSpec extends Specification {
 
     ActualFactory actualFactory = new DefaultActualFactory()
     ExpectationFactory expectationFactory = new DefaultExpectationFactory()
-    FacadeExpectationFactory facadeExpectationFactory = new FacadeExpectationFactory(
+    MatcherFactory matcherFactory = new MatcherFactory(
             expectationFactory,
             actualFactory
     )
@@ -364,7 +364,9 @@ class FacadeExpectationSpec extends Specification {
     }
 
     JazonMatchResult match(Map expected, Map actual) {
-        def facadeExpectation = facadeExpectationFactory.facadeExpectation(expected)
-        facadeExpectation.match(actual)
+        matcherFactory.matcher()
+                .expected(expected)
+                .actual(actual)
+                .match()
     }
 }

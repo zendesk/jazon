@@ -10,7 +10,7 @@ import java.util.Set;
 
 import static com.zendesk.jazon.expectation.ExpectationFactory.*;
 
-class DefaultExpectationFactory implements ExpectationFactory {
+public class DefaultExpectationFactory implements ExpectationFactory {
 
     @Override
     public JsonExpectation expectation(Object object) {

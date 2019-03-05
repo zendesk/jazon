@@ -4,9 +4,9 @@ import com.zendesk.jazon.actual.DefaultActualFactory
 import com.zendesk.jazon.expectation.SpockExpectationFactory
 import spock.lang.Specification
 
-class FacadeExpectationForGroovySpec extends Specification {
+class MatcherForGroovySpec extends Specification {
 
-    FacadeExpectationFactory facadeExpectationFactory = new FacadeExpectationFactory(
+    MatcherFactory matcherFactory = new MatcherFactory(
             new SpockExpectationFactory(),
             new DefaultActualFactory()
     )
@@ -14,10 +14,12 @@ class FacadeExpectationForGroovySpec extends Specification {
     def "predicate expectation: succeeds"() {
         given:
         Closure closure = { it ==~ "dig.*" }
-        def expectation = facadeExpectationFactory.facadeExpectation([a: closure])
 
         when:
-        def result = expectation.match([a: stringToMatch])
+        def result = matcherFactory.matcher()
+                .expected([a: closure])
+                .actual([a: stringToMatch])
+                .match()
 
         then:
         result.ok()

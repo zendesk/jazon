@@ -1,12 +1,11 @@
 package com.zendesk.jazon.spock
 
-
-import com.zendesk.jazon.FacadeExpectationFactory
+import com.zendesk.jazon.MatcherFactory
 import com.zendesk.jazon.actual.DefaultActualFactory
 import com.zendesk.jazon.expectation.SpockExpectationFactory
 
 class JazonSpockAdapter {
-    FacadeExpectationFactory facadeExpectationFactory = new FacadeExpectationFactory(
+    MatcherFactory matcherFactory = new MatcherFactory(
             new SpockExpectationFactory(),
             new DefaultActualFactory()
     )
@@ -17,8 +16,10 @@ class JazonSpockAdapter {
     }
 
     boolean matches(Map jsonAsMap) {
-        def facadeExpectation = facadeExpectationFactory.facadeExpectation(jsonAsMap)
-        def matchResult = facadeExpectation.match(json)
+        def matchResult = matcherFactory.matcher()
+                .expected(jsonAsMap)
+                .actual(json)
+                .match();
         if (matchResult.ok()) {
             return true
         }
