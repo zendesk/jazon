@@ -1,7 +1,7 @@
 package com.zendesk.jazon.expectation;
 
 import com.google.common.collect.ImmutableSet;
-import com.zendesk.jazon.JazonMatchResult;
+import com.zendesk.jazon.MatchResult;
 import com.zendesk.jazon.actual.*;
 import com.zendesk.jazon.mismatch.ArrayLackingElementsMismatch;
 import com.zendesk.jazon.mismatch.ArrayUnexpectedElementsMismatch;
@@ -15,8 +15,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkState;
-import static com.zendesk.jazon.JazonMatchResult.failure;
-import static com.zendesk.jazon.JazonMatchResult.success;
+import static com.zendesk.jazon.MatchResult.failure;
+import static com.zendesk.jazon.MatchResult.success;
 
 /**
  * FIXME:
@@ -43,34 +43,34 @@ class UnorderedArrayExpectation implements JsonExpectation {
     }
 
     @Override
-    public JazonMatchResult match(ActualJsonNumber actualNumber) {
+    public MatchResult match(ActualJsonNumber actualNumber) {
         return failure(typeMismatch(ActualJsonNumber.class));
     }
 
     @Override
-    public JazonMatchResult match(ActualJsonObject actualObject) {
+    public MatchResult match(ActualJsonObject actualObject) {
         return failure(typeMismatch(ActualJsonObject.class));
     }
 
     @Override
-    public JazonMatchResult match(ActualJsonString actualString) {
+    public MatchResult match(ActualJsonString actualString) {
         return failure(typeMismatch(ActualJsonString.class));
     }
 
     @Override
-    public JazonMatchResult match(ActualJsonNull actualNull) {
+    public MatchResult match(ActualJsonNull actualNull) {
         return failure(new NullMismatch<>(ActualJsonArray.class));
     }
 
     @Override
-    public JazonMatchResult match(ActualJsonArray actualArray) {
+    public MatchResult match(ActualJsonArray actualArray) {
         Set<JsonExpectation> stillExpected = new HashSet<>(expectationSet);
         ArrayList<Actual> actualList = new ArrayList<>(actualArray.list());
 
         for (JsonExpectation expectation : expectationSet) {
             for (int actualIndex = 0; actualIndex < actualList.size(); actualIndex++) {
                 Actual actual = actualList.get(actualIndex);
-                JazonMatchResult result = actual.accept(expectation);
+                MatchResult result = actual.accept(expectation);
                 if (result.ok()) {
                     actualList.remove(actual);
                     stillExpected.remove(expectation);
@@ -89,7 +89,7 @@ class UnorderedArrayExpectation implements JsonExpectation {
     }
 
     @Override
-    public JazonMatchResult match(ActualJsonBoolean actualBoolean) {
+    public MatchResult match(ActualJsonBoolean actualBoolean) {
         return null;
     }
 

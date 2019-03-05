@@ -363,7 +363,7 @@ class MatcherSpec extends Specification {
         result.ok()
     }
 
-    JazonMatchResult match(Map expected, Map actual) {
+    MatchResult match(Map expected, Map actual) {
         matcherFactory.matcher()
                 .expected(expected)
                 .actual(actual)

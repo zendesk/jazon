@@ -1,6 +1,6 @@
 package com.zendesk.jazon.expectation;
 
-import com.zendesk.jazon.JazonMatchResult;
+import com.zendesk.jazon.MatchResult;
 import com.zendesk.jazon.actual.*;
 import com.zendesk.jazon.mismatch.JsonMismatch;
 import com.zendesk.jazon.mismatch.NullMismatch;
@@ -15,7 +15,7 @@ import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Sets.difference;
-import static com.zendesk.jazon.JazonMatchResult.failure;
+import static com.zendesk.jazon.MatchResult.failure;
 
 @ToString
 @EqualsAndHashCode
@@ -27,36 +27,36 @@ public class ObjectExpectation implements JsonExpectation {
     }
 
     @Override
-    public JazonMatchResult match(ActualJsonNumber actualNumber) {
+    public MatchResult match(ActualJsonNumber actualNumber) {
         return failure(new TypeMismatch(ActualJsonObject.class, ActualJsonNumber.class));
     }
 
     @Override
-    public JazonMatchResult match(ActualJsonObject actualObject) {
+    public MatchResult match(ActualJsonObject actualObject) {
         Optional<JsonMismatch> mismatchFromExpectedFields = mismatchFromExpectedFields(actualObject);
         Optional<JsonMismatch> mismatchFromUnexpected = mismatchFromUnexpected(actualObject);
         return firstOf(mismatchFromExpectedFields, mismatchFromUnexpected)
-                .map(JazonMatchResult::failure)
-                .orElseGet(JazonMatchResult::success);
+                .map(MatchResult::failure)
+                .orElseGet(MatchResult::success);
     }
 
     @Override
-    public JazonMatchResult match(ActualJsonString actualString) {
+    public MatchResult match(ActualJsonString actualString) {
         return failure(new TypeMismatch(ActualJsonObject.class, ActualJsonString.class));
     }
 
     @Override
-    public JazonMatchResult match(ActualJsonNull actualNull) {
+    public MatchResult match(ActualJsonNull actualNull) {
         return failure(new NullMismatch<>(ActualJsonObject.class));
     }
 
     @Override
-    public JazonMatchResult match(ActualJsonArray actualArray) {
+    public MatchResult match(ActualJsonArray actualArray) {
         return failure(new TypeMismatch(ActualJsonObject.class, ActualJsonArray.class));
     }
 
     @Override
-    public JazonMatchResult match(ActualJsonBoolean actualBoolean) {
+    public MatchResult match(ActualJsonBoolean actualBoolean) {
         return failure(new TypeMismatch(ActualJsonObject.class, ActualJsonBoolean.class));
     }
 
@@ -68,7 +68,7 @@ public class ObjectExpectation implements JsonExpectation {
                                 .accept(e.getValue())
                 )
                 .filter(matchResult -> !matchResult.ok())
-                .map(JazonMatchResult::mismatch)
+                .map(MatchResult::mismatch)
                 .findFirst();
     }
 

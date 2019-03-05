@@ -1,44 +1,44 @@
 package com.zendesk.jazon.expectation;
 
-import com.zendesk.jazon.JazonMatchResult;
+import com.zendesk.jazon.MatchResult;
 import com.zendesk.jazon.actual.*;
 import com.zendesk.jazon.mismatch.NotNullMismatch;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import static com.zendesk.jazon.JazonMatchResult.failure;
-import static com.zendesk.jazon.JazonMatchResult.success;
+import static com.zendesk.jazon.MatchResult.failure;
+import static com.zendesk.jazon.MatchResult.success;
 
 @ToString
 @EqualsAndHashCode
 class NullExpectation implements JsonExpectation {
     @Override
-    public JazonMatchResult match(ActualJsonNumber actualNumber) {
+    public MatchResult match(ActualJsonNumber actualNumber) {
         return failure(new NotNullMismatch(actualNumber));
     }
 
     @Override
-    public JazonMatchResult match(ActualJsonObject actualObject) {
+    public MatchResult match(ActualJsonObject actualObject) {
         return failure(new NotNullMismatch(actualObject));
     }
 
     @Override
-    public JazonMatchResult match(ActualJsonString actualString) {
+    public MatchResult match(ActualJsonString actualString) {
         return failure(new NotNullMismatch(actualString));
     }
 
     @Override
-    public JazonMatchResult match(ActualJsonNull actualNull) {
+    public MatchResult match(ActualJsonNull actualNull) {
         return success();
     }
 
     @Override
-    public JazonMatchResult match(ActualJsonArray actualArray) {
+    public MatchResult match(ActualJsonArray actualArray) {
         return failure(new NotNullMismatch(actualArray));
     }
 
     @Override
-    public JazonMatchResult match(ActualJsonBoolean actualBoolean) {
+    public MatchResult match(ActualJsonBoolean actualBoolean) {
         return null;
     }
 }

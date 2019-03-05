@@ -21,7 +21,7 @@ public class Matcher {
         this.actualFactory = actualFactory;
     }
 
-    public JazonMatchResult match() {
+    public MatchResult match() {
         return actual.accept(expectation);
     }
 

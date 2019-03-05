@@ -7,18 +7,18 @@ import java.util.Optional;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
-public class JazonMatchResult {
+public class MatchResult {
     private final Optional<JsonMismatch> mismatch;
 
-    public static JazonMatchResult success() {
-        return new JazonMatchResult(empty());
+    public static MatchResult success() {
+        return new MatchResult(empty());
     }
 
-    public static JazonMatchResult failure(JsonMismatch mismatch) {
-        return new JazonMatchResult(of(mismatch));
+    public static MatchResult failure(JsonMismatch mismatch) {
+        return new MatchResult(of(mismatch));
     }
 
-    private JazonMatchResult(Optional<JsonMismatch> mismatch) {
+    private MatchResult(Optional<JsonMismatch> mismatch) {
         this.mismatch = mismatch;
     }
 

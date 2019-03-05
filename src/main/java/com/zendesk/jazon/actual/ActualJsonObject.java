@@ -1,6 +1,6 @@
 package com.zendesk.jazon.actual;
 
-import com.zendesk.jazon.JazonMatchResult;
+import com.zendesk.jazon.MatchResult;
 import com.zendesk.jazon.expectation.JsonExpectation;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -37,7 +37,7 @@ public class ActualJsonObject implements Actual {
     }
 
     @Override
-    public JazonMatchResult accept(JsonExpectation expectation) {
+    public MatchResult accept(JsonExpectation expectation) {
         return expectation.match(this);
     }
 }

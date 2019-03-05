@@ -1,6 +1,6 @@
 package com.zendesk.jazon.expectation;
 
-import com.zendesk.jazon.JazonMatchResult;
+import com.zendesk.jazon.MatchResult;
 import com.zendesk.jazon.actual.*;
 import com.zendesk.jazon.mismatch.NullMismatch;
 import com.zendesk.jazon.mismatch.PrimitiveValueMismatch;
@@ -9,8 +9,8 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.zendesk.jazon.JazonMatchResult.failure;
-import static com.zendesk.jazon.JazonMatchResult.success;
+import static com.zendesk.jazon.MatchResult.failure;
+import static com.zendesk.jazon.MatchResult.success;
 
 @ToString
 @EqualsAndHashCode
@@ -24,36 +24,36 @@ class PrimitiveValueExpectation<T> implements JsonExpectation {
     }
 
     @Override
-    public JazonMatchResult match(ActualJsonNumber actualNumber) {
+    public MatchResult match(ActualJsonNumber actualNumber) {
         return matchPrimitive(actualNumber.number(), ActualJsonNumber.class);
     }
 
     @Override
-    public JazonMatchResult match(ActualJsonObject actualObject) {
+    public MatchResult match(ActualJsonObject actualObject) {
         return failure(new TypeMismatch(expectedJsonType, ActualJsonObject.class));
     }
 
     @Override
-    public JazonMatchResult match(ActualJsonString actualString) {
+    public MatchResult match(ActualJsonString actualString) {
         return matchPrimitive(actualString.string(), ActualJsonString.class);
     }
 
     @Override
-    public JazonMatchResult match(ActualJsonNull actualNull) {
+    public MatchResult match(ActualJsonNull actualNull) {
         return failure(new NullMismatch<>(expectedJsonType, expectedValue));
     }
 
     @Override
-    public JazonMatchResult match(ActualJsonArray actualArray) {
+    public MatchResult match(ActualJsonArray actualArray) {
         return failure(new TypeMismatch(expectedJsonType, ActualJsonArray.class));
     }
 
     @Override
-    public JazonMatchResult match(ActualJsonBoolean actualBoolean) {
+    public MatchResult match(ActualJsonBoolean actualBoolean) {
         return matchPrimitive(actualBoolean.value(), ActualJsonBoolean.class);
     }
 
-    private <ActualType extends Actual> JazonMatchResult matchPrimitive(Object actualValue, Class<ActualType> actualTypeClass) {
+    private <ActualType extends Actual> MatchResult matchPrimitive(Object actualValue, Class<ActualType> actualTypeClass) {
         if (actualTypeClass != expectedJsonType) {
             return failure(new TypeMismatch(expectedJsonType, actualTypeClass));
         }

@@ -1,7 +1,7 @@
 package com.zendesk.jazon.expectation;
 
 import com.google.common.collect.Iterators;
-import com.zendesk.jazon.JazonMatchResult;
+import com.zendesk.jazon.MatchResult;
 import com.zendesk.jazon.actual.*;
 import com.zendesk.jazon.mismatch.*;
 import lombok.EqualsAndHashCode;
@@ -12,8 +12,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.zendesk.jazon.JazonMatchResult.failure;
-import static com.zendesk.jazon.JazonMatchResult.success;
+import static com.zendesk.jazon.MatchResult.failure;
+import static com.zendesk.jazon.MatchResult.success;
 
 @ToString
 @EqualsAndHashCode
@@ -25,27 +25,27 @@ class OrderedArrayExpectation implements JsonExpectation {
     }
 
     @Override
-    public JazonMatchResult match(ActualJsonNumber actualNumber) {
+    public MatchResult match(ActualJsonNumber actualNumber) {
         return failure(typeMismatch(ActualJsonNumber.class));
     }
 
     @Override
-    public JazonMatchResult match(ActualJsonObject actualObject) {
+    public MatchResult match(ActualJsonObject actualObject) {
         return failure(typeMismatch(ActualJsonObject.class));
     }
 
     @Override
-    public JazonMatchResult match(ActualJsonString actualString) {
+    public MatchResult match(ActualJsonString actualString) {
         return failure(typeMismatch(ActualJsonString.class));
     }
 
     @Override
-    public JazonMatchResult match(ActualJsonNull actualNull) {
+    public MatchResult match(ActualJsonNull actualNull) {
         return failure(new NullMismatch<>(ActualJsonArray.class));
     }
 
     @Override
-    public JazonMatchResult match(ActualJsonArray actualArray) {
+    public MatchResult match(ActualJsonArray actualArray) {
         int index = 0;
         Iterator<JsonExpectation> expectationIterator = expectationList.iterator();
         Iterator<Actual> actualIterator = actualArray.list().iterator();
@@ -53,7 +53,7 @@ class OrderedArrayExpectation implements JsonExpectation {
         while (expectationIterator.hasNext() && actualIterator.hasNext()) {
             JsonExpectation expectation = expectationIterator.next();
             Actual actual = actualIterator.next();
-            JazonMatchResult matchResult = actual.accept(expectation);
+            MatchResult matchResult = actual.accept(expectation);
             if (!matchResult.ok()) {
                 return failure(new ArrayElementMismatch(index, matchResult.mismatch()));
             }
@@ -74,7 +74,7 @@ class OrderedArrayExpectation implements JsonExpectation {
     }
 
     @Override
-    public JazonMatchResult match(ActualJsonBoolean actualBoolean) {
+    public MatchResult match(ActualJsonBoolean actualBoolean) {
         return null;
     }
 
