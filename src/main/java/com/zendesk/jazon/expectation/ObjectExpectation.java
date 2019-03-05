@@ -6,9 +6,10 @@ import com.zendesk.jazon.mismatch.JsonMismatch;
 import com.zendesk.jazon.mismatch.NullMismatch;
 import com.zendesk.jazon.mismatch.TypeMismatch;
 import com.zendesk.jazon.mismatch.UnexpectedFieldMismatch;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -16,6 +17,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Sets.difference;
 import static com.zendesk.jazon.JazonMatchResult.failure;
 
+@ToString
+@EqualsAndHashCode
 public class ObjectExpectation implements JsonExpectation {
     private final Map<String, JsonExpectation> expectationMap;
 
@@ -57,26 +60,6 @@ public class ObjectExpectation implements JsonExpectation {
         return failure(new TypeMismatch(ActualJsonObject.class, ActualJsonBoolean.class));
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ObjectExpectation that = (ObjectExpectation) o;
-        return Objects.equals(expectationMap, that.expectationMap);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(expectationMap);
-    }
-
-    @Override
-    public String toString() {
-        return "ObjectExpectation{" +
-                "expectationMap=" + expectationMap +
-                '}';
-    }
-
     private Optional<JsonMismatch> mismatchFromExpectedFields(ActualJsonObject actualObject) {
         return expectationMap.entrySet()
                 .stream()
@@ -107,6 +90,6 @@ public class ObjectExpectation implements JsonExpectation {
 
     private Actual actual(ActualJsonObject jsonObject, String fieldName) {
         return jsonObject.actualField(fieldName)
-                .orElseGet(ActualJsonNull::new);
+                .orElse(ActualJsonNull.INSTANCE);
     }
 }

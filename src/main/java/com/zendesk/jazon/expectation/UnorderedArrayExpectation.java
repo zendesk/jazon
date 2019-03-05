@@ -7,9 +7,11 @@ import com.zendesk.jazon.mismatch.ArrayLackingElementsMismatch;
 import com.zendesk.jazon.mismatch.ArrayUnexpectedElementsMismatch;
 import com.zendesk.jazon.mismatch.NullMismatch;
 import com.zendesk.jazon.mismatch.TypeMismatch;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.ArrayList;
-import java.util.Objects;
+import java.util.HashSet;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkState;
@@ -25,6 +27,8 @@ import static com.zendesk.jazon.JazonMatchResult.success;
  *      soon expected CustomPredicateExpectation similarly will not be supported in UnorderedArrayExpectation).
  *      {@code SUPPORTED_EXPECTATION_TYPES} defines which types of expectation classes are supported.
  */
+@ToString
+@EqualsAndHashCode
 class UnorderedArrayExpectation implements JsonExpectation {
     private static final Set<Class<? extends JsonExpectation>> SUPPORTED_EXPECTATION_TYPES = ImmutableSet.of(
             PrimitiveValueExpectation.class,
@@ -60,7 +64,7 @@ class UnorderedArrayExpectation implements JsonExpectation {
 
     @Override
     public JazonMatchResult match(ActualJsonArray actualArray) {
-        ArrayList<JsonExpectation> expectedButNotFound = new ArrayList<>();
+        Set<JsonExpectation> stillExpected = new HashSet<>(expectationSet);
         ArrayList<Actual> actualList = new ArrayList<>(actualArray.list());
 
         for (JsonExpectation expectation : expectationSet) {
@@ -69,15 +73,14 @@ class UnorderedArrayExpectation implements JsonExpectation {
                 JazonMatchResult result = actual.accept(expectation);
                 if (result.ok()) {
                     actualList.remove(actual);
+                    stillExpected.remove(expectation);
                     break;
-                } else if (actualIndex == actualList.size() - 1) {
-                    expectedButNotFound.add(expectation);
                 }
             }
         }
 
-        if (!expectedButNotFound.isEmpty()) {
-            return failure(new ArrayLackingElementsMismatch(expectedButNotFound));
+        if (!stillExpected.isEmpty()) {
+            return failure(new ArrayLackingElementsMismatch(stillExpected));
         }
         if (!actualList.isEmpty()) {
             return failure(new ArrayUnexpectedElementsMismatch(actualList));
@@ -88,26 +91,6 @@ class UnorderedArrayExpectation implements JsonExpectation {
     @Override
     public JazonMatchResult match(ActualJsonBoolean actualBoolean) {
         return null;
-    }
-
-    @Override
-    public String toString() {
-        return "UnorderedArrayExpectation{" +
-                "expectationSet=" + expectationSet +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UnorderedArrayExpectation that = (UnorderedArrayExpectation) o;
-        return Objects.equals(expectationSet, that.expectationSet);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(expectationSet);
     }
 
     private TypeMismatch typeMismatch(Class<? extends Actual> actualType) {

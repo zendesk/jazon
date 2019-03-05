@@ -5,13 +5,15 @@ import com.zendesk.jazon.actual.*;
 import com.zendesk.jazon.mismatch.NullMismatch;
 import com.zendesk.jazon.mismatch.PrimitiveValueMismatch;
 import com.zendesk.jazon.mismatch.TypeMismatch;
-
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.zendesk.jazon.JazonMatchResult.failure;
 import static com.zendesk.jazon.JazonMatchResult.success;
 
+@ToString
+@EqualsAndHashCode
 class PrimitiveValueExpectation<T> implements JsonExpectation {
     private final T expectedValue;
     private final Class<? extends Actual> expectedJsonType;
@@ -59,25 +61,5 @@ class PrimitiveValueExpectation<T> implements JsonExpectation {
             return success();
         }
         return failure(new PrimitiveValueMismatch<>(expectedValue, actualValue));
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PrimitiveValueExpectation that = (PrimitiveValueExpectation) o;
-        return Objects.equals(expectedValue, that.expectedValue);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(expectedValue);
-    }
-
-    @Override
-    public String toString() {
-        return "PrimitiveValueExpectation{" +
-                "expectedValue=" + expectedValue +
-                '}';
     }
 }

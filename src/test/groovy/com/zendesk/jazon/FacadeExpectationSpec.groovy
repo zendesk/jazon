@@ -284,7 +284,7 @@ class FacadeExpectationSpec extends Specification {
         then:
         !result.ok()
         result.mismatch() == new ArrayLackingElementsMismatch(
-                lackingElements.collect(expectationFactory.&expectation)
+                lackingElements.collect(expectationFactory.&expectation) as Set
         )
 
         where:
@@ -296,6 +296,10 @@ class FacadeExpectationSpec extends Specification {
         [1, 2, 'lalala'] as Set          | ['lalala', 11, 2]      || [1]
         [1, 2, 'lalala', 5, 6, 7] as Set | [6, 7, 2, 5, 'rob', 1] || ['lalala']
         [3, 4, 2, 1] as Set              | [11, 2, 3, 55]         || [1, 4]
+        [3, 4, 2, 1] as Set              | [1]                    || [2, 3, 4]
+        [3, 4, 2, 1] as Set              | [2]                    || [1, 3, 4]
+        [3, 4, 2, 1] as Set              | [3]                    || [1, 2, 4]
+        [3, 4, 2, 1] as Set              | [4]                    || [1, 2, 3]
     }
 
     def "unordered list expectation: unexpected elements"() {

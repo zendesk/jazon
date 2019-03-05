@@ -3,6 +3,8 @@ package com.zendesk.jazon.expectation;
 import com.zendesk.jazon.JazonMatchResult;
 import com.zendesk.jazon.actual.*;
 import com.zendesk.jazon.mismatch.PredicateMismatch;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.function.Predicate;
 
@@ -10,6 +12,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.zendesk.jazon.JazonMatchResult.failure;
 import static com.zendesk.jazon.JazonMatchResult.success;
 
+@ToString
+@EqualsAndHashCode
 class PredicateExpectation implements JsonExpectation {
     private final Predicate<Object> predicate;
 

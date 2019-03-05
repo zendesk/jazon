@@ -3,10 +3,14 @@ package com.zendesk.jazon.expectation;
 import com.zendesk.jazon.JazonMatchResult;
 import com.zendesk.jazon.actual.*;
 import com.zendesk.jazon.mismatch.NotNullMismatch;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import static com.zendesk.jazon.JazonMatchResult.failure;
 import static com.zendesk.jazon.JazonMatchResult.success;
 
+@ToString
+@EqualsAndHashCode
 class NullExpectation implements JsonExpectation {
     @Override
     public JazonMatchResult match(ActualJsonNumber actualNumber) {
@@ -36,20 +40,5 @@ class NullExpectation implements JsonExpectation {
     @Override
     public JazonMatchResult match(ActualJsonBoolean actualBoolean) {
         return null;
-    }
-
-    @Override
-    public int hashCode() {
-        return JsonExpectation.class.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return getClass().equals(obj.getClass());
-    }
-
-    @Override
-    public String toString() {
-        return "NullExpectation{}";
     }
 }

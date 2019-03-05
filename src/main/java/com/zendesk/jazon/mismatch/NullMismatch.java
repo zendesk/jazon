@@ -1,13 +1,16 @@
 package com.zendesk.jazon.mismatch;
 
 import com.zendesk.jazon.actual.Actual;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
-import java.util.Objects;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.Optional.empty;
 
+@ToString
+@EqualsAndHashCode
 public class NullMismatch<T> implements JsonMismatch {
     private final Class<? extends Actual> expectedType;
     private final Optional<T> expectedValue;
@@ -31,27 +34,5 @@ public class NullMismatch<T> implements JsonMismatch {
                 .map(value -> String.format("%s (type: %s)", value, expectedType))
                 .orElseGet(expectedType::toString);
         return String.format("Found null. Expected: %s", expectationMessage);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        NullMismatch<?> that = (NullMismatch<?>) o;
-        return Objects.equals(expectedValue, that.expectedValue) &&
-                Objects.equals(expectedType, that.expectedType);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(expectedValue, expectedType);
-    }
-
-    @Override
-    public String toString() {
-        return "NullMismatch{" +
-                "expectedValue=" + expectedValue +
-                ", expectedType=" + expectedType +
-                '}';
     }
 }

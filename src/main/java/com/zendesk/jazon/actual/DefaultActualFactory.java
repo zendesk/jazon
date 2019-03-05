@@ -17,7 +17,7 @@ class DefaultActualFactory implements ActualFactory {
         } else if (object instanceof String) {
             return new ActualJsonString((String) object);
         } else if (object == null) {
-            return new ActualJsonNull();
+            return ActualJsonNull.INSTANCE;
         } else if (object instanceof List) {
             return actualArray((List<Object>) object, this);
         } else if (object instanceof Boolean) {

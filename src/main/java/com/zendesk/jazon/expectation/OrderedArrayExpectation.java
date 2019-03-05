@@ -4,16 +4,19 @@ import com.google.common.collect.Iterators;
 import com.zendesk.jazon.JazonMatchResult;
 import com.zendesk.jazon.actual.*;
 import com.zendesk.jazon.mismatch.*;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.zendesk.jazon.JazonMatchResult.failure;
 import static com.zendesk.jazon.JazonMatchResult.success;
 
+@ToString
+@EqualsAndHashCode
 class OrderedArrayExpectation implements JsonExpectation {
     private final List<JsonExpectation> expectationList;
 
@@ -79,26 +82,6 @@ class OrderedArrayExpectation implements JsonExpectation {
         ArrayList<T> result = new ArrayList<>();
         Iterators.addAll(result, iterator);
         return result;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        OrderedArrayExpectation that = (OrderedArrayExpectation) o;
-        return Objects.equals(expectationList, that.expectationList);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(expectationList);
-    }
-
-    @Override
-    public String toString() {
-        return "OrderedArrayExpectation{" +
-                "expectationList=" + expectationList +
-                '}';
     }
 
     private TypeMismatch typeMismatch(Class<? extends Actual> actualType) {

@@ -1,36 +1,19 @@
 package com.zendesk.jazon.mismatch;
 
 import com.zendesk.jazon.expectation.JsonExpectation;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.Collection;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+@ToString
+@EqualsAndHashCode
 public class ArrayLackingElementsMismatch implements JsonMismatch {
-    private final List<JsonExpectation> lackingElements;
+    private final Collection<JsonExpectation> lackingElements;
 
-    public ArrayLackingElementsMismatch(List<JsonExpectation> lackingElements) {
+    public ArrayLackingElementsMismatch(Collection<JsonExpectation> lackingElements) {
         this.lackingElements = checkNotNull(lackingElements);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ArrayLackingElementsMismatch that = (ArrayLackingElementsMismatch) o;
-        return Objects.equals(lackingElements, that.lackingElements);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(lackingElements);
-    }
-
-    @Override
-    public String toString() {
-        return "ArrayLackingElementsMismatch{" +
-                "lackingElements=" + lackingElements +
-                '}';
     }
 }

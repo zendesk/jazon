@@ -2,9 +2,9 @@ package com.zendesk.jazon.actual;
 
 import com.zendesk.jazon.JazonMatchResult;
 import com.zendesk.jazon.expectation.JsonExpectation;
+import lombok.EqualsAndHashCode;
 
-import java.util.Objects;
-
+@EqualsAndHashCode
 public class ActualJsonBoolean implements Actual {
     private final boolean value;
 
@@ -23,21 +23,6 @@ public class ActualJsonBoolean implements Actual {
 
     @Override
     public String toString() {
-        return "ActualJsonBoolean{" +
-                "value=" + value +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ActualJsonBoolean that = (ActualJsonBoolean) o;
-        return value == that.value;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(value);
+        return value ? "true" : "false";
     }
 }

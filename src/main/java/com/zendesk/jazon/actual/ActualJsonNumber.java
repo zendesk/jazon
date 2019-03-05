@@ -2,11 +2,11 @@ package com.zendesk.jazon.actual;
 
 import com.zendesk.jazon.JazonMatchResult;
 import com.zendesk.jazon.expectation.JsonExpectation;
-
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+@EqualsAndHashCode
 public class ActualJsonNumber implements Actual {
     private final Number number;
 
@@ -26,18 +26,5 @@ public class ActualJsonNumber implements Actual {
     @Override
     public String toString() {
         return number.toString();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ActualJsonNumber that = (ActualJsonNumber) o;
-        return Objects.equals(number, that.number);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(number);
     }
 }
