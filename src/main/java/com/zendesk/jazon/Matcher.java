@@ -4,7 +4,6 @@ import com.zendesk.jazon.actual.Actual;
 import com.zendesk.jazon.actual.ActualFactory;
 import com.zendesk.jazon.expectation.ExpectationFactory;
 import com.zendesk.jazon.expectation.JsonExpectation;
-import groovy.json.JsonSlurper;
 
 import java.util.Map;
 
@@ -42,12 +41,6 @@ public class Matcher {
 
     public Matcher actual(Map<String, Object> jsonAsMap) {
         this.actual = actualFactory.actual(jsonAsMap);
-        return this;
-    }
-
-    public Matcher actual(String jsonAsString) {
-        Object parsed = new JsonSlurper().parse(jsonAsString.getBytes());
-        this.actual = actualFactory.actual(parsed);
         return this;
     }
 }
