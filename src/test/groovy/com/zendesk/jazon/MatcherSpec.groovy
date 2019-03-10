@@ -197,6 +197,24 @@ class MatcherSpec extends Specification {
         false                   | ActualJsonBoolean
     }
 
+    def "lack of field in Actual does not match `null`"() {
+        given:
+        def expected = [
+                a: 10,
+                b: null
+        ]
+        def actual = [
+                a: 10
+        ]
+
+        when:
+        def result = match(expected, actual)
+
+        then:
+        !result.ok()
+        result.mismatch() == NotNullButEmptyMismatch.INSTANCE
+    }
+
     @Unroll
     def "ordered list expectation - exact element mismatch"() {
         when:

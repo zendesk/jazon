@@ -2,10 +2,7 @@ package com.zendesk.jazon.expectation;
 
 import com.zendesk.jazon.MatchResult;
 import com.zendesk.jazon.actual.*;
-import com.zendesk.jazon.mismatch.JsonMismatch;
-import com.zendesk.jazon.mismatch.NullMismatch;
-import com.zendesk.jazon.mismatch.TypeMismatch;
-import com.zendesk.jazon.mismatch.UnexpectedFieldMismatch;
+import com.zendesk.jazon.mismatch.*;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -64,8 +61,9 @@ public class ObjectExpectation implements JsonExpectation {
         return expectationMap.entrySet()
                 .stream()
                 .map(
-                        e -> actual(actualObject, e.getKey())
-                                .accept(e.getValue())
+                        e -> actualObject.actualField(e.getKey())
+                                .map(actual -> actual.accept(e.getValue()))
+                                .orElseGet(() -> failure(NotNullButEmptyMismatch.INSTANCE))
                 )
                 .filter(matchResult -> !matchResult.ok())
                 .map(MatchResult::mismatch)
@@ -86,10 +84,5 @@ public class ObjectExpectation implements JsonExpectation {
             return first;
         }
         return second;
-    }
-
-    private Actual actual(ActualJsonObject jsonObject, String fieldName) {
-        return jsonObject.actualField(fieldName)
-                .orElse(ActualJsonNull.INSTANCE);
     }
 }
