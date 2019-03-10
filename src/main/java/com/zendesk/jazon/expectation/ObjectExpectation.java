@@ -81,7 +81,7 @@ public class ObjectExpectation implements JsonExpectation {
                 .findFirst();
     }
 
-    private Optional<JsonMismatch> firstOf(Optional<JsonMismatch> first, Optional<JsonMismatch> second) {
+    private static Optional<JsonMismatch> firstOf(Optional<JsonMismatch> first, Optional<JsonMismatch> second) {
         if (first.isPresent()) {
             return first;
         }
