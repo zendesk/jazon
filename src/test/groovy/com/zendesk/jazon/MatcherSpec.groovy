@@ -153,7 +153,7 @@ class MatcherSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch() == new NullMismatch(ActualJsonString, 'some value');
+        result.mismatch() == new NoFieldMismatch(expectationFactory.expectation('some value'))
 
         where:
         actual << [
@@ -195,24 +195,6 @@ class MatcherSpec extends Specification {
         [5, 4, 3]               | ActualJsonArray
         true                    | ActualJsonBoolean
         false                   | ActualJsonBoolean
-    }
-
-    def "lack of field in Actual does not match `null`"() {
-        given:
-        def expected = [
-                a: 10,
-                b: null
-        ]
-        def actual = [
-                a: 10
-        ]
-
-        when:
-        def result = match(expected, actual)
-
-        then:
-        !result.ok()
-        result.mismatch() == NotNullButEmptyMismatch.INSTANCE
     }
 
     @Unroll

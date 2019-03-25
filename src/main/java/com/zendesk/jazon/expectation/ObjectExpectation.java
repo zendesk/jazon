@@ -63,7 +63,7 @@ public class ObjectExpectation implements JsonExpectation {
                 .map(
                         e -> actualObject.actualField(e.getKey())
                                 .map(actual -> actual.accept(e.getValue()))
-                                .orElseGet(() -> failure(NotNullButEmptyMismatch.INSTANCE))
+                                .orElseGet(() -> failure(new NoFieldMismatch(e.getValue())))
                 )
                 .filter(matchResult -> !matchResult.ok())
                 .map(MatchResult::mismatch)
