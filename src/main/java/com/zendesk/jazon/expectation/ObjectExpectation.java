@@ -62,19 +62,13 @@ public class ObjectExpectation implements JsonExpectation {
     }
 
     private Optional<MismatchWithPath> mismatchFromExpectedFields(ActualJsonObject actualObject, String path) {
-        return new MismatchFromExpectedFields(actualObject, path)
-                .mismatch();
+        return new MismatchFactory(actualObject, path)
+                .mismatchFromExpectedFields();
     }
 
     private Optional<MismatchWithPath> mismatchFromUnexpected(ActualJsonObject actualObject, String path) {
-        Set<String> unexpectedFields = difference(actualObject.keys(), expectationMap.keySet());
-        return unexpectedFields.stream()
-                .map(actualObject::actualPresentField)
-                .map(actualField ->
-                        new UnexpectedFieldMismatch<>(actualField.getClass())
-                                .at(path)
-                )
-                .findFirst();
+        return new MismatchFactory(actualObject, path)
+                .mismatchFromUnexpected();
     }
 
     private static <T> Optional<T> firstOf(Optional<T> first, Optional<T> second) {
@@ -90,16 +84,27 @@ public class ObjectExpectation implements JsonExpectation {
     }
 
     @AllArgsConstructor
-    private class MismatchFromExpectedFields {
+    private class MismatchFactory {
         private final ActualJsonObject actualObject;
         private final String path;
 
-        Optional<MismatchWithPath> mismatch() {
+        Optional<MismatchWithPath> mismatchFromExpectedFields() {
             return expectationMap.entrySet()
                     .stream()
                     .map(e -> matchResult(e.getKey(), e.getValue()))
                     .filter(matchResult -> !matchResult.ok())
                     .map(MatchResult::mismatch)
+                    .findFirst();
+        }
+
+        private Optional<MismatchWithPath> mismatchFromUnexpected() {
+            Set<String> unexpectedFields = difference(actualObject.keys(), expectationMap.keySet());
+            return unexpectedFields.stream()
+                    .map(actualObject::actualPresentField)
+                    .map(actualField ->
+                            new UnexpectedFieldMismatch<>(actualField.getClass())
+                                    .at(path)
+                    )
                     .findFirst();
         }
 
