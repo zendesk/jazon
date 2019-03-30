@@ -1,11 +1,9 @@
 package com.zendesk.jazon
 
-
 import com.zendesk.jazon.actual.ActualFactory
 import com.zendesk.jazon.actual.DefaultActualFactory
 import com.zendesk.jazon.expectation.DefaultExpectationFactory
 import com.zendesk.jazon.expectation.ExpectationFactory
-import com.zendesk.jazon.mismatch.ArrayElementMismatch
 import com.zendesk.jazon.mismatch.PrimitiveValueMismatch
 import spock.lang.Specification
 
@@ -42,7 +40,8 @@ class MismatchPathSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch() == new ArrayElementMismatch(2, new PrimitiveValueMismatch(8, 99))
+        result.mismatch().internalMismatch() == new PrimitiveValueMismatch(8, 99)
+        result.mismatch().path() == '$.data.2.values.b'
     }
 
     MatchResult match(Map expected, Map actual) {

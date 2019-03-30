@@ -1,6 +1,7 @@
 package com.zendesk.jazon;
 
 import com.zendesk.jazon.mismatch.JsonMismatch;
+import com.zendesk.jazon.mismatch.LocJsonMismatch;
 
 import java.util.Optional;
 
@@ -8,17 +9,17 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
 public class MatchResult {
-    private final Optional<JsonMismatch> mismatch;
+    private final Optional<LocJsonMismatch> mismatch;
 
     public static MatchResult success() {
         return new MatchResult(empty());
     }
 
-    public static MatchResult failure(JsonMismatch mismatch) {
+    public static MatchResult failure(LocJsonMismatch mismatch) {
         return new MatchResult(of(mismatch));
     }
 
-    private MatchResult(Optional<JsonMismatch> mismatch) {
+    private MatchResult(Optional<LocJsonMismatch> mismatch) {
         this.mismatch = mismatch;
     }
 
@@ -27,10 +28,17 @@ public class MatchResult {
     }
 
     public String message() {
-        return "JSON MISMATCH:\n" + mismatch.map(JsonMismatch::message).orElse("lol no mismatch!");
+        return "JSON MISMATCH:\n" + mismatchMessage();
     }
 
-    public JsonMismatch mismatch() {
+    private String mismatchMessage() {
+        return mismatch
+                .map(LocJsonMismatch::internalMismatch)
+                .map(JsonMismatch::message)
+                .orElse("lol no mismatch!");
+    }
+
+    public LocJsonMismatch mismatch() {
         return mismatch.orElseThrow(IllegalArgumentException::new);
     }
 }

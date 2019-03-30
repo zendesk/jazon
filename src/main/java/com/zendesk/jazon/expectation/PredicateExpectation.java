@@ -22,44 +22,44 @@ class PredicateExpectation implements JsonExpectation {
     }
 
     @Override
-    public MatchResult match(ActualJsonNumber actualNumber) {
+    public MatchResult match(ActualJsonNumber actualNumber, String path) {
         return predicate.test(actualNumber.number())
                 ? success()
-                : failure(PredicateMismatch.INSTANCE);
+                : failure(PredicateMismatch.INSTANCE.at(path));
     }
 
     @Override
-    public MatchResult match(ActualJsonObject actualObject) {
+    public MatchResult match(ActualJsonObject actualObject, String path) {
         return predicate.test(actualObject)
                 ? success()
-                : failure(PredicateMismatch.INSTANCE);
+                : failure(PredicateMismatch.INSTANCE.at(path));
     }
 
     @Override
-    public MatchResult match(ActualJsonString actualString) {
+    public MatchResult match(ActualJsonString actualString, String path) {
         return predicate.test(actualString.string())
                 ? success()
-                : failure(PredicateMismatch.INSTANCE);
+                : failure(PredicateMismatch.INSTANCE.at(path));
     }
 
     @Override
-    public MatchResult match(ActualJsonNull actualNull) {
+    public MatchResult match(ActualJsonNull actualNull, String path) {
         return predicate.test(actualNull)
                 ? success()
-                : failure(PredicateMismatch.INSTANCE);
+                : failure(PredicateMismatch.INSTANCE.at(path));
     }
 
     @Override
-    public MatchResult match(ActualJsonArray actualArray) {
+    public MatchResult match(ActualJsonArray actualArray, String path) {
         return predicate.test(actualArray)
                 ? success()
-                : failure(PredicateMismatch.INSTANCE);
+                : failure(PredicateMismatch.INSTANCE.at(path));
     }
 
     @Override
-    public MatchResult match(ActualJsonBoolean actualBoolean) {
+    public MatchResult match(ActualJsonBoolean actualBoolean, String path) {
         return predicate.test(actualBoolean.value())
                 ? success()
-                : failure(PredicateMismatch.INSTANCE);
+                : failure(PredicateMismatch.INSTANCE.at(path));
     }
 }

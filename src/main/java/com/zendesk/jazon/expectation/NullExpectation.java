@@ -2,6 +2,7 @@ package com.zendesk.jazon.expectation;
 
 import com.zendesk.jazon.MatchResult;
 import com.zendesk.jazon.actual.*;
+import com.zendesk.jazon.mismatch.LocJsonMismatch;
 import com.zendesk.jazon.mismatch.NotNullMismatch;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -13,32 +14,37 @@ import static com.zendesk.jazon.MatchResult.success;
 @EqualsAndHashCode
 class NullExpectation implements JsonExpectation {
     @Override
-    public MatchResult match(ActualJsonNumber actualNumber) {
-        return failure(new NotNullMismatch(actualNumber));
+    public MatchResult match(ActualJsonNumber actualNumber, String path) {
+        return failure(notNullMismatch(actualNumber, path));
     }
 
     @Override
-    public MatchResult match(ActualJsonObject actualObject) {
-        return failure(new NotNullMismatch(actualObject));
+    public MatchResult match(ActualJsonObject actualObject, String path) {
+        return failure(notNullMismatch(actualObject, path));
     }
 
     @Override
-    public MatchResult match(ActualJsonString actualString) {
-        return failure(new NotNullMismatch(actualString));
+    public MatchResult match(ActualJsonString actualString, String path) {
+        return failure(notNullMismatch(actualString, path));
     }
 
     @Override
-    public MatchResult match(ActualJsonNull actualNull) {
+    public MatchResult match(ActualJsonNull actualNull, String path) {
         return success();
     }
 
     @Override
-    public MatchResult match(ActualJsonArray actualArray) {
-        return failure(new NotNullMismatch(actualArray));
+    public MatchResult match(ActualJsonArray actualArray, String path) {
+        return failure(notNullMismatch(actualArray, path));
     }
 
     @Override
-    public MatchResult match(ActualJsonBoolean actualBoolean) {
+    public MatchResult match(ActualJsonBoolean actualBoolean, String path) {
         return null;
+    } //TODO!!!!!
+
+    private LocJsonMismatch notNullMismatch(Actual actual, String path) {
+        return new NotNullMismatch(actual)
+                .at(path);
     }
 }

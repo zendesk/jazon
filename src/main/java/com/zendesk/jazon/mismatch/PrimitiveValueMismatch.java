@@ -7,7 +7,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 @ToString
 @EqualsAndHashCode
-public class PrimitiveValueMismatch<T> implements JsonMismatch {
+public class PrimitiveValueMismatch<T> implements JsonMismatch, LocJsonMismatchFactory {
     private final T expected;
     private final T actual;
 

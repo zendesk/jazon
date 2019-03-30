@@ -25,66 +25,76 @@ public class ObjectExpectation implements JsonExpectation {
     }
 
     @Override
-    public MatchResult match(ActualJsonNumber actualNumber) {
-        return failure(new TypeMismatch(ActualJsonObject.class, ActualJsonNumber.class));
+    public MatchResult match(ActualJsonNumber actualNumber, String path) {
+        return failure(typeMismatch(ActualJsonNumber.class, path));
     }
 
     @Override
-    public MatchResult match(ActualJsonObject actualObject) {
-        Optional<JsonMismatch> mismatchFromExpectedFields = mismatchFromExpectedFields(actualObject);
-        Optional<JsonMismatch> mismatchFromUnexpected = mismatchFromUnexpected(actualObject);
+    public MatchResult match(ActualJsonObject actualObject, String path) {
+        Optional<LocJsonMismatch> mismatchFromExpectedFields = mismatchFromExpectedFields(actualObject, path);
+        Optional<LocJsonMismatch> mismatchFromUnexpected = mismatchFromUnexpected(actualObject, path);
         return firstOf(mismatchFromExpectedFields, mismatchFromUnexpected)
                 .map(MatchResult::failure)
                 .orElseGet(MatchResult::success);
     }
 
     @Override
-    public MatchResult match(ActualJsonString actualString) {
-        return failure(new TypeMismatch(ActualJsonObject.class, ActualJsonString.class));
+    public MatchResult match(ActualJsonString actualString, String path) {
+        return failure(typeMismatch(ActualJsonString.class, path));
     }
 
     @Override
-    public MatchResult match(ActualJsonNull actualNull) {
-        return failure(new NullMismatch<>(ActualJsonObject.class));
+    public MatchResult match(ActualJsonNull actualNull, String path) {
+        return failure(
+                new NullMismatch<>(ActualJsonObject.class)
+                        .at(path)
+        );
     }
 
     @Override
-    public MatchResult match(ActualJsonArray actualArray) {
-        return failure(new TypeMismatch(ActualJsonObject.class, ActualJsonArray.class));
+    public MatchResult match(ActualJsonArray actualArray, String path) {
+        return failure(typeMismatch(ActualJsonArray.class, path));
     }
 
     @Override
-    public MatchResult match(ActualJsonBoolean actualBoolean) {
-        return failure(new TypeMismatch(ActualJsonObject.class, ActualJsonBoolean.class));
+    public MatchResult match(ActualJsonBoolean actualBoolean, String path) {
+        return failure(typeMismatch(ActualJsonBoolean.class, path));
     }
 
-    private Optional<JsonMismatch> mismatchFromExpectedFields(ActualJsonObject actualObject) {
-        return new MismatchFromExpectedFields(expectationMap, actualObject)
+    private Optional<LocJsonMismatch> mismatchFromExpectedFields(ActualJsonObject actualObject, String path) {
+        return new MismatchFromExpectedFields(actualObject, path)
                 .mismatch();
     }
 
-    private Optional<JsonMismatch> mismatchFromUnexpected(ActualJsonObject actualObject) {
+    private Optional<LocJsonMismatch> mismatchFromUnexpected(ActualJsonObject actualObject, String path) {
         Set<String> unexpectedFields = difference(actualObject.keys(), expectationMap.keySet());
         return unexpectedFields.stream()
                 .map(actualObject::actualPresentField)
-                .map(actualField -> new UnexpectedFieldMismatch<>(actualField.getClass()))
-                .map(JsonMismatch.class::cast)
+                .map(actualField ->
+                        new UnexpectedFieldMismatch<>(actualField.getClass())
+                                .at(path)
+                )
                 .findFirst();
     }
 
-    private static Optional<JsonMismatch> firstOf(Optional<JsonMismatch> first, Optional<JsonMismatch> second) {
+    private static <T> Optional<T> firstOf(Optional<T> first, Optional<T> second) {
         if (first.isPresent()) {
             return first;
         }
         return second;
     }
 
-    @AllArgsConstructor
-    private static class MismatchFromExpectedFields {
-        private final Map<String, JsonExpectation> expectationMap;
-        private final ActualJsonObject actualObject;
+    private LocJsonMismatch typeMismatch(Class<? extends Actual> actualType, String path) {
+        return new TypeMismatch(ActualJsonObject.class, actualType)
+                .at(path);
+    }
 
-        Optional<JsonMismatch> mismatch() {
+    @AllArgsConstructor
+    private class MismatchFromExpectedFields {
+        private final ActualJsonObject actualObject;
+        private final String path;
+
+        Optional<LocJsonMismatch> mismatch() {
             return expectationMap.entrySet()
                     .stream()
                     .map(e -> matchResult(e.getKey(), e.getValue()))
@@ -95,8 +105,13 @@ public class ObjectExpectation implements JsonExpectation {
 
         private MatchResult matchResult(String fieldName, JsonExpectation expectation) {
             return actualObject.actualField(fieldName)
-                    .map(actual -> actual.accept(expectation))
-                    .orElseGet(() -> failure(new NoFieldMismatch(expectation)));
+                    .map(actual -> actual.accept(expectation, path + "." + fieldName))
+                    .orElseGet(() ->
+                            failure(
+                                    new NoFieldMismatch(expectation)
+                                            .at(path + "." + fieldName)
+                            )
+                    );
         }
     }
 }

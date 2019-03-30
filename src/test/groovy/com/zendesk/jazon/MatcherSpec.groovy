@@ -23,7 +23,7 @@ class MatcherSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch() == new PrimitiveValueMismatch(expected, actual)
+        result.mismatch().internalMismatch() == new PrimitiveValueMismatch(expected, actual)
 
         where:
         expected                | actual
@@ -63,7 +63,7 @@ class MatcherSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch() == new TypeMismatch(mismatchExpectedType, mismatchActualType)
+        result.mismatch().internalMismatch() == new TypeMismatch(mismatchExpectedType, mismatchActualType)
 
         where:
         expected           | actual        | mismatchExpectedType    | mismatchActualType
@@ -99,7 +99,7 @@ class MatcherSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch() == new NullMismatch(expectedType, expected)
+        result.mismatch().internalMismatch() == new NullMismatch(expectedType, expected)
 
         where:
         expected                | expectedType
@@ -129,7 +129,7 @@ class MatcherSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch() == foundMismatch
+        result.mismatch().internalMismatch() == foundMismatch
 
         where:
         expectedFieldValue | actualFieldValue || foundMismatch
@@ -138,7 +138,7 @@ class MatcherSpec extends Specification {
         'vegetable'        | 150              || new TypeMismatch(ActualJsonString, ActualJsonNumber)
         77                 | 'rosemary'       || new TypeMismatch(ActualJsonNumber, ActualJsonString)
         []                 | 'kek'            || new TypeMismatch(ActualJsonArray, ActualJsonString)
-        [20, 30]           | [20, 77]         || new ArrayElementMismatch(1, new PrimitiveValueMismatch(30, 77))
+        [20, 30]           | [20, 77]         || new PrimitiveValueMismatch(30, 77)
     }
 
     def "catches lacking field in Object"() {
@@ -153,7 +153,7 @@ class MatcherSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch() == new NoFieldMismatch(expectationFactory.expectation('some value'))
+        result.mismatch().internalMismatch() == new NoFieldMismatch(expectationFactory.expectation('some value'))
 
         where:
         actual << [
@@ -180,7 +180,7 @@ class MatcherSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch() == new UnexpectedFieldMismatch(unexpectedFieldType);
+        result.mismatch().internalMismatch() == new UnexpectedFieldMismatch(unexpectedFieldType);
 
         where:
         unexpectedFieldValue    | unexpectedFieldType
@@ -204,7 +204,7 @@ class MatcherSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch() == new ArrayElementMismatch(elementIndex, elementMismatch)
+        result.mismatch().internalMismatch() == elementMismatch
 
         where:
         expected     | actual       || elementIndex | elementMismatch
@@ -224,7 +224,7 @@ class MatcherSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch() == new ArrayLackingElementsMismatch(
+        result.mismatch().internalMismatch() == new ArrayLackingElementsMismatch(
                 lackingElements.collect(expectationFactory.&expectation)
         )
 
@@ -246,7 +246,7 @@ class MatcherSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch() == new ArrayUnexpectedElementsMismatch(
+        result.mismatch().internalMismatch() == new ArrayUnexpectedElementsMismatch(
                 unexpectedElements.collect(actualFactory.&actual)
         )
 
@@ -283,7 +283,7 @@ class MatcherSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch() == new ArrayLackingElementsMismatch(
+        result.mismatch().internalMismatch() == new ArrayLackingElementsMismatch(
                 lackingElements.collect(expectationFactory.&expectation) as Set
         )
 
@@ -308,7 +308,7 @@ class MatcherSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch() == new ArrayUnexpectedElementsMismatch(
+        result.mismatch().internalMismatch() == new ArrayUnexpectedElementsMismatch(
                 unexpectedElements.collect(actualFactory.&actual)
         )
 
@@ -340,7 +340,7 @@ class MatcherSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch() == new NotNullMismatch(actualFactory.actual(actual))
+        result.mismatch().internalMismatch() == new NotNullMismatch(actualFactory.actual(actual))
 
         where:
         actual << [

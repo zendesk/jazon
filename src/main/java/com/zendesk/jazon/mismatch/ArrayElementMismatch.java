@@ -7,7 +7,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 @ToString
 @EqualsAndHashCode
-public class ArrayElementMismatch implements JsonMismatch {
+public class ArrayElementMismatch implements JsonMismatch, LocJsonMismatchFactory {
     private final int elementIndex;
     private final JsonMismatch elementMismatch;
 

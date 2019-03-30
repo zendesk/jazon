@@ -3,10 +3,7 @@ package com.zendesk.jazon.expectation;
 import com.google.common.collect.ImmutableSet;
 import com.zendesk.jazon.MatchResult;
 import com.zendesk.jazon.actual.*;
-import com.zendesk.jazon.mismatch.ArrayLackingElementsMismatch;
-import com.zendesk.jazon.mismatch.ArrayUnexpectedElementsMismatch;
-import com.zendesk.jazon.mismatch.NullMismatch;
-import com.zendesk.jazon.mismatch.TypeMismatch;
+import com.zendesk.jazon.mismatch.*;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -43,34 +40,37 @@ class UnorderedArrayExpectation implements JsonExpectation {
     }
 
     @Override
-    public MatchResult match(ActualJsonNumber actualNumber) {
-        return failure(typeMismatch(ActualJsonNumber.class));
+    public MatchResult match(ActualJsonNumber actualNumber, String path) {
+        return failure(typeMismatch(ActualJsonNumber.class, path));
     }
 
     @Override
-    public MatchResult match(ActualJsonObject actualObject) {
-        return failure(typeMismatch(ActualJsonObject.class));
+    public MatchResult match(ActualJsonObject actualObject, String path) {
+        return failure(typeMismatch(ActualJsonObject.class, path));
     }
 
     @Override
-    public MatchResult match(ActualJsonString actualString) {
-        return failure(typeMismatch(ActualJsonString.class));
+    public MatchResult match(ActualJsonString actualString, String path) {
+        return failure(typeMismatch(ActualJsonString.class, path));
     }
 
     @Override
-    public MatchResult match(ActualJsonNull actualNull) {
-        return failure(new NullMismatch<>(ActualJsonArray.class));
+    public MatchResult match(ActualJsonNull actualNull, String path) {
+        return failure(
+                new NullMismatch<>(ActualJsonArray.class)
+                        .at(path)
+        );
     }
 
     @Override
-    public MatchResult match(ActualJsonArray actualArray) {
+    public MatchResult match(ActualJsonArray actualArray, String path) {
         Set<JsonExpectation> stillExpected = new HashSet<>(expectationSet);
         ArrayList<Actual> actualList = new ArrayList<>(actualArray.list());
 
         for (JsonExpectation expectation : expectationSet) {
             for (int actualIndex = 0; actualIndex < actualList.size(); actualIndex++) {
                 Actual actual = actualList.get(actualIndex);
-                MatchResult result = actual.accept(expectation);
+                MatchResult result = actual.accept(expectation, path + ".?");
                 if (result.ok()) {
                     actualList.remove(actual);
                     stillExpected.remove(expectation);
@@ -80,21 +80,28 @@ class UnorderedArrayExpectation implements JsonExpectation {
         }
 
         if (!stillExpected.isEmpty()) {
-            return failure(new ArrayLackingElementsMismatch(stillExpected));
+            return failure(
+                    new ArrayLackingElementsMismatch(stillExpected)
+                            .at(path)
+            );
         }
         if (!actualList.isEmpty()) {
-            return failure(new ArrayUnexpectedElementsMismatch(actualList));
+            return failure(
+                    new ArrayUnexpectedElementsMismatch(actualList)
+                            .at(path)
+            );
         }
         return success();
     }
 
     @Override
-    public MatchResult match(ActualJsonBoolean actualBoolean) {
+    public MatchResult match(ActualJsonBoolean actualBoolean, String path) {
         return null;
     }
 
-    private TypeMismatch typeMismatch(Class<? extends Actual> actualType) {
-        return new TypeMismatch(ActualJsonArray.class, actualType);
+    private LocJsonMismatch typeMismatch(Class<? extends Actual> actualType, String path) {
+        return new TypeMismatch(ActualJsonArray.class, actualType)
+                .at(path);
     }
 
     private void verifyExpectationSupported(JsonExpectation expectation) {

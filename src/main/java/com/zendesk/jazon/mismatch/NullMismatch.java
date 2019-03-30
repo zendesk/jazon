@@ -11,7 +11,7 @@ import static java.util.Optional.empty;
 
 @ToString
 @EqualsAndHashCode
-public class NullMismatch<T> implements JsonMismatch {
+public class NullMismatch<T> implements JsonMismatch, LocJsonMismatchFactory {
     private final Class<? extends Actual> expectedType;
     private final Optional<T> expectedValue;
 
@@ -34,5 +34,10 @@ public class NullMismatch<T> implements JsonMismatch {
                 .map(value -> String.format("%s (type: %s)", value, expectedType))
                 .orElseGet(expectedType::toString);
         return String.format("Found null. Expected: %s", expectationMessage);
+    }
+
+    @Override
+    public LocJsonMismatch at(String path) {
+        return new LocJsonMismatch(this, path);
     }
 }

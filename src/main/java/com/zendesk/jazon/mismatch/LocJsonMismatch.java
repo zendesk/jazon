@@ -1,15 +1,26 @@
 package com.zendesk.jazon.mismatch;
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class LocJsonMismatch implements JsonMismatch {
-    private final JsonMismatch jsonMismatch;
+@ToString
+@EqualsAndHashCode
+public class LocJsonMismatch {
+    private final JsonMismatch internalMismatch;
+    private final String path;
 
-    public LocJsonMismatch(JsonMismatch jsonMismatch) {
-        this.jsonMismatch = checkNotNull(jsonMismatch);
+    public LocJsonMismatch(JsonMismatch internalMismatch, String path) {
+        this.internalMismatch = checkNotNull(internalMismatch);
+        this.path = checkNotNull(path);
+    }
+
+    public JsonMismatch internalMismatch() {
+        return internalMismatch;
     }
 
     public String path() {
-        return ".";
+        return path;
     }
 }
