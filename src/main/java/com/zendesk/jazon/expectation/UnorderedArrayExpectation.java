@@ -96,7 +96,7 @@ class UnorderedArrayExpectation implements JsonExpectation {
 
     @Override
     public MatchResult match(ActualJsonBoolean actualBoolean, String path) {
-        return null;
+        return failure(typeMismatch(ActualJsonBoolean.class, path));
     }
 
     private MismatchWithPath typeMismatch(Class<? extends Actual> actualType, String path) {

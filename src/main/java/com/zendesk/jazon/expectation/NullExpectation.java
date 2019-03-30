@@ -40,8 +40,8 @@ class NullExpectation implements JsonExpectation {
 
     @Override
     public MatchResult match(ActualJsonBoolean actualBoolean, String path) {
-        return null;
-    } //TODO!!!!!
+        return failure(notNullMismatch(actualBoolean, path));
+    }
 
     private MismatchWithPath notNullMismatch(Actual actual, String path) {
         return new NotNullMismatch(actual)

@@ -188,7 +188,7 @@ class MatcherSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch().expectationMismatch() == new UnexpectedFieldMismatch(unexpectedFieldType);
+        result.mismatch().expectationMismatch() == new UnexpectedFieldMismatch(unexpectedFieldType)
         result.mismatch().path() == '$'
 
         where:
@@ -204,6 +204,33 @@ class MatcherSpec extends Specification {
         [5, 4, 3]               | ActualJsonArray
         true                    | ActualJsonBoolean
         false                   | ActualJsonBoolean
+    }
+
+    @Unroll
+    def "object expectation - type mismatch for #actualType"() {
+        given:
+        def theObject = [
+                id: 1,
+                name: "Leo",
+                nationality: "Argentinian"
+        ]
+        def expected = [a: theObject]
+        def actual = [a: actualValue]
+
+        when:
+        def result = match(expected, actual)
+
+        then:
+        !result.ok()
+        result.mismatch().expectationMismatch() == new TypeMismatch(ActualJsonObject, actualType)
+        result.mismatch().path() == '$.a'
+
+        where:
+        actualValue | actualType
+        true        | ActualJsonBoolean
+        130         | ActualJsonNumber
+        'orange'    | ActualJsonString
+        [1, 2, 3]   | ActualJsonArray
     }
 
     @Unroll
@@ -273,6 +300,29 @@ class MatcherSpec extends Specification {
         [true, 'bike'] | [true, 'bike', false] || [false]
     }
 
+    @Unroll
+    def "ordered list expectation - type mismatch for #actualType"() {
+        given:
+        def theArray = ['white bear', 'seal', 'penguin']
+        def expected = [a: theArray]
+        def actual = [a: actualValue]
+
+        when:
+        def result = match(expected, actual)
+
+        then:
+        !result.ok()
+        result.mismatch().expectationMismatch() == new TypeMismatch(ActualJsonArray, actualType)
+        result.mismatch().path() == '$.a'
+
+        where:
+        actualValue | actualType
+        true        | ActualJsonBoolean
+        130         | ActualJsonNumber
+        'orange'    | ActualJsonString
+        [a: 44]     | ActualJsonObject
+    }
+
     def "unordered list expectation: success"() {
         when:
         def result = match([a: expected], [a: actual])
@@ -335,6 +385,29 @@ class MatcherSpec extends Specification {
         ['what', 'is', 'love'] as Set | ['love', 'is', 10, 'what'] || [10]
     }
 
+    @Unroll
+    def "unordered list expectation - type mismatch for #actualType"() {
+        given:
+        def theSet = ['white bear', 'seal', 'penguin'] as Set
+        def expected = [a: theSet]
+        def actual = [a: actualValue]
+
+        when:
+        def result = match(expected, actual)
+
+        then:
+        !result.ok()
+        result.mismatch().expectationMismatch() == new TypeMismatch(ActualJsonArray, actualType)
+        result.mismatch().path() == '$.a'
+
+        where:
+        actualValue | actualType
+        true        | ActualJsonBoolean
+        130         | ActualJsonNumber
+        'orange'    | ActualJsonString
+        [a: 44]     | ActualJsonObject
+    }
+
     def "unordered list expectation: fails for unsupported expectation types"() {
         given:
         def unsupportedExpectation = [1, 2, 3] as Set
@@ -366,7 +439,9 @@ class MatcherSpec extends Specification {
                 new BigDecimal("11.05"),
                 12345l,
                 [x: 123],
-                [1, 2, 3]
+                [1, 2, 3],
+                true,
+                false
         ]
     }
 

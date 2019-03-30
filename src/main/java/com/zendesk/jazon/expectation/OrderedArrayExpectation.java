@@ -84,7 +84,7 @@ class OrderedArrayExpectation implements JsonExpectation {
 
     @Override
     public MatchResult match(ActualJsonBoolean actualBoolean, String path) {
-        return null;
+        return failure(typeMismatch(ActualJsonBoolean.class, path));
     }
 
     private <T> List<T> remainingItems(Iterator<T> iterator) {
