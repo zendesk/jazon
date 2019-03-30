@@ -35,9 +35,4 @@ public class NullMismatch<T> implements JsonMismatch, LocJsonMismatchFactory {
                 .orElseGet(expectedType::toString);
         return String.format("Found null. Expected: %s", expectationMessage);
     }
-
-    @Override
-    public LocJsonMismatch at(String path) {
-        return new LocJsonMismatch(this, path);
-    }
 }
