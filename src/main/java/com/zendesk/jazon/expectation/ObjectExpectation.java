@@ -3,6 +3,7 @@ package com.zendesk.jazon.expectation;
 import com.zendesk.jazon.MatchResult;
 import com.zendesk.jazon.actual.*;
 import com.zendesk.jazon.mismatch.*;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -58,16 +59,8 @@ public class ObjectExpectation implements JsonExpectation {
     }
 
     private Optional<JsonMismatch> mismatchFromExpectedFields(ActualJsonObject actualObject) {
-        return expectationMap.entrySet()
-                .stream()
-                .map(
-                        e -> actualObject.actualField(e.getKey())
-                                .map(actual -> actual.accept(e.getValue()))
-                                .orElseGet(() -> failure(new NoFieldMismatch(e.getValue())))
-                )
-                .filter(matchResult -> !matchResult.ok())
-                .map(MatchResult::mismatch)
-                .findFirst();
+        return new MismatchFromExpectedFields(expectationMap, actualObject)
+                .mismatch();
     }
 
     private Optional<JsonMismatch> mismatchFromUnexpected(ActualJsonObject actualObject) {
@@ -84,5 +77,26 @@ public class ObjectExpectation implements JsonExpectation {
             return first;
         }
         return second;
+    }
+
+    @AllArgsConstructor
+    private static class MismatchFromExpectedFields {
+        private final Map<String, JsonExpectation> expectationMap;
+        private final ActualJsonObject actualObject;
+
+        Optional<JsonMismatch> mismatch() {
+            return expectationMap.entrySet()
+                    .stream()
+                    .map(e -> matchResult(e.getKey(), e.getValue()))
+                    .filter(matchResult -> !matchResult.ok())
+                    .map(MatchResult::mismatch)
+                    .findFirst();
+        }
+
+        private MatchResult matchResult(String fieldName, JsonExpectation expectation) {
+            return actualObject.actualField(fieldName)
+                    .map(actual -> actual.accept(expectation))
+                    .orElseGet(() -> failure(new NoFieldMismatch(expectation)));
+        }
     }
 }
