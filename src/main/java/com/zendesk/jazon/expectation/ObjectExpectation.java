@@ -3,6 +3,7 @@ package com.zendesk.jazon.expectation;
 import com.zendesk.jazon.MatchResult;
 import com.zendesk.jazon.actual.*;
 import com.zendesk.jazon.mismatch.*;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -24,65 +25,98 @@ public class ObjectExpectation implements JsonExpectation {
     }
 
     @Override
-    public MatchResult match(ActualJsonNumber actualNumber) {
-        return failure(new TypeMismatch(ActualJsonObject.class, ActualJsonNumber.class));
+    public MatchResult match(ActualJsonNumber actualNumber, String path) {
+        return failure(typeMismatch(ActualJsonNumber.class, path));
     }
 
     @Override
-    public MatchResult match(ActualJsonObject actualObject) {
-        Optional<JsonMismatch> mismatchFromExpectedFields = mismatchFromExpectedFields(actualObject);
-        Optional<JsonMismatch> mismatchFromUnexpected = mismatchFromUnexpected(actualObject);
+    public MatchResult match(ActualJsonObject actualObject, String path) {
+        Optional<MismatchWithPath> mismatchFromExpectedFields = mismatchFromExpectedFields(actualObject, path);
+        Optional<MismatchWithPath> mismatchFromUnexpected = mismatchFromUnexpected(actualObject, path);
         return firstOf(mismatchFromExpectedFields, mismatchFromUnexpected)
                 .map(MatchResult::failure)
                 .orElseGet(MatchResult::success);
     }
 
     @Override
-    public MatchResult match(ActualJsonString actualString) {
-        return failure(new TypeMismatch(ActualJsonObject.class, ActualJsonString.class));
+    public MatchResult match(ActualJsonString actualString, String path) {
+        return failure(typeMismatch(ActualJsonString.class, path));
     }
 
     @Override
-    public MatchResult match(ActualJsonNull actualNull) {
-        return failure(new NullMismatch<>(ActualJsonObject.class));
+    public MatchResult match(ActualJsonNull actualNull, String path) {
+        return failure(
+                new NullMismatch<>(ActualJsonObject.class)
+                        .at(path)
+        );
     }
 
     @Override
-    public MatchResult match(ActualJsonArray actualArray) {
-        return failure(new TypeMismatch(ActualJsonObject.class, ActualJsonArray.class));
+    public MatchResult match(ActualJsonArray actualArray, String path) {
+        return failure(typeMismatch(ActualJsonArray.class, path));
     }
 
     @Override
-    public MatchResult match(ActualJsonBoolean actualBoolean) {
-        return failure(new TypeMismatch(ActualJsonObject.class, ActualJsonBoolean.class));
+    public MatchResult match(ActualJsonBoolean actualBoolean, String path) {
+        return failure(typeMismatch(ActualJsonBoolean.class, path));
     }
 
-    private Optional<JsonMismatch> mismatchFromExpectedFields(ActualJsonObject actualObject) {
-        return expectationMap.entrySet()
-                .stream()
-                .map(
-                        e -> actualObject.actualField(e.getKey())
-                                .map(actual -> actual.accept(e.getValue()))
-                                .orElseGet(() -> failure(new NoFieldMismatch(e.getValue())))
-                )
-                .filter(matchResult -> !matchResult.ok())
-                .map(MatchResult::mismatch)
-                .findFirst();
+    private Optional<MismatchWithPath> mismatchFromExpectedFields(ActualJsonObject actualObject, String path) {
+        return new MismatchFactory(actualObject, path)
+                .mismatchFromExpectedFields();
     }
 
-    private Optional<JsonMismatch> mismatchFromUnexpected(ActualJsonObject actualObject) {
-        Set<String> unexpectedFields = difference(actualObject.keys(), expectationMap.keySet());
-        return unexpectedFields.stream()
-                .map(actualObject::actualPresentField)
-                .map(actualField -> new UnexpectedFieldMismatch<>(actualField.getClass()))
-                .map(JsonMismatch.class::cast)
-                .findFirst();
+    private Optional<MismatchWithPath> mismatchFromUnexpected(ActualJsonObject actualObject, String path) {
+        return new MismatchFactory(actualObject, path)
+                .mismatchFromUnexpected();
     }
 
-    private static Optional<JsonMismatch> firstOf(Optional<JsonMismatch> first, Optional<JsonMismatch> second) {
+    private static <T> Optional<T> firstOf(Optional<T> first, Optional<T> second) {
         if (first.isPresent()) {
             return first;
         }
         return second;
+    }
+
+    private MismatchWithPath typeMismatch(Class<? extends Actual> actualType, String path) {
+        return new TypeMismatch(ActualJsonObject.class, actualType)
+                .at(path);
+    }
+
+    @AllArgsConstructor
+    private class MismatchFactory {
+        private final ActualJsonObject actualObject;
+        private final String path;
+
+        Optional<MismatchWithPath> mismatchFromExpectedFields() {
+            return expectationMap.entrySet()
+                    .stream()
+                    .map(e -> matchResult(e.getKey(), e.getValue()))
+                    .filter(matchResult -> !matchResult.ok())
+                    .map(MatchResult::mismatch)
+                    .findFirst();
+        }
+
+        private Optional<MismatchWithPath> mismatchFromUnexpected() {
+            Set<String> unexpectedFields = difference(actualObject.keys(), expectationMap.keySet());
+            return unexpectedFields.stream()
+                    .map(actualObject::actualPresentField)
+                    .map(actualField ->
+                            new UnexpectedFieldMismatch<>(actualField.getClass())
+                                    .at(path)
+                    )
+                    .findFirst();
+        }
+
+        private MatchResult matchResult(String fieldName, JsonExpectation expectation) {
+            return actualObject.actualField(fieldName)
+                    .map(actual -> actual.accept(expectation, path + "." + fieldName))
+                    .orElseGet(() ->
+                            failure(
+                                    new NoFieldMismatch(fieldName, expectation)
+                                            .at(path)
+                            )
+                    );
+        }
     }
 }

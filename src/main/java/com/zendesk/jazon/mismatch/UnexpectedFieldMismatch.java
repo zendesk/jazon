@@ -8,7 +8,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 @ToString
 @EqualsAndHashCode
-public class UnexpectedFieldMismatch<T> implements JsonMismatch {
+public class UnexpectedFieldMismatch<T> implements Mismatch, MismatchWithPathFactory {
     private final Class<? extends Actual> actualType;
 
     public UnexpectedFieldMismatch(Class<? extends Actual> actualType) {

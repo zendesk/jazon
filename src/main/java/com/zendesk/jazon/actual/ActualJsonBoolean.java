@@ -17,8 +17,8 @@ public class ActualJsonBoolean implements Actual {
     }
 
     @Override
-    public MatchResult accept(JsonExpectation expectation) {
-        return expectation.match(this);
+    public MatchResult accept(JsonExpectation expectation, String path) {
+        return expectation.match(this, path);
     }
 
     @Override

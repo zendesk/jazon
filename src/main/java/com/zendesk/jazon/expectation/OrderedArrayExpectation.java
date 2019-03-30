@@ -25,27 +25,30 @@ class OrderedArrayExpectation implements JsonExpectation {
     }
 
     @Override
-    public MatchResult match(ActualJsonNumber actualNumber) {
-        return failure(typeMismatch(ActualJsonNumber.class));
+    public MatchResult match(ActualJsonNumber actualNumber, String path) {
+        return failure(typeMismatch(ActualJsonNumber.class, path));
     }
 
     @Override
-    public MatchResult match(ActualJsonObject actualObject) {
-        return failure(typeMismatch(ActualJsonObject.class));
+    public MatchResult match(ActualJsonObject actualObject, String path) {
+        return failure(typeMismatch(ActualJsonObject.class, path));
     }
 
     @Override
-    public MatchResult match(ActualJsonString actualString) {
-        return failure(typeMismatch(ActualJsonString.class));
+    public MatchResult match(ActualJsonString actualString, String path) {
+        return failure(typeMismatch(ActualJsonString.class, path));
     }
 
     @Override
-    public MatchResult match(ActualJsonNull actualNull) {
-        return failure(new NullMismatch<>(ActualJsonArray.class));
+    public MatchResult match(ActualJsonNull actualNull, String path) {
+        return failure(
+                new NullMismatch<>(ActualJsonArray.class)
+                        .at(path)
+        );
     }
 
     @Override
-    public MatchResult match(ActualJsonArray actualArray) {
+    public MatchResult match(ActualJsonArray actualArray, String path) {
         int index = 0;
         Iterator<JsonExpectation> expectationIterator = expectationList.iterator();
         Iterator<Actual> actualIterator = actualArray.list().iterator();
@@ -53,28 +56,34 @@ class OrderedArrayExpectation implements JsonExpectation {
         while (expectationIterator.hasNext() && actualIterator.hasNext()) {
             JsonExpectation expectation = expectationIterator.next();
             Actual actual = actualIterator.next();
-            MatchResult matchResult = actual.accept(expectation);
+            MatchResult matchResult = actual.accept(expectation, path + "." + index);
             if (!matchResult.ok()) {
-                return failure(new ArrayElementMismatch(index, matchResult.mismatch()));
+                return matchResult;
             }
             index += 1;
         }
 
         if (expectationIterator.hasNext()) {
             List<JsonExpectation> lackingElements = remainingItems(expectationIterator);
-            return failure(new ArrayLackingElementsMismatch(lackingElements));
+            return failure(
+                    new ArrayLackingElementsMismatch(lackingElements)
+                            .at(path)
+            );
         }
 
         if (actualIterator.hasNext()) {
             List<Actual> unexpectedElements = remainingItems(actualIterator);
-            return failure(new ArrayUnexpectedElementsMismatch(unexpectedElements));
+            return failure(
+                    new ArrayUnexpectedElementsMismatch(unexpectedElements)
+                            .at(path)
+            );
         }
 
         return success();
     }
 
     @Override
-    public MatchResult match(ActualJsonBoolean actualBoolean) {
+    public MatchResult match(ActualJsonBoolean actualBoolean, String path) {
         return null;
     }
 
@@ -84,7 +93,8 @@ class OrderedArrayExpectation implements JsonExpectation {
         return result;
     }
 
-    private TypeMismatch typeMismatch(Class<? extends Actual> actualType) {
-        return new TypeMismatch(ActualJsonArray.class, actualType);
+    private MismatchWithPath typeMismatch(Class<? extends Actual> actualType, String path) {
+        return new TypeMismatch(ActualJsonArray.class, actualType)
+                .at(path);
     }
 }

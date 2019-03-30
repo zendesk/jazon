@@ -8,7 +8,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 @ToString
 @EqualsAndHashCode
-public class NotNullMismatch implements JsonMismatch {
+public class NotNullMismatch implements Mismatch, MismatchWithPathFactory {
     private final Actual actual;
 
     public NotNullMismatch(Actual actual) {

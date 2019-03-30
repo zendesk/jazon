@@ -24,42 +24,59 @@ class PrimitiveValueExpectation<T> implements JsonExpectation {
     }
 
     @Override
-    public MatchResult match(ActualJsonNumber actualNumber) {
-        return matchPrimitive(actualNumber.number(), ActualJsonNumber.class);
+    public MatchResult match(ActualJsonNumber actualNumber, String path) {
+        return matchPrimitive(actualNumber.number(), ActualJsonNumber.class, path);
     }
 
     @Override
-    public MatchResult match(ActualJsonObject actualObject) {
-        return failure(new TypeMismatch(expectedJsonType, ActualJsonObject.class));
+    public MatchResult match(ActualJsonObject actualObject, String path) {
+        return failure(
+                new TypeMismatch(expectedJsonType, ActualJsonObject.class)
+                        .at(path)
+        );
     }
 
     @Override
-    public MatchResult match(ActualJsonString actualString) {
-        return matchPrimitive(actualString.string(), ActualJsonString.class);
+    public MatchResult match(ActualJsonString actualString, String path) {
+        return matchPrimitive(actualString.string(), ActualJsonString.class, path);
     }
 
     @Override
-    public MatchResult match(ActualJsonNull actualNull) {
-        return failure(new NullMismatch<>(expectedJsonType, expectedValue));
+    public MatchResult match(ActualJsonNull actualNull, String path) {
+        return failure(
+                new NullMismatch<>(expectedJsonType, expectedValue)
+                        .at(path)
+        );
     }
 
     @Override
-    public MatchResult match(ActualJsonArray actualArray) {
-        return failure(new TypeMismatch(expectedJsonType, ActualJsonArray.class));
+    public MatchResult match(ActualJsonArray actualArray, String path) {
+        return failure(
+                new TypeMismatch(expectedJsonType, ActualJsonArray.class)
+                        .at(path)
+        );
     }
 
     @Override
-    public MatchResult match(ActualJsonBoolean actualBoolean) {
-        return matchPrimitive(actualBoolean.value(), ActualJsonBoolean.class);
+    public MatchResult match(ActualJsonBoolean actualBoolean, String path) {
+        return matchPrimitive(actualBoolean.value(), ActualJsonBoolean.class, path);
     }
 
-    private <ActualType extends Actual> MatchResult matchPrimitive(Object actualValue, Class<ActualType> actualTypeClass) {
+    private <ActualType extends Actual> MatchResult matchPrimitive(Object actualValue,
+                                                                   Class<ActualType> actualTypeClass,
+                                                                   String path) {
         if (actualTypeClass != expectedJsonType) {
-            return failure(new TypeMismatch(expectedJsonType, actualTypeClass));
+            return failure(
+                    new TypeMismatch(expectedJsonType, actualTypeClass)
+                            .at(path)
+            );
         }
         if (expectedValue.equals(actualValue)) {
             return success();
         }
-        return failure(new PrimitiveValueMismatch<>(expectedValue, actualValue));
+        return failure(
+                new PrimitiveValueMismatch<>(expectedValue, actualValue)
+                        .at(path)
+        );
     }
 }

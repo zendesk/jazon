@@ -8,10 +8,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 @EqualsAndHashCode
 @ToString
-public class NoFieldMismatch implements JsonMismatch {
+public class NoFieldMismatch implements Mismatch, MismatchWithPathFactory {
+    private final String fieldName;
     private final JsonExpectation expectation;
 
-    public NoFieldMismatch(JsonExpectation expectation) {
+    public NoFieldMismatch(String fieldName, JsonExpectation expectation) {
+        this.fieldName = checkNotNull(fieldName);
         this.expectation = checkNotNull(expectation);
     }
 }

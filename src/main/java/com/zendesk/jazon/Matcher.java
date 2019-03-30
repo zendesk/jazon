@@ -21,7 +21,7 @@ public class Matcher {
     }
 
     public MatchResult match() {
-        return actual.accept(expectation);
+        return actual.accept(expectation, "$");
     }
 
     public Matcher expected(JsonExpectation expectation) {
