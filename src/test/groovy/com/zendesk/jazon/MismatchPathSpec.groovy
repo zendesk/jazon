@@ -16,7 +16,7 @@ class MismatchPathSpec extends Specification {
             actualFactory
     )
 
-    def "path to mismatch is returned"() {
+    def "complex case"() {
         given:
         def expected = [
                 data: [
@@ -42,6 +42,194 @@ class MismatchPathSpec extends Specification {
         !result.ok()
         result.mismatch().internalMismatch() == new PrimitiveValueMismatch(8, 99)
         result.mismatch().path() == '$.data.2.values.b'
+    }
+
+    def "complex case 2"() {
+        given:
+        def expected = [
+                data: [
+                        [
+                                key   : 111,
+                                values: [
+                                        a       : 1,
+                                        b       : "one",
+                                        elements: [
+                                                [
+                                                        name: "color",
+                                                        value: "blue"
+                                                ],
+                                                [
+                                                        name: "width",
+                                                        value: 5
+                                                ],
+                                                [
+                                                        name: "height",
+                                                        value: 10
+                                                ],
+                                        ]
+                                ]
+                        ],
+                        [
+                                key   : 111,
+                                values: [
+                                        a: 2,
+                                        b: "two",
+                                        elements: [
+                                                [
+                                                        name: "color",
+                                                        value: "green"
+                                                ],
+                                                [
+                                                        name: "width",
+                                                        value: 12
+                                                ],
+                                                [
+                                                        name: "height",
+                                                        value: 24
+                                                ],
+                                        ]
+                                ]
+                        ],
+                        [
+                                key   : 111,
+                                values: [
+                                        a: 3,
+                                        b: "three",
+                                        elements: [
+                                                [
+                                                        name: "color",
+                                                        value: "red"
+                                                ],
+                                                [
+                                                        name: "width",
+                                                        value: 33
+                                                ],
+                                                [
+                                                        name: "height",
+                                                        value: 66
+                                                ],
+                                        ]
+                                ]
+                        ],
+                        [
+                                key   : 111,
+                                values: [
+                                        a: 4,
+                                        b: "four",
+                                        elements: [
+                                                [
+                                                        name: "color",
+                                                        value: "orange"
+                                                ],
+                                                [
+                                                        name: "width",
+                                                        value: 25
+                                                ],
+                                                [
+                                                        name: "height",
+                                                        value: 50
+                                                ],
+                                        ]
+                                ]
+                        ],
+                ]
+        ]
+        def actual = [
+                data: [
+                        [
+                                key   : 111,
+                                values: [
+                                        a       : 1,
+                                        b       : "one",
+                                        elements: [
+                                                [
+                                                        name: "color",
+                                                        value: "blue"
+                                                ],
+                                                [
+                                                        name: "width",
+                                                        value: 5
+                                                ],
+                                                [
+                                                        name: "height",
+                                                        value: 10
+                                                ],
+                                        ]
+                                ]
+                        ],
+                        [
+                                key   : 111,
+                                values: [
+                                        a: 2,
+                                        b: "two",
+                                        elements: [
+                                                [
+                                                        name: "color",
+                                                        value: "black"
+                                                ],
+                                                [
+                                                        name: "width",
+                                                        value: 12
+                                                ],
+                                                [
+                                                        name: "height",
+                                                        value: 24
+                                                ],
+                                        ]
+                                ]
+                        ],
+                        [
+                                key   : 111,
+                                values: [
+                                        a: 3,
+                                        b: "three",
+                                        elements: [
+                                                [
+                                                        name: "color",
+                                                        value: "red"
+                                                ],
+                                                [
+                                                        name: "width",
+                                                        value: 33
+                                                ],
+                                                [
+                                                        name: "height",
+                                                        value: 66
+                                                ],
+                                        ]
+                                ]
+                        ],
+                        [
+                                key   : 111,
+                                values: [
+                                        a: 4,
+                                        b: "four",
+                                        elements: [
+                                                [
+                                                        name: "color",
+                                                        value: "orange"
+                                                ],
+                                                [
+                                                        name: "width",
+                                                        value: 25
+                                                ],
+                                                [
+                                                        name: "height",
+                                                        value: 50
+                                                ],
+                                        ]
+                                ]
+                        ],
+                ]
+        ]
+
+        when:
+        def result = match(expected, actual)
+
+        then:
+        !result.ok()
+        result.mismatch().internalMismatch() == new PrimitiveValueMismatch("green", "black")
+        result.mismatch().path() == '$.data.1.values.elements.0.value'
     }
 
     MatchResult match(Map expected, Map actual) {

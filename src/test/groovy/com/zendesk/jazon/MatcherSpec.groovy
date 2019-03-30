@@ -24,6 +24,7 @@ class MatcherSpec extends Specification {
         then:
         !result.ok()
         result.mismatch().internalMismatch() == new PrimitiveValueMismatch(expected, actual)
+        result.mismatch().path() == '$.a'
 
         where:
         expected                | actual
@@ -64,6 +65,7 @@ class MatcherSpec extends Specification {
         then:
         !result.ok()
         result.mismatch().internalMismatch() == new TypeMismatch(mismatchExpectedType, mismatchActualType)
+        result.mismatch().path() == '$.a'
 
         where:
         expected           | actual        | mismatchExpectedType    | mismatchActualType
@@ -100,6 +102,7 @@ class MatcherSpec extends Specification {
         then:
         !result.ok()
         result.mismatch().internalMismatch() == new NullMismatch(expectedType, expected)
+        result.mismatch().path() == '$.a'
 
         where:
         expected                | expectedType
@@ -130,15 +133,16 @@ class MatcherSpec extends Specification {
         then:
         !result.ok()
         result.mismatch().internalMismatch() == foundMismatch
+        result.mismatch().path() == mismatchPath
 
         where:
-        expectedFieldValue | actualFieldValue || foundMismatch
-        'vegetable'        | 'meat'           || new PrimitiveValueMismatch('vegetable', 'meat')
-        'vegetable'        | null             || new NullMismatch<>(ActualJsonString, 'vegetable')
-        'vegetable'        | 150              || new TypeMismatch(ActualJsonString, ActualJsonNumber)
-        77                 | 'rosemary'       || new TypeMismatch(ActualJsonNumber, ActualJsonString)
-        []                 | 'kek'            || new TypeMismatch(ActualJsonArray, ActualJsonString)
-        [20, 30]           | [20, 77]         || new PrimitiveValueMismatch(30, 77)
+        expectedFieldValue | actualFieldValue || mismatchPath | foundMismatch
+        'vegetable'        | 'meat'           || '$.b'        | new PrimitiveValueMismatch('vegetable', 'meat')
+        'vegetable'        | null             || '$.b'        | new NullMismatch<>(ActualJsonString, 'vegetable')
+        'vegetable'        | 150              || '$.b'        | new TypeMismatch(ActualJsonString, ActualJsonNumber)
+        77                 | 'rosemary'       || '$.b'        | new TypeMismatch(ActualJsonNumber, ActualJsonString)
+        []                 | 'kek'            || '$.b'        | new TypeMismatch(ActualJsonArray, ActualJsonString)
+        [20, 30]           | [20, 77]         || '$.b.1'      | new PrimitiveValueMismatch(30, 77)
     }
 
     def "catches lacking field in Object"() {
@@ -153,7 +157,11 @@ class MatcherSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch().internalMismatch() == new NoFieldMismatch(expectationFactory.expectation('some value'))
+        result.mismatch().internalMismatch() == new NoFieldMismatch(
+                'b',
+                expectationFactory.expectation('some value')
+        )
+        result.mismatch().path() == '$'
 
         where:
         actual << [
@@ -181,6 +189,7 @@ class MatcherSpec extends Specification {
         then:
         !result.ok()
         result.mismatch().internalMismatch() == new UnexpectedFieldMismatch(unexpectedFieldType);
+        result.mismatch().path() == '$'
 
         where:
         unexpectedFieldValue    | unexpectedFieldType
@@ -205,6 +214,7 @@ class MatcherSpec extends Specification {
         then:
         !result.ok()
         result.mismatch().internalMismatch() == elementMismatch
+        result.mismatch().path() == '$.a.' + elementIndex
 
         where:
         expected     | actual       || elementIndex | elementMismatch
@@ -227,6 +237,7 @@ class MatcherSpec extends Specification {
         result.mismatch().internalMismatch() == new ArrayLackingElementsMismatch(
                 lackingElements.collect(expectationFactory.&expectation)
         )
+        result.mismatch().path() == '$.a'
 
         where:
         expected                  | actual          || lackingElements
@@ -249,6 +260,7 @@ class MatcherSpec extends Specification {
         result.mismatch().internalMismatch() == new ArrayUnexpectedElementsMismatch(
                 unexpectedElements.collect(actualFactory.&actual)
         )
+        result.mismatch().path() == '$.a'
 
         where:
         expected       | actual                || unexpectedElements
@@ -286,6 +298,7 @@ class MatcherSpec extends Specification {
         result.mismatch().internalMismatch() == new ArrayLackingElementsMismatch(
                 lackingElements.collect(expectationFactory.&expectation) as Set
         )
+        result.mismatch().path() == '$.a'
 
         where:
         expected                         | actual                 || lackingElements
@@ -311,6 +324,7 @@ class MatcherSpec extends Specification {
         result.mismatch().internalMismatch() == new ArrayUnexpectedElementsMismatch(
                 unexpectedElements.collect(actualFactory.&actual)
         )
+        result.mismatch().path() == '$.a'
 
         where:
         expected                      | actual                     || unexpectedElements
@@ -341,6 +355,7 @@ class MatcherSpec extends Specification {
         then:
         !result.ok()
         result.mismatch().internalMismatch() == new NotNullMismatch(actualFactory.actual(actual))
+        result.mismatch().path() == '$.a'
 
         where:
         actual << [

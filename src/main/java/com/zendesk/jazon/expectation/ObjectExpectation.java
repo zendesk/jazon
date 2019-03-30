@@ -108,8 +108,8 @@ public class ObjectExpectation implements JsonExpectation {
                     .map(actual -> actual.accept(expectation, path + "." + fieldName))
                     .orElseGet(() ->
                             failure(
-                                    new NoFieldMismatch(expectation)
-                                            .at(path + "." + fieldName)
+                                    new NoFieldMismatch(fieldName, expectation)
+                                            .at(path)
                             )
                     );
         }
