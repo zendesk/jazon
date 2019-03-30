@@ -2,7 +2,7 @@ package com.zendesk.jazon.expectation;
 
 import com.zendesk.jazon.MatchResult;
 import com.zendesk.jazon.actual.*;
-import com.zendesk.jazon.mismatch.LocJsonMismatch;
+import com.zendesk.jazon.mismatch.MismatchWithPath;
 import com.zendesk.jazon.mismatch.NotNullMismatch;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -43,7 +43,7 @@ class NullExpectation implements JsonExpectation {
         return null;
     } //TODO!!!!!
 
-    private LocJsonMismatch notNullMismatch(Actual actual, String path) {
+    private MismatchWithPath notNullMismatch(Actual actual, String path) {
         return new NotNullMismatch(actual)
                 .at(path);
     }

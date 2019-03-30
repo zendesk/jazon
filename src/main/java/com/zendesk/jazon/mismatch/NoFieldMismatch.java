@@ -8,7 +8,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 @EqualsAndHashCode
 @ToString
-public class NoFieldMismatch implements JsonMismatch, LocJsonMismatchFactory {
+public class NoFieldMismatch implements Mismatch, MismatchWithPathFactory {
     private final String fieldName;
     private final JsonExpectation expectation;
 

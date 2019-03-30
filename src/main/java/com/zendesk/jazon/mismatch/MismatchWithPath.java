@@ -7,16 +7,16 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 @ToString
 @EqualsAndHashCode
-public class LocJsonMismatch {
-    private final JsonMismatch internalMismatch;
+public class MismatchWithPath {
+    private final Mismatch internalMismatch;
     private final String path;
 
-    public LocJsonMismatch(JsonMismatch internalMismatch, String path) {
+    public MismatchWithPath(Mismatch internalMismatch, String path) {
         this.internalMismatch = checkNotNull(internalMismatch);
         this.path = checkNotNull(path);
     }
 
-    public JsonMismatch internalMismatch() {
+    public Mismatch expectationMismatch() {
         return internalMismatch;
     }
 

@@ -10,7 +10,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 @ToString
 @EqualsAndHashCode
-public class ArrayUnexpectedElementsMismatch implements JsonMismatch, LocJsonMismatchFactory {
+public class ArrayUnexpectedElementsMismatch implements Mismatch, MismatchWithPathFactory {
     private final List<Actual> unexpectedElements;
 
     public ArrayUnexpectedElementsMismatch(List<Actual> unexpectedElements) {

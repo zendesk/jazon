@@ -1,6 +1,6 @@
 package com.zendesk.jazon.mismatch;
 
-public interface JsonMismatch {
+public interface Mismatch {
     default String message() {
         return "ale beka: " + this.toString();
     }

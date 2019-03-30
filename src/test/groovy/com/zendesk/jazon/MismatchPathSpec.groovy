@@ -40,7 +40,7 @@ class MismatchPathSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch().internalMismatch() == new PrimitiveValueMismatch(8, 99)
+        result.mismatch().expectationMismatch() == new PrimitiveValueMismatch(8, 99)
         result.mismatch().path() == '$.data.2.values.b'
     }
 
@@ -228,7 +228,7 @@ class MismatchPathSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch().internalMismatch() == new PrimitiveValueMismatch("green", "black")
+        result.mismatch().expectationMismatch() == new PrimitiveValueMismatch("green", "black")
         result.mismatch().path() == '$.data.1.values.elements.0.value'
     }
 

@@ -23,7 +23,7 @@ class MatcherSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch().internalMismatch() == new PrimitiveValueMismatch(expected, actual)
+        result.mismatch().expectationMismatch() == new PrimitiveValueMismatch(expected, actual)
         result.mismatch().path() == '$.a'
 
         where:
@@ -64,7 +64,7 @@ class MatcherSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch().internalMismatch() == new TypeMismatch(mismatchExpectedType, mismatchActualType)
+        result.mismatch().expectationMismatch() == new TypeMismatch(mismatchExpectedType, mismatchActualType)
         result.mismatch().path() == '$.a'
 
         where:
@@ -101,7 +101,7 @@ class MatcherSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch().internalMismatch() == new NullMismatch(expectedType, expected)
+        result.mismatch().expectationMismatch() == new NullMismatch(expectedType, expected)
         result.mismatch().path() == '$.a'
 
         where:
@@ -132,7 +132,7 @@ class MatcherSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch().internalMismatch() == foundMismatch
+        result.mismatch().expectationMismatch() == foundMismatch
         result.mismatch().path() == mismatchPath
 
         where:
@@ -157,7 +157,7 @@ class MatcherSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch().internalMismatch() == new NoFieldMismatch(
+        result.mismatch().expectationMismatch() == new NoFieldMismatch(
                 'b',
                 expectationFactory.expectation('some value')
         )
@@ -188,7 +188,7 @@ class MatcherSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch().internalMismatch() == new UnexpectedFieldMismatch(unexpectedFieldType);
+        result.mismatch().expectationMismatch() == new UnexpectedFieldMismatch(unexpectedFieldType);
         result.mismatch().path() == '$'
 
         where:
@@ -213,7 +213,7 @@ class MatcherSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch().internalMismatch() == elementMismatch
+        result.mismatch().expectationMismatch() == elementMismatch
         result.mismatch().path() == '$.a.' + elementIndex
 
         where:
@@ -234,7 +234,7 @@ class MatcherSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch().internalMismatch() == new ArrayLackingElementsMismatch(
+        result.mismatch().expectationMismatch() == new ArrayLackingElementsMismatch(
                 lackingElements.collect(expectationFactory.&expectation)
         )
         result.mismatch().path() == '$.a'
@@ -257,7 +257,7 @@ class MatcherSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch().internalMismatch() == new ArrayUnexpectedElementsMismatch(
+        result.mismatch().expectationMismatch() == new ArrayUnexpectedElementsMismatch(
                 unexpectedElements.collect(actualFactory.&actual)
         )
         result.mismatch().path() == '$.a'
@@ -295,7 +295,7 @@ class MatcherSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch().internalMismatch() == new ArrayLackingElementsMismatch(
+        result.mismatch().expectationMismatch() == new ArrayLackingElementsMismatch(
                 lackingElements.collect(expectationFactory.&expectation) as Set
         )
         result.mismatch().path() == '$.a'
@@ -321,7 +321,7 @@ class MatcherSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch().internalMismatch() == new ArrayUnexpectedElementsMismatch(
+        result.mismatch().expectationMismatch() == new ArrayUnexpectedElementsMismatch(
                 unexpectedElements.collect(actualFactory.&actual)
         )
         result.mismatch().path() == '$.a'
@@ -354,7 +354,7 @@ class MatcherSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch().internalMismatch() == new NotNullMismatch(actualFactory.actual(actual))
+        result.mismatch().expectationMismatch() == new NotNullMismatch(actualFactory.actual(actual))
         result.mismatch().path() == '$.a'
 
         where:

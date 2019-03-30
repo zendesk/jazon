@@ -31,8 +31,8 @@ public class ObjectExpectation implements JsonExpectation {
 
     @Override
     public MatchResult match(ActualJsonObject actualObject, String path) {
-        Optional<LocJsonMismatch> mismatchFromExpectedFields = mismatchFromExpectedFields(actualObject, path);
-        Optional<LocJsonMismatch> mismatchFromUnexpected = mismatchFromUnexpected(actualObject, path);
+        Optional<MismatchWithPath> mismatchFromExpectedFields = mismatchFromExpectedFields(actualObject, path);
+        Optional<MismatchWithPath> mismatchFromUnexpected = mismatchFromUnexpected(actualObject, path);
         return firstOf(mismatchFromExpectedFields, mismatchFromUnexpected)
                 .map(MatchResult::failure)
                 .orElseGet(MatchResult::success);
@@ -61,12 +61,12 @@ public class ObjectExpectation implements JsonExpectation {
         return failure(typeMismatch(ActualJsonBoolean.class, path));
     }
 
-    private Optional<LocJsonMismatch> mismatchFromExpectedFields(ActualJsonObject actualObject, String path) {
+    private Optional<MismatchWithPath> mismatchFromExpectedFields(ActualJsonObject actualObject, String path) {
         return new MismatchFromExpectedFields(actualObject, path)
                 .mismatch();
     }
 
-    private Optional<LocJsonMismatch> mismatchFromUnexpected(ActualJsonObject actualObject, String path) {
+    private Optional<MismatchWithPath> mismatchFromUnexpected(ActualJsonObject actualObject, String path) {
         Set<String> unexpectedFields = difference(actualObject.keys(), expectationMap.keySet());
         return unexpectedFields.stream()
                 .map(actualObject::actualPresentField)
@@ -84,7 +84,7 @@ public class ObjectExpectation implements JsonExpectation {
         return second;
     }
 
-    private LocJsonMismatch typeMismatch(Class<? extends Actual> actualType, String path) {
+    private MismatchWithPath typeMismatch(Class<? extends Actual> actualType, String path) {
         return new TypeMismatch(ActualJsonObject.class, actualType)
                 .at(path);
     }
@@ -94,7 +94,7 @@ public class ObjectExpectation implements JsonExpectation {
         private final ActualJsonObject actualObject;
         private final String path;
 
-        Optional<LocJsonMismatch> mismatch() {
+        Optional<MismatchWithPath> mismatch() {
             return expectationMap.entrySet()
                     .stream()
                     .map(e -> matchResult(e.getKey(), e.getValue()))
