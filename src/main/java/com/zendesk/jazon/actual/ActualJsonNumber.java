@@ -10,7 +10,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class ActualJsonNumber implements Actual {
     private final Number number;
 
-    ActualJsonNumber(Number number) {
+    public ActualJsonNumber(Number number) {
         this.number = checkNotNull(number);
     }
 

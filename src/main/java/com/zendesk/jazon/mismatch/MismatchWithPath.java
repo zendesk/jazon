@@ -23,4 +23,8 @@ public class MismatchWithPath {
     public String path() {
         return path;
     }
+
+    public String message() {
+        return "Mismatch at path: " + path + "\n" + internalMismatch.message();
+    }
 }

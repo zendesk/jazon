@@ -40,7 +40,7 @@ class MismatchPathSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch().expectationMismatch() == new PrimitiveValueMismatch(8, 99)
+        result.mismatch().expectationMismatch() == primitiveValueMismatch(8, 99)
         result.mismatch().path() == '$.data.2.values.b'
     }
 
@@ -54,15 +54,19 @@ class MismatchPathSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch().expectationMismatch() == new PrimitiveValueMismatch("green", "black")
+        result.mismatch().expectationMismatch() == primitiveValueMismatch("green", "black")
         result.mismatch().path() == '$.data.1.values.elements.0.value'
     }
 
-    MatchResult match(Map expected, Map actual) {
+    private MatchResult match(Map expected, Map actual) {
         matcherFactory.matcher()
                 .expected(expected)
                 .actual(actual)
                 .match()
+    }
+
+    private PrimitiveValueMismatch primitiveValueMismatch(def expected, def actual) {
+        return new PrimitiveValueMismatch(actualFactory.actual(expected), actualFactory.actual(actual))
     }
 
     private static final VERY_COMPLEX_OBJECT = [

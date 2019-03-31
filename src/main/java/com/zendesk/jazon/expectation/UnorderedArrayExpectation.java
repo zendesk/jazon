@@ -5,11 +5,9 @@ import com.zendesk.jazon.MatchResult;
 import com.zendesk.jazon.actual.*;
 import com.zendesk.jazon.mismatch.*;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkState;
 import static com.zendesk.jazon.MatchResult.failure;
@@ -24,7 +22,6 @@ import static com.zendesk.jazon.MatchResult.success;
  *      soon expected CustomPredicateExpectation similarly will not be supported in UnorderedArrayExpectation).
  *      {@code SUPPORTED_EXPECTATION_TYPES} defines which types of expectation classes are supported.
  */
-@ToString
 @EqualsAndHashCode
 class UnorderedArrayExpectation implements JsonExpectation {
     private static final Set<Class<? extends JsonExpectation>> SUPPORTED_EXPECTATION_TYPES = ImmutableSet.of(
@@ -57,7 +54,7 @@ class UnorderedArrayExpectation implements JsonExpectation {
     @Override
     public MatchResult match(ActualJsonNull actualNull, String path) {
         return failure(
-                new NullMismatch<>(ActualJsonArray.class)
+                new NullMismatch<>(this)
                         .at(path)
         );
     }
@@ -99,6 +96,11 @@ class UnorderedArrayExpectation implements JsonExpectation {
         return failure(typeMismatch(ActualJsonBoolean.class, path));
     }
 
+    @Override
+    public String toString() {
+        return "[" + String.join(", ", strings(expectationSet)) + "] (unordered)";
+    }
+
     private MismatchWithPath typeMismatch(Class<? extends Actual> actualType, String path) {
         return new TypeMismatch(ActualJsonArray.class, actualType)
                 .at(path);
@@ -111,5 +113,11 @@ class UnorderedArrayExpectation implements JsonExpectation {
                 expectation.getClass(),
                 UnorderedArrayExpectation.class.toString()
         );
+    }
+
+    private <T> Collection<String> strings(Collection<T> objects) {
+        return objects.stream()
+                .map(Object::toString)
+                .collect(Collectors.toList());
     }
 }

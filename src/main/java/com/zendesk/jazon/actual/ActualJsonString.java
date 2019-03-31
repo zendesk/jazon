@@ -10,7 +10,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class ActualJsonString implements Actual {
     private final String string;
 
-    ActualJsonString(String string) {
+    public ActualJsonString(String string) {
         this.string = checkNotNull(string);
     }
 
@@ -25,6 +25,6 @@ public class ActualJsonString implements Actual {
 
     @Override
     public String toString() {
-        return string;
+        return String.format("\"%s\"", string);
     }
 }

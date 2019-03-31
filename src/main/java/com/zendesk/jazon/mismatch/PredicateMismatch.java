@@ -4,5 +4,10 @@ import lombok.ToString;
 
 @ToString
 public enum PredicateMismatch implements Mismatch, MismatchWithPathFactory {
-    INSTANCE
+    INSTANCE;
+
+    @Override
+    public String message() {
+        return "Custom predicate does not match the value.";
+    }
 }

@@ -8,12 +8,14 @@ public interface ExpectationFactory {
     JsonExpectation expectation(Object object);
 
     static ObjectExpectation objectExpectation(Map<String, Object> objectsMap, ExpectationFactory expectationFactory) {
-        Map<String, JsonExpectation> expectationsMap = objectsMap.entrySet()
+        LinkedHashMap<String, JsonExpectation> expectationsMap = objectsMap.entrySet()
                 .stream()
                 .collect(
                         toMap(
                                 Map.Entry::getKey,
-                                e -> expectationFactory.expectation(e.getValue())
+                                e -> expectationFactory.expectation(e.getValue()),
+                                (a, b) -> a,
+                                () -> new LinkedHashMap<>(objectsMap.size())
                         )
                 );
         return new ObjectExpectation(expectationsMap);

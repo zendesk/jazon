@@ -5,17 +5,16 @@ import com.zendesk.jazon.actual.*;
 import com.zendesk.jazon.mismatch.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Sets.difference;
 import static com.zendesk.jazon.MatchResult.failure;
 
-@ToString
 @EqualsAndHashCode
 public class ObjectExpectation implements JsonExpectation {
     private final Map<String, JsonExpectation> expectationMap;
@@ -46,7 +45,7 @@ public class ObjectExpectation implements JsonExpectation {
     @Override
     public MatchResult match(ActualJsonNull actualNull, String path) {
         return failure(
-                new NullMismatch<>(ActualJsonObject.class)
+                new NullMismatch<>(this)
                         .at(path)
         );
     }
@@ -59,6 +58,23 @@ public class ObjectExpectation implements JsonExpectation {
     @Override
     public MatchResult match(ActualJsonBoolean actualBoolean, String path) {
         return failure(typeMismatch(ActualJsonBoolean.class, path));
+    }
+
+    @Override
+    public String toString() {
+        return partialJsonObject(2);
+    }
+
+    private String partialJsonObject(int firstFieldsCount) {
+        if (expectationMap.isEmpty()) {
+            return "{}";
+        }
+        String firstFields = expectationMap.entrySet().stream()
+                .limit(firstFieldsCount)
+                .map(e -> String.format("\"%s\": %s", e.getKey(), e. getValue()))
+                .collect(Collectors.joining(", "));
+        String suffix = firstFieldsCount < expectationMap.size() ? ", ...}" : "}";
+        return "{" + firstFields + suffix;
     }
 
     private Optional<MismatchWithPath> mismatchFromExpectedFields(ActualJsonObject actualObject, String path) {
@@ -100,9 +116,8 @@ public class ObjectExpectation implements JsonExpectation {
         private Optional<MismatchWithPath> mismatchFromUnexpected() {
             Set<String> unexpectedFields = difference(actualObject.keys(), expectationMap.keySet());
             return unexpectedFields.stream()
-                    .map(actualObject::actualPresentField)
-                    .map(actualField ->
-                            new UnexpectedFieldMismatch<>(actualField.getClass())
+                    .map(fieldName ->
+                            new UnexpectedFieldMismatch(fieldName)
                                     .at(path)
                     )
                     .findFirst();

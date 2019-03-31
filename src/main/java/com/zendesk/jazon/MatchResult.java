@@ -1,6 +1,5 @@
 package com.zendesk.jazon;
 
-import com.zendesk.jazon.mismatch.Mismatch;
 import com.zendesk.jazon.mismatch.MismatchWithPath;
 
 import java.util.Optional;
@@ -28,13 +27,12 @@ public class MatchResult {
     }
 
     public String message() {
-        return "JSON MISMATCH:\n" + mismatchMessage();
+        return mismatchMessage();
     }
 
     private String mismatchMessage() {
         return mismatch
-                .map(MismatchWithPath::expectationMismatch)
-                .map(Mismatch::message)
+                .map(MismatchWithPath::message)
                 .orElse("lol no mismatch!");
     }
 

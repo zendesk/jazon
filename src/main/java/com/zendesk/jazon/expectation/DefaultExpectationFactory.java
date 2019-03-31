@@ -17,11 +17,11 @@ public class DefaultExpectationFactory implements ExpectationFactory {
         if (object instanceof Map) {
             return objectExpectation((Map<String, Object>) object, this);
         } else if (object instanceof Number) {
-            return new PrimitiveValueExpectation<>((Number) object, ActualJsonNumber.class);
+            return new PrimitiveValueExpectation<>(new ActualJsonNumber((Number) object));
         } else if (object instanceof String) {
-            return new PrimitiveValueExpectation<>((String) object, ActualJsonString.class);
+            return new PrimitiveValueExpectation<>(new ActualJsonString((String) object));
         } else if (object instanceof Boolean) {
-            return new PrimitiveValueExpectation<>((Boolean) object, ActualJsonBoolean.class);
+            return new PrimitiveValueExpectation<>(new ActualJsonBoolean((Boolean) object));
         } else if (object instanceof List) {
             return expectedOrderedArray((List<Object>) object, this);
         } else if (object instanceof Set) {

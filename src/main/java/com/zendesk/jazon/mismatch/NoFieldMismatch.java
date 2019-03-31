@@ -16,4 +16,9 @@ public class NoFieldMismatch implements Mismatch, MismatchWithPathFactory {
         this.fieldName = checkNotNull(fieldName);
         this.expectation = checkNotNull(expectation);
     }
+
+    @Override
+    public String message() {
+        return String.format("Could not find expected field (\"%s\": %s)", fieldName, expectation);
+    }
 }

@@ -14,4 +14,9 @@ public class NotNullMismatch implements Mismatch, MismatchWithPathFactory {
     public NotNullMismatch(Actual actual) {
         this.actual = checkNotNull(actual);
     }
+
+    @Override
+    public String message() {
+        return String.format("Expected null. Found: %s", actual);
+    }
 }
