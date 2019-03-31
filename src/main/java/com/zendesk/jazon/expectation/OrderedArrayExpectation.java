@@ -5,17 +5,14 @@ import com.zendesk.jazon.MatchResult;
 import com.zendesk.jazon.actual.*;
 import com.zendesk.jazon.mismatch.*;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.zendesk.jazon.MatchResult.failure;
 import static com.zendesk.jazon.MatchResult.success;
 
-@ToString
 @EqualsAndHashCode
 class OrderedArrayExpectation implements JsonExpectation {
     private final List<JsonExpectation> expectationList;
@@ -42,7 +39,7 @@ class OrderedArrayExpectation implements JsonExpectation {
     @Override
     public MatchResult match(ActualJsonNull actualNull, String path) {
         return failure(
-                new NullMismatch<>(ActualJsonArray.class)
+                new NullMismatch<>(this)
                         .at(path)
         );
     }
@@ -87,6 +84,11 @@ class OrderedArrayExpectation implements JsonExpectation {
         return failure(typeMismatch(ActualJsonBoolean.class, path));
     }
 
+    @Override
+    public String toString() {
+        return "[" + String.join(", ", strings(expectationList)) + "]";
+    }
+
     private <T> List<T> remainingItems(Iterator<T> iterator) {
         ArrayList<T> result = new ArrayList<>();
         Iterators.addAll(result, iterator);
@@ -96,5 +98,11 @@ class OrderedArrayExpectation implements JsonExpectation {
     private MismatchWithPath typeMismatch(Class<? extends Actual> actualType, String path) {
         return new TypeMismatch(ActualJsonArray.class, actualType)
                 .at(path);
+    }
+
+    private <T> Collection<String> strings(Collection<T> objects) {
+        return objects.stream()
+                .map(Object::toString)
+                .collect(Collectors.toList());
     }
 }

@@ -16,4 +16,9 @@ public class ArrayLackingElementsMismatch implements Mismatch, MismatchWithPathF
     public ArrayLackingElementsMismatch(Collection<JsonExpectation> lackingElements) {
         this.lackingElements = checkNotNull(lackingElements);
     }
+
+    @Override
+    public String message() {
+        return String.format("Array lacks the items: %s", lackingElements);
+    }
 }

@@ -24,7 +24,7 @@ class JazonSpockAdapter {
         if (matchResult.ok()) {
             return true
         }
-        throw new AssertionError("\n\n${matchResult.message()}\n")
+        throw new AssertionError("\n-----------------------------------\nJSON MISMATCH:\n${matchResult.message()}\n-----------------------------------\n")
     }
 
     private static Map<String, Object> parsed(String jsonAsString) {

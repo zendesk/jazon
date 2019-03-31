@@ -9,9 +9,9 @@ import spock.lang.Unroll
 
 class MatcherSpec extends Specification {
 
-    ActualFactory actualFactory = new DefaultActualFactory()
-    ExpectationFactory expectationFactory = new DefaultExpectationFactory()
-    MatcherFactory matcherFactory = new MatcherFactory(
+    static ActualFactory actualFactory = new DefaultActualFactory()
+    static ExpectationFactory expectationFactory = new DefaultExpectationFactory()
+    static MatcherFactory matcherFactory = new MatcherFactory(
             expectationFactory,
             actualFactory
     )
@@ -23,7 +23,7 @@ class MatcherSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch().expectationMismatch() == new PrimitiveValueMismatch(expected, actual)
+        result.mismatch().expectationMismatch() == primitiveValueMismatch(expected, actual)
         result.mismatch().path() == '$.a'
 
         where:
@@ -95,13 +95,14 @@ class MatcherSpec extends Specification {
         [a: [1, 2] as Set] | [a: [bb: 10]] | ActualJsonArray.class   | ActualJsonObject.class
     }
 
-    def "finds null instead of primitive value"() {
+    @Unroll
+    def "finds null instead of primitive value: #expected"() {
         when:
         def result = match([a: expected], [a: null])
 
         then:
         !result.ok()
-        result.mismatch().expectationMismatch() == new NullMismatch(expectedType, expected)
+        result.mismatch().expectationMismatch() == new NullMismatch(expectationFactory.expectation(expected))
         result.mismatch().path() == '$.a'
 
         where:
@@ -137,12 +138,12 @@ class MatcherSpec extends Specification {
 
         where:
         expectedFieldValue | actualFieldValue || mismatchPath | foundMismatch
-        'vegetable'        | 'meat'           || '$.b'        | new PrimitiveValueMismatch('vegetable', 'meat')
-        'vegetable'        | null             || '$.b'        | new NullMismatch<>(ActualJsonString, 'vegetable')
+        'vegetable'        | 'meat'           || '$.b'        | primitiveValueMismatch('vegetable', 'meat')
+        'vegetable'        | null             || '$.b'        | new NullMismatch<>(expectationFactory.expectation('vegetable'))
         'vegetable'        | 150              || '$.b'        | new TypeMismatch(ActualJsonString, ActualJsonNumber)
         77                 | 'rosemary'       || '$.b'        | new TypeMismatch(ActualJsonNumber, ActualJsonString)
         []                 | 'kek'            || '$.b'        | new TypeMismatch(ActualJsonArray, ActualJsonString)
-        [20, 30]           | [20, 77]         || '$.b.1'      | new PrimitiveValueMismatch(30, 77)
+        [20, 30]           | [20, 77]         || '$.b.1'      | primitiveValueMismatch(30, 77)
     }
 
     def "catches lacking field in Object"() {
@@ -188,7 +189,7 @@ class MatcherSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch().expectationMismatch() == new UnexpectedFieldMismatch(unexpectedFieldType)
+        result.mismatch().expectationMismatch() == new UnexpectedFieldMismatch('b')
         result.mismatch().path() == '$'
 
         where:
@@ -245,13 +246,13 @@ class MatcherSpec extends Specification {
 
         where:
         expected     | actual       || elementIndex | elementMismatch
-        [1, 2, 3]    | [3, 2, 1]    || 0            | new PrimitiveValueMismatch<>(1, 3)
-        [1, 2, 3]    | [1, 7, 3]    || 1            | new PrimitiveValueMismatch<>(2, 7)
+        [1, 2, 3]    | [3, 2, 1]    || 0            | primitiveValueMismatch(1, 3)
+        [1, 2, 3]    | [1, 7, 3]    || 1            | primitiveValueMismatch(2, 7)
         [1, 2, true] | [1, 2, 3]    || 2            | new TypeMismatch(ActualJsonBoolean, ActualJsonNumber)
         [1, 2, 3]    | [1, 2, true] || 2            | new TypeMismatch(ActualJsonNumber, ActualJsonBoolean)
         [1, null, 3] | [1, 2, 3]    || 1            | new NotNullMismatch(new ActualJsonNumber(2))
-        [1, 2, 3]    | [1, null, 3] || 1            | new NullMismatch<>(ActualJsonNumber, 2)
-        [1, 2, 3]    | [1, 2, 4, 5] || 2            | new PrimitiveValueMismatch<>(3, 4)
+        [1, 2, 3]    | [1, null, 3] || 1            | new NullMismatch<>(expectationFactory.expectation(2))
+        [1, 2, 3]    | [1, 2, 4, 5] || 2            | primitiveValueMismatch(3, 4)
     }
 
     @Unroll
@@ -453,10 +454,14 @@ class MatcherSpec extends Specification {
         result.ok()
     }
 
-    MatchResult match(Map expected, Map actual) {
+    private MatchResult match(Map expected, Map actual) {
         matcherFactory.matcher()
                 .expected(expected)
                 .actual(actual)
                 .match()
+    }
+
+    private PrimitiveValueMismatch primitiveValueMismatch(def expected, def actual) {
+        return new PrimitiveValueMismatch(actualFactory.actual(expected), actualFactory.actual(actual))
     }
 }

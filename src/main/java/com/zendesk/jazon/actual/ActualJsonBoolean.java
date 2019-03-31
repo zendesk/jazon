@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 public class ActualJsonBoolean implements Actual {
     private final boolean value;
 
-    ActualJsonBoolean(boolean value) {
+    public ActualJsonBoolean(boolean value) {
         this.value = value;
     }
 

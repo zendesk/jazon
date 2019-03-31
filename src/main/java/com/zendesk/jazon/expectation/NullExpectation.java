@@ -5,12 +5,10 @@ import com.zendesk.jazon.actual.*;
 import com.zendesk.jazon.mismatch.MismatchWithPath;
 import com.zendesk.jazon.mismatch.NotNullMismatch;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 import static com.zendesk.jazon.MatchResult.failure;
 import static com.zendesk.jazon.MatchResult.success;
 
-@ToString
 @EqualsAndHashCode
 class NullExpectation implements JsonExpectation {
     @Override
@@ -46,5 +44,10 @@ class NullExpectation implements JsonExpectation {
     private MismatchWithPath notNullMismatch(Actual actual, String path) {
         return new NotNullMismatch(actual)
                 .at(path);
+    }
+
+    @Override
+    public String toString() {
+        return "null";
     }
 }

@@ -16,4 +16,9 @@ public class ArrayUnexpectedElementsMismatch implements Mismatch, MismatchWithPa
     public ArrayUnexpectedElementsMismatch(List<Actual> unexpectedElements) {
         this.unexpectedElements = checkNotNull(unexpectedElements);
     }
+
+    @Override
+    public String message() {
+        return String.format("Array contains unexpected items: %s", unexpectedElements);
+    }
 }
