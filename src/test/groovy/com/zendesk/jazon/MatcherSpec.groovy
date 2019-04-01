@@ -3,6 +3,7 @@ package com.zendesk.jazon
 import com.zendesk.jazon.actual.*
 import com.zendesk.jazon.expectation.DefaultExpectationFactory
 import com.zendesk.jazon.expectation.ExpectationFactory
+import com.zendesk.jazon.expectation.JsonExpectation
 import com.zendesk.jazon.mismatch.*
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -454,14 +455,41 @@ class MatcherSpec extends Specification {
         result.ok()
     }
 
-    private MatchResult match(Map expected, Map actual) {
+    def "any expectation can be root expectation"() {
+        when:
+        def result = matcherFactory.matcher()
+                .expected(expected)
+                .actual(actual)
+                .match()
+
+        then:
+        !result.ok()
+        result.mismatch().expectationMismatch() == mismatch
+        result.mismatch().path() == path
+
+        where:
+        expected         | actual       || path  | mismatch
+        [1, 2, 3]        | [1, 88, 3]   || '$.1' | primitiveValueMismatch(2, 88)
+        [1, 2, 3] as Set | [3, 1, 99]   || '$'   | new ArrayLackingElementsMismatch([expectation(2)] as Set)
+        'medicine'       | 'drug'       || '$'   | primitiveValueMismatch('medicine', 'drug')
+        100              | 99           || '$'   | primitiveValueMismatch(100, 99)
+        true             | false        || '$'   | primitiveValueMismatch(true, false)
+        null             | 'vegetables' || '$'   | new NotNullMismatch(actualFactory.actual('vegetables'))
+        [a: 1]           | [a: 9]       || '$.a' | primitiveValueMismatch(1, 9)
+    }
+
+    private static MatchResult match(Map expected, Map actual) {
         matcherFactory.matcher()
                 .expected(expected)
                 .actual(actual)
                 .match()
     }
 
-    private PrimitiveValueMismatch primitiveValueMismatch(def expected, def actual) {
+    private static PrimitiveValueMismatch primitiveValueMismatch(def expected, def actual) {
         return new PrimitiveValueMismatch(actualFactory.actual(expected), actualFactory.actual(actual))
+    }
+
+    private static JsonExpectation expectation(Object object) {
+        expectationFactory.expectation(object)
     }
 }

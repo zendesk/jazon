@@ -47,6 +47,7 @@ class MatcherForGroovySpec extends Specification {
         then:
         !result.ok()
         result.mismatch().expectationMismatch() == PredicateMismatch.INSTANCE
+        result.mismatch().path() == '$.a'
 
         where:
         stringToMatch << [
@@ -56,5 +57,18 @@ class MatcherForGroovySpec extends Specification {
                 'dagger',
                 'refrigerator',
         ]
+    }
+
+    def "predicate expectation can be root"() {
+        when:
+        def result = matcherFactory.matcher()
+                .expected({ it ==~ 'dig.*'})
+                .actual('refrigerator')
+                .match()
+
+        then:
+        !result.ok()
+        result.mismatch().expectationMismatch() == PredicateMismatch.INSTANCE
+        result.mismatch().path() == '$'
     }
 }

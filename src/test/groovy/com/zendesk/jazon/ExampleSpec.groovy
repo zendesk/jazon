@@ -24,4 +24,15 @@ class ExampleSpec extends Specification {
                 wegorz: { it.startsWith('ele') }
         ])
     }
+
+    def "array can be root JSON: success"() {
+        expect:
+        jazon('["platypus", "narwhal"]').matches(['platypus', 'narwhal'])
+    }
+
+    @FailsWith(AssertionError)
+    def "array can be root JSON: fails"() {
+        expect:
+        jazon('["platypus", "narwhal"]').matches(['platypus', 'lynx'])
+    }
 }
