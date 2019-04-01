@@ -17,19 +17,27 @@ class JazonSpockAdapter {
     }
 
     boolean matches(Map jsonAsMap) {
+        return match(jsonAsMap, parsed(json) as Map<String, Object>)
+    }
+
+    boolean matches(List jsonAsList) {
+        return match(jsonAsList, parsed(json) as List<Object>)
+    }
+
+    private boolean match(Object expected, Object actual) {
         def matchResult = matcherFactory.matcher()
-                .expected(jsonAsMap)
-                .actual(parsed(json))
-                .match();
+                .expected(expected)
+                .actual(actual)
+                .match()
         if (matchResult.ok()) {
             return true
         }
         throw new AssertionError("\n-----------------------------------\nJSON MISMATCH:\n${matchResult.message()}\n-----------------------------------\n")
     }
 
-    private static Map<String, Object> parsed(String jsonAsString) {
+    private static parsed(String jsonAsString) {
         new JsonSlurper()
-                .parse(jsonAsString.getBytes()) as Map<String, Object>
+                .parse(jsonAsString.getBytes())
     }
 
     static JazonSpockAdapter jazon(String json) {

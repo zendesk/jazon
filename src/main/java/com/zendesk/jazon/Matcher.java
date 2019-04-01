@@ -5,8 +5,6 @@ import com.zendesk.jazon.actual.ActualFactory;
 import com.zendesk.jazon.expectation.ExpectationFactory;
 import com.zendesk.jazon.expectation.JsonExpectation;
 
-import java.util.Map;
-
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class Matcher {
@@ -29,8 +27,8 @@ public class Matcher {
         return this;
     }
 
-    public Matcher expected(Map<String, Object> expectationMap) {
-        this.expectation = expectationFactory.expectation(expectationMap);
+    public Matcher expected(Object expectation) {
+        this.expectation = expectationFactory.expectation(expectation);
         return this;
     }
 
@@ -39,8 +37,8 @@ public class Matcher {
         return this;
     }
 
-    public Matcher actual(Map<String, Object> jsonAsMap) {
-        this.actual = actualFactory.actual(jsonAsMap);
+    public Matcher actual(Object actual) {
+        this.actual = actualFactory.actual(actual);
         return this;
     }
 }
