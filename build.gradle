@@ -1,4 +1,4 @@
-group 'com.getbase.jazon'
+group 'com.zendesk.jazon'
 
 apply plugin: 'groovy'
 apply plugin: 'maven-publish'
