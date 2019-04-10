@@ -71,4 +71,19 @@ class MatcherForGroovySpec extends Specification {
         result.mismatch().expectationMismatch() == PredicateMismatch.INSTANCE
         result.mismatch().path() == '$'
     }
+
+    def "Groovy's GString works well"() {
+        given:
+        def someVariable = 123
+        def gstring = "this is interpolated string with $someVariable"
+
+        when:
+        def result = matcherFactory.matcher()
+                .expected([a: gstring])
+                .actual([a: 'this is interpolated string with 123'])
+                .match()
+
+        then:
+        result.ok()
+    }
 }

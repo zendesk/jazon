@@ -4,6 +4,7 @@ import com.zendesk.jazon.actual.ActualJsonBoolean;
 import com.zendesk.jazon.actual.ActualJsonNumber;
 import com.zendesk.jazon.actual.ActualJsonString;
 import groovy.lang.Closure;
+import groovy.lang.GString;
 
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,9 @@ public class SpockExpectationFactory implements ExpectationFactory {
             return new PrimitiveValueExpectation<>(new ActualJsonNumber((Number) object));
         } else if (object instanceof String) {
             return new PrimitiveValueExpectation<>(new ActualJsonString((String) object));
+        } else if (object instanceof GString) {
+            GString interpolatedString = (GString) object;
+            return new PrimitiveValueExpectation<>(new ActualJsonString(interpolatedString.toString()));
         } else if (object instanceof Boolean) {
             return new PrimitiveValueExpectation<>(new ActualJsonBoolean((Boolean) object));
         } else if (object instanceof List) {
@@ -33,6 +37,6 @@ public class SpockExpectationFactory implements ExpectationFactory {
         } else if (object == null) {
             return new NullExpectation();
         }
-        throw new IllegalArgumentException();
+        throw new IllegalArgumentException(String.format("Could not map this object to expectation: %s", object));
     }
 }
