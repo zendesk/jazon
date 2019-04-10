@@ -1,5 +1,6 @@
 package com.zendesk.jazon
 
+import com.zendesk.jazon.actual.ActualJsonString
 import com.zendesk.jazon.actual.DefaultActualFactory
 import com.zendesk.jazon.expectation.SpockExpectationFactory
 import com.zendesk.jazon.mismatch.PredicateMismatch
@@ -85,5 +86,41 @@ class MatcherForGroovySpec extends Specification {
 
         then:
         result.ok()
+    }
+
+    def "predicate expectation for array: fails"() {
+        when:
+        def result = matcherFactory.matcher()
+                .expected([a: predicate])
+                .actual([a: ['chips', 'ketchup', 'fish']])
+                .match()
+
+        then:
+        !result.ok()
+        result.mismatch().expectationMismatch() == PredicateMismatch.INSTANCE
+        result.mismatch().path() == '$.a'
+
+        where:
+        predicate << [
+                { it.size() == 9 },
+                { it[1] == 'fish' },
+        ]
+    }
+
+    def "predicate expectation for array succeeds"() {
+        when:
+        def result = matcherFactory.matcher()
+                .expected([a: predicate])
+                .actual([a: ['chips', 'ketchup', 'fish']])
+                .match()
+
+        then:
+        result.ok()
+
+        where:
+        predicate << [
+                { it.size() == 3 },
+                { it[1] == new ActualJsonString('ketchup') },
+        ]
     }
 }

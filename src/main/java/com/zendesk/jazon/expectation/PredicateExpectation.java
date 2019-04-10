@@ -51,7 +51,7 @@ class PredicateExpectation implements JsonExpectation {
 
     @Override
     public MatchResult match(ActualJsonArray actualArray, String path) {
-        return predicate.test(actualArray)
+        return predicate.test(actualArray.list())
                 ? success()
                 : failure(PredicateMismatch.INSTANCE.at(path));
     }
