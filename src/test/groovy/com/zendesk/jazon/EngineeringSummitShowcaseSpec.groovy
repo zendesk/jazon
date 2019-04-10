@@ -149,29 +149,6 @@ class EngineeringSummitShowcaseSpec extends Specification {
 
 
 
-    def "against code duplication"() {
-        when:
-        def response = '''
-            {
-                "id": 95478,
-                "name": "Coca Cola",
-                "value": "133.30",
-                "updated_at": "1990-06-19T12:19:10Z"
-            }
-        '''
-
-        then:
-        jazon(response).matches deal(value: '133.30', name: 'Coca Cola')
-    }
-
-    private Map deal(Map kwargs) {
-        def defaults = [
-                id        : { it >= 0 },
-                updated_at: { it != null }
-        ]
-        defaults + kwargs
-    }
-
 
 // /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/
 }
