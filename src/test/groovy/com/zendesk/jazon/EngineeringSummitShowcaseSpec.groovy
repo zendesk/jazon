@@ -6,6 +6,15 @@ import static com.zendesk.jazon.spock.JazonSpockAdapter.jazon
 
 class EngineeringSummitShowcaseSpec extends Specification {
 
+
+
+
+
+
+
+
+
+
     def "simple case"() {
         when:
         def response = '''
@@ -139,6 +148,17 @@ class EngineeringSummitShowcaseSpec extends Specification {
                 updated_at: { it != null }
         ])
     }
+
+
+
+
+
+
+
+
+
+
+    // TODO add one here, man
 
 
 
