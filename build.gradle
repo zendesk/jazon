@@ -2,6 +2,7 @@ group 'com.zendesk.jazon'
 
 apply plugin: 'groovy'
 apply plugin: 'maven-publish'
+apply plugin: 'signing'
 
 sourceCompatibility = 1.8
 
@@ -22,31 +23,67 @@ task sourceJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
 }
 
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+artifacts {
+    archives sourceJar, javadocJar
+}
+
+signing {
+    sign publishing.publications
+}
+
 publishing {
     publications {
         jazon(MavenPublication) {
             from components.java
             artifact sourceJar
-        }
-    }
-    repositories {
-        maven {
-            if (version.toString().endsWith('-SNAPSHOT')) {
-                url baseMavenRepoSnapshotsUrl
-                credentials {
-                    username baseMavenRepoSnapshotsUser
-                    password baseMavenRepoSnapshotsPassword
+            artifact javadocJar
+            pom {
+                name = 'Jazon'
+                packaging = 'jar'
+                description = 'A library for test assertions on JSON payloads.'
+                url = 'https://github.com/zendesk/jazon'
+
+                scm {
+                    connection = 'scm:git:git://github.com/zendesk/jazon.git'
+                    developerConnection = 'scm:git:ssh://github.com:zendesk/jazon.git'
+                    url = 'http://github.com/zendesk/jazon/tree/master'
                 }
-            } else {
-                url baseMavenRepoInternalUrl
-                credentials {
-                    username baseMavenRepoInternalUser
-                    password baseMavenRepoInternalPassword
+
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'pawel'
+                        name = 'Paweł Mikołajczyk'
+                        email = 'pmikolajczyk@zendesk.com'
+                        organization = 'Zendesk'
+                        organizationUrl = 'https://zendesk.com'
+                    }
                 }
             }
         }
     }
-
+    repositories {
+        maven {
+            String snapshotUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
+            String releaseUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+            url = version.endsWith('SNAPSHOT') ? snapshotUrl : releaseUrl
+            credentials {
+                username ossrhUsername
+                password ossrhPassword
+            }
+        }
+    }
 }
 
 dependencies {
