@@ -1,7 +1,7 @@
 package com.zendesk.jazon
 
 import com.zendesk.jazon.actual.ActualJsonString
-import com.zendesk.jazon.actual.DefaultActualFactory
+import com.zendesk.jazon.actual.ObjectsActualFactory
 import com.zendesk.jazon.expectation.SpockExpectationFactory
 import com.zendesk.jazon.mismatch.PredicateMismatch
 import spock.lang.Specification
@@ -10,7 +10,7 @@ class MatcherForGroovySpec extends Specification {
 
     MatcherFactory matcherFactory = new MatcherFactory(
             new SpockExpectationFactory(),
-            new DefaultActualFactory()
+            new ObjectsActualFactory()
     )
 
     def "predicate expectation: succeeds"() {

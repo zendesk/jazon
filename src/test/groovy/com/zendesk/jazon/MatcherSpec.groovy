@@ -10,7 +10,7 @@ import spock.lang.Unroll
 
 class MatcherSpec extends Specification {
 
-    static ActualFactory actualFactory = new DefaultActualFactory()
+    static ActualFactory actualFactory = new ObjectsActualFactory()
     static ExpectationFactory expectationFactory = new DefaultExpectationFactory()
     static MatcherFactory matcherFactory = new MatcherFactory(
             expectationFactory,

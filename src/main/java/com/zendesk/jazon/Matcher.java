@@ -9,11 +9,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class Matcher {
     private final ExpectationFactory expectationFactory;
-    private final ActualFactory actualFactory;
+    private final ActualFactory<Object> actualFactory;
     private JsonExpectation expectation;
     private Actual actual;
 
-    Matcher(ExpectationFactory expectationFactory, ActualFactory actualFactory) {
+    Matcher(ExpectationFactory expectationFactory, ActualFactory<Object> actualFactory) {
         this.expectationFactory = expectationFactory;
         this.actualFactory = actualFactory;
     }
