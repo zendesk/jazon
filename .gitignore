@@ -13,6 +13,7 @@
 # Gradle
 build/
 .gradle/
+.gradletasknamecache
 
 # Misc
 bin/
