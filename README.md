@@ -1,5 +1,5 @@
 # jazon
-Test assertions on JSONs has never been easier
+Test assertions on JSONs have never been easier
 
 ## Features
 Jazon supports:
