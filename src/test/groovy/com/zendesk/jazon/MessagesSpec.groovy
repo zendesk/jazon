@@ -1,7 +1,7 @@
 package com.zendesk.jazon
 
 import com.zendesk.jazon.actual.ActualFactory
-import com.zendesk.jazon.actual.DefaultActualFactory
+import com.zendesk.jazon.actual.ObjectsActualFactory
 import com.zendesk.jazon.expectation.DefaultExpectationFactory
 import com.zendesk.jazon.expectation.ExpectationFactory
 import spock.lang.Specification
@@ -9,7 +9,7 @@ import spock.lang.Unroll
 
 class MessagesSpec extends Specification {
 
-    ActualFactory actualFactory = new DefaultActualFactory()
+    ActualFactory actualFactory = new ObjectsActualFactory()
     ExpectationFactory expectationFactory = new DefaultExpectationFactory()
     MatcherFactory matcherFactory = new MatcherFactory(
             expectationFactory,
