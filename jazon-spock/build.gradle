@@ -1,0 +1,13 @@
+ext {
+    name = 'Jazon Spock Adapter'
+    description = 'A library for test assertions on JSON payloads - for Spock framework.'
+}
+
+apply from: '../gradle/publishing.gradle'
+
+dependencies {
+    compile project(':jazon-core')
+    compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.12'
+
+    testCompile group: 'org.spockframework', name: 'spock-core', version: '1.2-groovy-2.4'
+}

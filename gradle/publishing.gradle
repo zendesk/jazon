@@ -1,0 +1,39 @@
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+            artifact sourceJar
+            artifact javadocJar
+
+            pom {
+                name = project.ext.name
+                packaging = 'jar'
+                description = project.ext.description
+                url = 'https://github.com/zendesk/jazon'
+
+                scm {
+                    connection = 'scm:git:git://github.com/zendesk/jazon.git'
+                    developerConnection = 'scm:git:ssh://github.com:zendesk/jazon.git'
+                    url = 'http://github.com/zendesk/jazon/tree/master'
+                }
+
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'pawel'
+                        name = 'Paweł Mikołajczyk'
+                        email = 'pmikolajczyk@zendesk.com'
+                        organization = 'Zendesk'
+                        organizationUrl = 'https://zendesk.com'
+                    }
+                }
+            }
+        }
+    }
+}
