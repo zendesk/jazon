@@ -2,6 +2,7 @@ package com.zendesk.jazon.actual;
 
 import com.google.gson.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -56,11 +57,29 @@ public class GsonActualFactory implements ActualFactory<String> {
         if (jsonPrimitive.isBoolean()) {
             return new ActualJsonBoolean(jsonPrimitive.getAsBoolean());
         } else if (jsonPrimitive.isNumber()) {
-            return new ActualJsonNumber(jsonPrimitive.getAsNumber());
+            return new ActualJsonNumber(intOrLongOrBigDecimal(jsonPrimitive));
         } else if (jsonPrimitive.isString()) {
             return new ActualJsonString(jsonPrimitive.getAsString());
         }
         throw new IllegalStateException("Invalid JsonPrimitive - not Boolean, not Number, not String");
+    }
+
+    private Number intOrLongOrBigDecimal(JsonPrimitive jsonPrimitive) {
+        String numberAsString = jsonPrimitive.getAsString();
+        if (isInteger(numberAsString)) {
+            long numberAsLong = Long.parseLong(numberAsString);
+            if (numberAsLong <= Integer.MAX_VALUE && numberAsLong >= Integer.MIN_VALUE) {
+                return (int) numberAsLong;
+            }
+            return numberAsLong;
+        }
+        return new BigDecimal(numberAsString);
+    }
+
+    private boolean isInteger(String numberAsString) {
+        return !numberAsString.contains(".") &&
+                !numberAsString.contains("e") &&
+                !numberAsString.contains("E");
     }
 
     private Stream<JsonElement> stream(JsonArray jsonArray) {
