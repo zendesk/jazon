@@ -1,2 +1,4 @@
 rootProject.name = 'jazon'
+include 'jazon-core'
+include 'jazon-spock'
 
