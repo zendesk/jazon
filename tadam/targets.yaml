@@ -1,4 +1,0 @@
-build_v1:
-  - "clean"
-  - "build"
-  - "publish"

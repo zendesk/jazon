@@ -3,6 +3,7 @@ package com.zendesk.jazon;
 import com.zendesk.jazon.mismatch.MismatchWithPath;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -27,16 +28,21 @@ public class MatchResult {
     }
 
     public String message() {
-        return mismatchMessage();
-    }
-
-    private String mismatchMessage() {
         return mismatch
                 .map(MismatchWithPath::message)
-                .orElse("lol no mismatch!");
+                .orElseThrow(cannotGetMessageException());
     }
 
     public MismatchWithPath mismatch() {
-        return mismatch.orElseThrow(IllegalArgumentException::new);
+        return mismatch
+                .orElseThrow(cannotGetMismatchException());
+    }
+
+    private Supplier<IllegalStateException> cannotGetMessageException() {
+        return () -> new IllegalStateException("MatchResult is OK. There is no Mismatch. You cannot get the message.");
+    }
+
+    private Supplier<IllegalStateException> cannotGetMismatchException() {
+        return () -> new IllegalStateException("MatchResult is OK. There is no Mismatch.");
     }
 }

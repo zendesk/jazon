@@ -47,7 +47,7 @@ class MessagesSpec extends Specification {
         ]
         def actual = [
                 a: 'lance',
-                b: 'kek'
+                b: 'helicopter'
         ]
 
         when:

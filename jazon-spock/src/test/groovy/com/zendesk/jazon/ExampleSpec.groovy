@@ -9,19 +9,19 @@ class ExampleSpec extends Specification {
 
     def "smoke test"() {
         expect:
-        jazon('{"wegorz": "elektryczny"}').matches([wegorz: 'elektryczny'])
+        jazon('{"shark": "white"}').matches([shark: 'white'])
     }
 
     @FailsWith(AssertionError)
     def "failure format test"() {
         expect:
-        jazon('{"wegorz": "elektryczny", "ryba": "pila"}').matches([wegorz: 'elektryczny'])
+        jazon('{"shark": "white", "raccoon": "red"}').matches([shark: 'white'])
     }
 
     def "predicate expectation test"() {
         expect:
-        jazon('{"wegorz": "elektryczny"}').matches([
-                wegorz: { it.startsWith('ele') }
+        jazon('{"shark": "white"}').matches([
+                shark: { it.startsWith('whi') }
         ])
     }
 

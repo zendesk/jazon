@@ -54,7 +54,7 @@ class MatcherSpec extends Specification {
         12345l                  | 1500.13d
         12345l                  | new BigDecimal("11.05")
         12345l                  | 1234567l
-        'something serious'     | 'lol'
+        'green'                 | 'red'
         true                    | false
         false                   | true
     }
@@ -70,7 +70,7 @@ class MatcherSpec extends Specification {
 
         where:
         expected           | actual        | mismatchExpectedType    | mismatchActualType
-        [a: 123]           | [a: 'lol']    | ActualJsonNumber.class  | ActualJsonString.class
+        [a: 123]           | [a: 'red']    | ActualJsonNumber.class  | ActualJsonString.class
         [a: 123]           | [a: [bb: 10]] | ActualJsonNumber.class  | ActualJsonObject.class
         [a: 123]           | [a: true]     | ActualJsonNumber.class  | ActualJsonBoolean.class
         [a: 123]           | [a: [1, 2]]   | ActualJsonNumber.class  | ActualJsonArray.class
@@ -79,19 +79,19 @@ class MatcherSpec extends Specification {
         [a: 'ww']          | [a: true]     | ActualJsonString.class  | ActualJsonBoolean.class
         [a: 'ww']          | [a: [1, 2]]   | ActualJsonString.class  | ActualJsonArray.class
         [a: [bb: 10]]      | [a: 88]       | ActualJsonObject.class  | ActualJsonNumber.class
-        [a: [bb: 10]]      | [a: 'lol']    | ActualJsonObject.class  | ActualJsonString.class
+        [a: [bb: 10]]      | [a: 'red']    | ActualJsonObject.class  | ActualJsonString.class
         [a: [bb: 10]]      | [a: true]     | ActualJsonObject.class  | ActualJsonBoolean.class
         [a: [bb: 10]]      | [a: [1, 2]]   | ActualJsonObject.class  | ActualJsonArray.class
-        [a: true]          | [a: 'lol']    | ActualJsonBoolean.class | ActualJsonString.class
+        [a: true]          | [a: 'red']    | ActualJsonBoolean.class | ActualJsonString.class
         [a: true]          | [a: 88]       | ActualJsonBoolean.class | ActualJsonNumber.class
         [a: true]          | [a: [bb: 10]] | ActualJsonBoolean.class | ActualJsonObject.class
         [a: true]          | [a: [1, 2]]   | ActualJsonBoolean.class | ActualJsonArray.class
         [a: [1, 2]]        | [a: 123]      | ActualJsonArray.class   | ActualJsonNumber.class
-        [a: [1, 2]]        | [a: 'lol']    | ActualJsonArray.class   | ActualJsonString.class
+        [a: [1, 2]]        | [a: 'red']    | ActualJsonArray.class   | ActualJsonString.class
         [a: [1, 2]]        | [a: 88]       | ActualJsonArray.class   | ActualJsonNumber.class
         [a: [1, 2]]        | [a: [bb: 10]] | ActualJsonArray.class   | ActualJsonObject.class
         [a: [1, 2] as Set] | [a: 123]      | ActualJsonArray.class   | ActualJsonNumber.class
-        [a: [1, 2] as Set] | [a: 'lol']    | ActualJsonArray.class   | ActualJsonString.class
+        [a: [1, 2] as Set] | [a: 'red']    | ActualJsonArray.class   | ActualJsonString.class
         [a: [1, 2] as Set] | [a: 88]       | ActualJsonArray.class   | ActualJsonNumber.class
         [a: [1, 2] as Set] | [a: [bb: 10]] | ActualJsonArray.class   | ActualJsonObject.class
     }
@@ -143,7 +143,7 @@ class MatcherSpec extends Specification {
         'vegetable'        | null             || '$.b'        | new NullMismatch<>(expectationFactory.expectation('vegetable'))
         'vegetable'        | 150              || '$.b'        | new TypeMismatch(ActualJsonString, ActualJsonNumber)
         77                 | 'rosemary'       || '$.b'        | new TypeMismatch(ActualJsonNumber, ActualJsonString)
-        []                 | 'kek'            || '$.b'        | new TypeMismatch(ActualJsonArray, ActualJsonString)
+        []                 | 'car'            || '$.b'        | new TypeMismatch(ActualJsonArray, ActualJsonString)
         [20, 30]           | [20, 77]         || '$.b.1'      | primitiveValueMismatch(30, 77)
     }
 
@@ -168,7 +168,7 @@ class MatcherSpec extends Specification {
         where:
         actual << [
                 [a: 103],
-                [a: 103, c: 'kek']
+                [a: 103, c: 'car']
         ]
     }
 
@@ -201,7 +201,7 @@ class MatcherSpec extends Specification {
         20.14f                  | ActualJsonNumber
         44.999d                 | ActualJsonNumber
         new BigDecimal("80.92") | ActualJsonNumber
-        [a: 1, b: 'lol']        | ActualJsonObject
+        [a: 1, b: 'blue']       | ActualJsonObject
         null                    | ActualJsonNull
         [5, 4, 3]               | ActualJsonArray
         true                    | ActualJsonBoolean
@@ -277,7 +277,7 @@ class MatcherSpec extends Specification {
         [1, null]                 | [1]             || [null]
         [9]                       | []              || [9]
         [null]                    | []              || [null]
-        [null, 'kek', 17]         | []              || [null, 'kek', 17]
+        [null, 'car', 17]         | []              || [null, 'car', 17]
     }
 
     def "ordered list expectation - unexpected elements"() {
@@ -295,7 +295,7 @@ class MatcherSpec extends Specification {
         expected       | actual                || unexpectedElements
         [1, 2]         | [1, 2, 3]             || [3]
         []             | [1, 2, 3]             || [1, 2, 3]
-        ['beka']       | ['beka', 'czeka']     || ['czeka']
+        ['carpet']     | ['carpet', 'fur']     || ['fur']
         []             | [null]                || [null]
         []             | [null, null]          || [null, null]
         [1, 2]         | [1, 2, null]          || [null]
