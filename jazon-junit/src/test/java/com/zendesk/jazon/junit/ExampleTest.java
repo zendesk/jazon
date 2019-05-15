@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import static com.zendesk.jazon.junit.JazonJunitAdapter.assertThat;
 import static java.util.Arrays.asList;
@@ -45,6 +46,25 @@ public class ExampleTest {
 
         // then
         assertThat(actualJson).matches(asList("blue", "pink", "red"));
+    }
+
+    @Test
+    public void testRegex() {
+        // given
+        String actualJson = "[\"blue\", \"black\", \"red\"]";
+
+        // then
+        assertThat(actualJson).matches(
+                asList(
+                        regex("bl.*"),
+                        regex("bl.*"),
+                        regex("r.*")
+                )
+        );
+    }
+
+    private Predicate<String> regex(String reg) {
+        return s -> s.matches(reg);
     }
 
     private static Map<String, Object> deal(int value, List<String> tags) {

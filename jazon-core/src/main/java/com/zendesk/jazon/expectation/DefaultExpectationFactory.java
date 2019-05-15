@@ -7,6 +7,7 @@ import com.zendesk.jazon.actual.ActualJsonString;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import static com.zendesk.jazon.expectation.ExpectationFactory.*;
 
@@ -28,6 +29,8 @@ public class DefaultExpectationFactory implements ExpectationFactory {
             return expectedUnorderedArray((Set<Object>) object, this);
         } else if (object == null) {
             return new NullExpectation();
+        } else if (object instanceof Predicate) {
+            return new PredicateExpectation((Predicate<Object>) object);
         }
         throw new IllegalArgumentException();
     }
