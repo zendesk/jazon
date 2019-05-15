@@ -23,7 +23,7 @@ Jazon was created to make writing tests on JSON APIs easy. It offers:
 Jazon is provided as separate libraries (so called adapters) for each supported testing framework.
 Depending on the framework you use, pick the adapter library that is applicable for you.
 
-#### Spock
+### Spock
 
 [User guide for Spock Adapter](jazon-spock/README.md#Quickstart)
 
@@ -43,7 +43,7 @@ dependencies {
 </dependency>
 ```
  
-#### JUnit:
+### JUnit:
 
 [User guide for JUnit Adapter](jazon-junit/README.md#Quickstart)
 
