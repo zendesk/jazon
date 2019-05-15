@@ -88,10 +88,6 @@ private Predicate<String> regex(String regex) {
 }
 ```
 
-#### Example 4: Utils extraction
-
-//TODO
-
 ## Copyright and license
 Copyright 2019 Zendesk, Inc.
 
