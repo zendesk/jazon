@@ -1,55 +1,63 @@
-# jazon
-Test assertions on JSONs have never been easier
+# Jazon
+A library for test assertions on JSON outputs. 
 
-## Features
-Jazon supports:
-* simple assertions on JSONs
-    * Groovy example: 
-    ```groovy
-    jazon(response).matches(
-        [
-            firstName: 'Steve', 
-            lastName: 'Jobs'
-        ]
-    )
-    ```
-* assertions for unordered arrays (when order of items do not matter in your JSON response)
-    * This Groovy example will pass for `[1, 2, 3]`, `[3, 1, 2]`, `[2, 3, 1]` as response's `"elements"` field: 
-    ```groovy
-    jazon(response).matches(
-        [
-            elements: [1, 2, 3] as Set
-        ]
-    )
-    ```
-* handy user-defined assertions (most powerful productivity booster)
-    * Groovy example:
-    ```groovy
-    jazon(response).matches(
-        [
-            id: ANYTHING,
-            elements: { it.size() == 17 }  
-        ]
-    )
-    ```
-* optimised to minimise code duplication
-    * Groovy example:
-    ```groovy
-    jazon(response).matches person(lastName: 'Jobs')
-    ```
-    ```groovy
-    def person(Map kwargs) {
-      Map defaults = [
-          id: ANYTHING,
-          firstName: ANY_STRING_OR_NULL,
-          lastName: ANY_STRING,
-      ]
-      return defaults + kwargs
-    }
-    ```     
-* optimised for best human-readable error message allowing for fast error tracing
-    * Sample error message: `Mismatch at path '$.data.deal.name' - Expected: "Big Deal" but found: null`. 
-    
+Supports Spock and JUnit. Easy to extend for other test frameworks and languages.
+
+## About
+
+Jazon was created to make writing tests on JSON APIs easy. It offers:
+* Simple Exact-match assertions on JSON
+* Matching unordered JSON arrays (ability to ignore the items order)
+* User-defined wildcard assertions, e.g.
+    * Match string to a regex
+    * Match number to a range
+    * Match datetime to some specific format
+    * Verify that float has only 2 decimal points
+    * Verify that list has only 25 items
+    * ... anything you need
+* Human-readable error messages for fast mismatch tracing
+* Optimised to minimise code duplication 
+
+## Usage
+
+##### For Spock:
+
+User guide: 
+
+Gradle: 
+```groovy
+dependencies {
+    testCompile 'com.zendesk.jazon:jazon-spock:0.3.0'
+}
+```
+Maven:
+```xml
+<dependency>
+    <groupId>com.zendesk.jazon</groupId>
+    <artifactId>jazon-spock</artifactId>
+    <version>0.3.0</version>
+    <scope>test</scope>
+</dependency>
+```
+ 
+##### For JUnit:
+
+Gradle: 
+```groovy
+dependencies {
+    testCompile 'com.zendesk.jazon:jazon-junit:0.3.0'
+}
+```
+Maven:
+```xml
+<dependency>
+    <groupId>com.zendesk.jazon</groupId>
+    <artifactId>jazon-junit</artifactId>
+    <version>0.3.0</version>
+    <scope>test</scope>
+</dependency>
+```
+
 ## Copyright and license
 Copyright 2019 Zendesk, Inc.
 
