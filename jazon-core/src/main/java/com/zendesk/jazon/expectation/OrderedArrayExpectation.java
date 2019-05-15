@@ -1,15 +1,17 @@
 package com.zendesk.jazon.expectation;
 
-import com.google.common.collect.Iterators;
 import com.zendesk.jazon.MatchResult;
 import com.zendesk.jazon.actual.*;
 import com.zendesk.jazon.mismatch.*;
 import lombok.EqualsAndHashCode;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.zendesk.jazon.util.Preconditions.checkNotNull;
 import static com.zendesk.jazon.MatchResult.failure;
 import static com.zendesk.jazon.MatchResult.success;
 
@@ -91,7 +93,7 @@ class OrderedArrayExpectation implements JsonExpectation {
 
     private <T> List<T> remainingItems(Iterator<T> iterator) {
         ArrayList<T> result = new ArrayList<>();
-        Iterators.addAll(result, iterator);
+        iterator.forEachRemaining(result::add);
         return result;
     }
 

@@ -8,7 +8,7 @@ import com.zendesk.jazon.mismatch.PrimitiveValueMismatch;
 import com.zendesk.jazon.mismatch.TypeMismatch;
 import lombok.EqualsAndHashCode;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.zendesk.jazon.util.Preconditions.checkNotNull;
 import static com.zendesk.jazon.MatchResult.failure;
 import static com.zendesk.jazon.MatchResult.success;
 

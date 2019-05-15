@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 
-import static com.google.common.base.Preconditions.*;
+import static com.zendesk.jazon.util.Preconditions.checkNotNull;
 
 @EqualsAndHashCode
 public class ActualJsonNumber implements Actual {

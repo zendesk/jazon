@@ -3,7 +3,7 @@ package com.zendesk.jazon.mismatch;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.zendesk.jazon.util.Preconditions.checkNotNull;
 
 @ToString
 @EqualsAndHashCode

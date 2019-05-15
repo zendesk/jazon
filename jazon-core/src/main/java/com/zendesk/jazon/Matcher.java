@@ -5,7 +5,7 @@ import com.zendesk.jazon.actual.ActualFactory;
 import com.zendesk.jazon.expectation.ExpectationFactory;
 import com.zendesk.jazon.expectation.JsonExpectation;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.zendesk.jazon.util.Preconditions.checkNotNull;
 
 public class Matcher {
     private final ExpectationFactory expectationFactory;

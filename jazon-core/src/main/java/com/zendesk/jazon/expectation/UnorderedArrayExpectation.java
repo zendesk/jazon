@@ -1,17 +1,19 @@
 package com.zendesk.jazon.expectation;
 
-import com.google.common.collect.ImmutableSet;
 import com.zendesk.jazon.MatchResult;
 import com.zendesk.jazon.actual.*;
 import com.zendesk.jazon.mismatch.*;
 import lombok.EqualsAndHashCode;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.google.common.base.Preconditions.checkState;
 import static com.zendesk.jazon.MatchResult.failure;
 import static com.zendesk.jazon.MatchResult.success;
+import static java.util.Arrays.asList;
 
 /**
  * FIXME:
@@ -24,11 +26,11 @@ import static com.zendesk.jazon.MatchResult.success;
  */
 @EqualsAndHashCode
 class UnorderedArrayExpectation implements JsonExpectation {
-    private static final Set<Class<? extends JsonExpectation>> SUPPORTED_EXPECTATION_TYPES = ImmutableSet.of(
+    private static final Set<Class<? extends JsonExpectation>> SUPPORTED_EXPECTATION_TYPES = new HashSet<>(asList(
             PrimitiveValueExpectation.class,
             ObjectExpectation.class,
             OrderedArrayExpectation.class
-    );
+    ));
     private final Set<JsonExpectation> expectationSet;
 
     UnorderedArrayExpectation(Set<JsonExpectation> expectationSet) {
@@ -108,11 +110,15 @@ class UnorderedArrayExpectation implements JsonExpectation {
 
     private void verifyExpectationSupported(JsonExpectation expectation) {
         boolean isSupported = SUPPORTED_EXPECTATION_TYPES.contains(expectation.getClass());
-        checkState(isSupported,
-                "{} is not supported in {}",
-                expectation.getClass(),
-                UnorderedArrayExpectation.class.toString()
-        );
+        if (!isSupported) {
+            throw new IllegalStateException(
+                    String.format(
+                            "%s is not supported in %s",
+                            expectation.getClass(),
+                            UnorderedArrayExpectation.class.toString()
+                    )
+            );
+        }
     }
 
     private <T> Collection<String> strings(Collection<T> objects) {

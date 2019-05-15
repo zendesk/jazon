@@ -8,7 +8,7 @@ import lombok.ToString;
 
 import java.util.function.Predicate;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.zendesk.jazon.util.Preconditions.checkNotNull;
 import static com.zendesk.jazon.MatchResult.failure;
 import static com.zendesk.jazon.MatchResult.success;
 

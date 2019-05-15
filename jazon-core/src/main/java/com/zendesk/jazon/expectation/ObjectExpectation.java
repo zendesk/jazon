@@ -6,13 +6,13 @@ import com.zendesk.jazon.mismatch.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.Sets.difference;
+import static com.zendesk.jazon.util.Preconditions.checkNotNull;
 import static com.zendesk.jazon.MatchResult.failure;
 
 @EqualsAndHashCode
@@ -71,7 +71,7 @@ public class ObjectExpectation implements JsonExpectation {
         }
         String firstFields = expectationMap.entrySet().stream()
                 .limit(firstFieldsCount)
-                .map(e -> String.format("\"%s\": %s", e.getKey(), e. getValue()))
+                .map(e -> String.format("\"%s\": %s", e.getKey(), e.getValue()))
                 .collect(Collectors.joining(", "));
         String suffix = firstFieldsCount < expectationMap.size() ? ", ...}" : "}";
         return "{" + firstFields + suffix;
@@ -114,7 +114,7 @@ public class ObjectExpectation implements JsonExpectation {
         }
 
         private Optional<MismatchWithPath> mismatchFromUnexpected() {
-            Set<String> unexpectedFields = difference(actualObject.keys(), expectationMap.keySet());
+            Set<String> unexpectedFields = setsDifference(actualObject.keys(), expectationMap.keySet());
             return unexpectedFields.stream()
                     .map(fieldName ->
                             new UnexpectedFieldMismatch(fieldName)
@@ -132,6 +132,16 @@ public class ObjectExpectation implements JsonExpectation {
                                             .at(path)
                             )
                     );
+        }
+
+        private Set<String> setsDifference(Set<String> first, Set<String> second) {
+            HashSet<String> result = new HashSet<>();
+            for (String memberOfFirst : first) {
+                if (!second.contains(memberOfFirst)) {
+                    result.add(memberOfFirst);
+                }
+            }
+            return result;
         }
     }
 }
