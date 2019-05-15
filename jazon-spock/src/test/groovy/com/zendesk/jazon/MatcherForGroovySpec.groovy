@@ -1,6 +1,5 @@
 package com.zendesk.jazon
 
-import com.zendesk.jazon.actual.ActualJsonString
 import com.zendesk.jazon.actual.ObjectsActualFactory
 import com.zendesk.jazon.expectation.SpockExpectationFactory
 import com.zendesk.jazon.mismatch.PredicateMismatch
@@ -63,7 +62,7 @@ class MatcherForGroovySpec extends Specification {
     def "predicate expectation can be root"() {
         when:
         def result = matcherFactory.matcher()
-                .expected({ it ==~ 'dig.*'})
+                .expected({ it ==~ 'dig.*' })
                 .actual('refrigerator')
                 .match()
 
@@ -120,7 +119,43 @@ class MatcherForGroovySpec extends Specification {
         where:
         predicate << [
                 { it.size() == 3 },
-                { it[1] == new ActualJsonString('ketchup') },
+                { it[1] == 'ketchup' },
+        ]
+    }
+
+    def "predicate expectation for object: fails"() {
+        when:
+        def result = matcherFactory.matcher()
+                .expected([a: predicate])
+                .actual([a: [name: 'tomato', color: 'red']])
+                .match()
+
+        then:
+        !result.ok()
+        result.mismatch().expectationMismatch() == PredicateMismatch.INSTANCE
+        result.mismatch().path() == '$.a'
+
+        where:
+        predicate << [
+                { it.size() == 17 },
+                { it.name == 'cucumber' },
+        ]
+    }
+
+    def "predicate expectation for object succeeds"() {
+        when:
+        def result = matcherFactory.matcher()
+                .expected([a: predicate])
+                .actual([a: [name: 'tomato', color: 'red']])
+                .match()
+
+        then:
+        result.ok()
+
+        where:
+        predicate << [
+                { it.name == 'tomato' },
+                { it.color == 'red' },
         ]
     }
 }

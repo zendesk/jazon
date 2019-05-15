@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static com.zendesk.jazon.util.Preconditions.checkNotNull;
+import static java.util.Collections.unmodifiableMap;
 
 @ToString
 @EqualsAndHashCode
@@ -24,12 +25,8 @@ public class ActualJsonObject implements Actual {
         return Optional.ofNullable(map.get(fieldName));
     }
 
-    public Actual actualPresentField(String fieldName) {
-        if (map.containsKey(fieldName)) {
-            return map.get(fieldName);
-        }
-        throw new IllegalStateException("Field " + fieldName +
-                " not found. To use this method you have to be sure the field exists.");
+    public Map<String, Actual> map() {
+        return unmodifiableMap(map);
     }
 
     public Set<String> keys() {
@@ -39,5 +36,9 @@ public class ActualJsonObject implements Actual {
     @Override
     public MatchResult accept(JsonExpectation expectation, String path) {
         return expectation.match(this, path);
+    }
+
+    public int size() {
+        return map.size();
     }
 }
