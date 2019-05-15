@@ -3,6 +3,94 @@ A library for test assertions on JSON payloads - for JUnit framework.
 
 ## Quickstart
 
+#### Example 1: Simple exact-match
+
+For such JSON:
+```json
+{
+  "firstname": "Steve",
+  "lastname": "Jobs"
+}
+```
+
+... an exact-match assertion would look like this:
+
+```java
+@Test
+public void simpleTest() {
+    // when
+    String actualJson = getSteveJobsJson();
+
+    // then
+    assertThat(actualJson).matches(
+            ImmutableMap.<String, Object>builder()
+                    .put("firstname", "Steve")
+                    .put("lastname", "Jobs")
+                    .build()
+    );
+}
+```
+
+#### Example 2: Unordered array
+
+This assertion passes even though the items in the array are in different order.
+
+The `actualJson`:
+```json
+{
+    "id": 95478,
+    "name": "Coca Cola",
+    "tags": ["sprite", "pepsi", "7up", "fanta", "dr pepper"]
+}
+```
+
+The assertion:
+```java
+assertThat(actualJson).matches(
+        ImmutableMap.<String, Object>builder()
+                .put("id", 95478)
+                .put("name", "Coca Cola")
+                .put("tags", newHashSet("pepsi", "dr pepper", "sprite", "fanta", "7up"))
+                .build()
+);
+```
+
+#### Example 3: Custom assertions
+
+If you need, instead of exact-matching, you can define custom assertions using Predicates.
+Here for example, we used custom assertions:
+ * to check that a number is in given range - `anyId()`
+ * to check that field matches a regex - `regex()`
+ * to check that field just exists, no matter of its value - `notNull()`
+
+```java
+assertThat(actualJson).matches(
+        ImmutableMap.<String, Object>builder()
+                .put("id", anyId())
+                .put("name", "Coca Cola")
+                .put("value", regex("\\d+\\.\\d\\d"))
+                .put("updated_at", notNull())
+                .build()
+);
+```
+
+```java
+private Predicate<Integer> anyId() {
+    return value -> value >= 0;
+}
+
+private Predicate<Integer> notNull() {
+    return value -> value != null;
+}
+
+private Predicate<String> regex(String regex) {
+    return value -> value.matches(regex);
+}
+```
+
+#### Example 4: Utils extraction
+
+//TODO
 
 ## Copyright and license
 Copyright 2019 Zendesk, Inc.
