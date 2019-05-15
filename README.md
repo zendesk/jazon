@@ -6,7 +6,7 @@ Supports Spock and JUnit. Easy to extend for other test frameworks and languages
 ## About
 
 Jazon was created to make writing tests on JSON APIs easy. It offers:
-* Simple Exact-match assertions on JSON
+* Simple exact-match assertions on JSON
 * Matching unordered JSON arrays (ability to ignore the items order)
 * User-defined wildcard assertions, e.g.
     * Match string to a regex
@@ -18,19 +18,22 @@ Jazon was created to make writing tests on JSON APIs easy. It offers:
 * Human-readable error messages for fast mismatch tracing
 * Optimised to minimise code duplication 
 
-## Usage
+## Using Jazon in you project
 
-##### For Spock:
+Jazon is provided as separate libraries (so called adapters) for each supported testing framework.
+Depending on the framework you use, pick the adapter library that is applicable for you.
 
-User guide: 
+#### Spock
 
-Gradle: 
+[User guide for Spock Adapter](jazon-spock/README.md#Quickstart)
+
+##### Gradle: 
 ```groovy
 dependencies {
     testCompile 'com.zendesk.jazon:jazon-spock:0.3.0'
 }
 ```
-Maven:
+##### Maven:
 ```xml
 <dependency>
     <groupId>com.zendesk.jazon</groupId>
@@ -40,15 +43,17 @@ Maven:
 </dependency>
 ```
  
-##### For JUnit:
+#### JUnit:
 
-Gradle: 
+[User guide for JUnit Adapter](jazon-junit/README.md#Quickstart)
+
+##### Gradle: 
 ```groovy
 dependencies {
     testCompile 'com.zendesk.jazon:jazon-junit:0.3.0'
 }
 ```
-Maven:
+##### Maven:
 ```xml
 <dependency>
     <groupId>com.zendesk.jazon</groupId>
