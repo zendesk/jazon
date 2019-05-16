@@ -1,5 +1,5 @@
 # Jazon
-A library for test assertions on JSON outputs. 
+A library for test assertions on JSON payloads. 
 
 Supports Spock and JUnit. Easy to extend for other test frameworks and languages.
 

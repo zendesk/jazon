@@ -60,9 +60,20 @@ assertThat(actualJson).matches(
 If you need, instead of exact-matching, you can define custom assertions using Predicates.
 Here for example, we used custom assertions:
  * to check that a number is in given range - `anyId()`
- * to check that field matches a regex - `regex()`
- * to check that field just exists, no matter of its value - `notNull()`
+ * to check that a field matches a regex - `regex()`
+ * to check that a field just exists, no matter of its value - `notNull()`
 
+The `actualJson`:
+```json
+{
+    "id": 95478,
+    "name": "Coca Cola",
+    "value": "133.30",
+    "updated_at": "1990-06-19T12:19:10Z"
+}
+```
+
+The assertion:
 ```java
 assertThat(actualJson).matches(
         ImmutableMap.<String, Object>builder()

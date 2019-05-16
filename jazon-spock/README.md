@@ -49,8 +49,8 @@ def "unordered array assertion passes"() {
 If you need, instead of exact-matching, you can define custom assertions using Closures.
 Here for example, we used custom assertions:
  * to check that a number is in given range - `{ it >= 0 }`
- * to check that field matches a regex - `{ it ==~ /\d+\.\d\d/ }`
- * to check that field just exists, no matter of its value - `{ it != null }`
+ * to check that a field matches a regex - `{ it ==~ /\d+\.\d\d/ }`
+ * to check that a field just exists, no matter of its value - `{ it != null }`
 
 ```groovy
 def "custom assertions"() {
@@ -76,7 +76,7 @@ def "custom assertions"() {
 
 #### Example 4: Utils extraction
 
-To avoid code duplication, you can extract you common wildcard-assertions to constants. 
+To avoid code duplication, you can extract your common wildcard-assertions to constants. 
 
 ```groovy
 def "utils extraction"() {
@@ -100,7 +100,7 @@ def "utils extraction"() {
 }
 ```
 
-#### Example 5: Even more utils extraction
+#### Example 5: Utils extraction to domain objects
 
 To avoid code duplication even more, you can extract the parts of JSON. This will also 
 make your tests more readable.
