@@ -18,7 +18,7 @@ Jazon was created to make writing tests on JSON APIs easy. It offers:
 * Human-readable error messages for fast mismatch tracing
 * Optimised to minimise code duplication 
 
-## Using Jazon in you project
+## Using Jazon in your project
 
 Jazon is provided as separate libraries (so called adapters) for each supported testing framework.
 Depending on the framework you use, pick the adapter library that is applicable for you.
