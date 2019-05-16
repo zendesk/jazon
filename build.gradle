@@ -8,14 +8,6 @@ subprojects {
     sourceCompatibility = 1.8
 
     repositories {
-        mavenLocal()
-        maven {
-            url baseMavenRepoAllUrl
-            credentials {
-                username baseMavenRepoAllUser
-                password baseMavenRepoAllPassword
-            }
-        }
         jcenter()
     }
 
@@ -47,8 +39,8 @@ subprojects {
                 String releaseUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
                 url = version.endsWith('SNAPSHOT') ? snapshotUrl : releaseUrl
                 credentials {
-                    username ossrhUsername
-                    password ossrhPassword
+                    username project.hasProperty('ossrhUsername') ? project['ossrhUsername'] : ''
+                    password project.hasProperty('ossrhPassword') ? project['ossrhPassword'] : ''
                 }
             }
         }
