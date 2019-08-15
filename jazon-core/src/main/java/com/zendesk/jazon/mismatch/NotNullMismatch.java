@@ -8,7 +8,7 @@ import static com.zendesk.jazon.util.Preconditions.checkNotNull;
 
 @ToString
 @EqualsAndHashCode
-public class NotNullMismatch implements Mismatch, MismatchWithPathFactory {
+public class NotNullMismatch implements Mismatch, MismatchOccurrenceFactory {
     private final Actual actual;
 
     public NotNullMismatch(Actual actual) {

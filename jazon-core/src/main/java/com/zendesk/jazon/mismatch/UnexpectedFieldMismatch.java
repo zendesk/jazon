@@ -7,7 +7,7 @@ import static com.zendesk.jazon.util.Preconditions.checkNotNull;
 
 @ToString
 @EqualsAndHashCode
-public class UnexpectedFieldMismatch implements Mismatch, MismatchWithPathFactory {
+public class UnexpectedFieldMismatch implements Mismatch, MismatchOccurrenceFactory {
     private final String fieldName;
 
     public UnexpectedFieldMismatch(String fieldName) {

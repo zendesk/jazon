@@ -2,7 +2,7 @@ package com.zendesk.jazon.expectation;
 
 import com.zendesk.jazon.MatchResult;
 import com.zendesk.jazon.actual.*;
-import com.zendesk.jazon.mismatch.MismatchWithPath;
+import com.zendesk.jazon.mismatch.MismatchOccurrence;
 import com.zendesk.jazon.mismatch.NotNullMismatch;
 import lombok.EqualsAndHashCode;
 
@@ -41,7 +41,7 @@ class NullExpectation implements JsonExpectation {
         return failure(notNullMismatch(actualBoolean, path));
     }
 
-    private MismatchWithPath notNullMismatch(Actual actual, String path) {
+    private MismatchOccurrence notNullMismatch(Actual actual, String path) {
         return new NotNullMismatch(actual)
                 .at(path);
     }

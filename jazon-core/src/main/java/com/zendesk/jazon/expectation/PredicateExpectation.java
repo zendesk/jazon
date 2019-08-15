@@ -62,8 +62,11 @@ class PredicateExpectation implements JsonExpectation {
                     ? success()
                     : failure(PredicateMismatch.INSTANCE.at(path));
         } catch (ClassCastException e) {
-            // TODO pass the exception to Mismatch for the purpose of its stack trace
-            return failure(PredicateMismatch.INSTANCE.at(path));
+            return failure(
+                    PredicateMismatch.INSTANCE
+                            .at(path)
+                            .causedBy(e)
+            );
         }
     }
 

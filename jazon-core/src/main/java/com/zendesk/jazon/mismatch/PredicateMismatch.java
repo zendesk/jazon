@@ -3,7 +3,7 @@ package com.zendesk.jazon.mismatch;
 import lombok.ToString;
 
 @ToString
-public enum PredicateMismatch implements Mismatch, MismatchWithPathFactory {
+public enum PredicateMismatch implements Mismatch, MismatchOccurrenceFactory {
     INSTANCE;
 
     @Override

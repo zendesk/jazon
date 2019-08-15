@@ -10,7 +10,7 @@ import static com.zendesk.jazon.util.Preconditions.checkNotNull;
 
 @ToString
 @EqualsAndHashCode
-public class ArrayUnexpectedElementsMismatch implements Mismatch, MismatchWithPathFactory {
+public class ArrayUnexpectedElementsMismatch implements Mismatch, MismatchOccurrenceFactory {
     private final List<Actual> unexpectedElements;
 
     public ArrayUnexpectedElementsMismatch(List<Actual> unexpectedElements) {
