@@ -17,8 +17,8 @@ public class JazonMap {
         return this;
     }
 
-    public JazonMap with(String fieldName, Predicate<Object> predicate) {
-        map.put(fieldName, new PredicateExpectationInput(predicate));
+    public <T> JazonMap with(String fieldName, Predicate<T> predicate) {
+        map.put(fieldName, new PredicateExpectationInput<>(predicate));
         return this;
     }
 

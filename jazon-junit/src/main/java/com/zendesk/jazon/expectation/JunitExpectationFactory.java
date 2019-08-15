@@ -34,7 +34,7 @@ public class JunitExpectationFactory implements ExpectationFactory {
         } else if (object == null) {
             return new NullExpectation();
         } else if (object instanceof Predicate) {
-            return new PredicateExpectation((Predicate<Object>) object);
+            return new PredicateExpectation((Predicate<?>) object);
         } else if (object instanceof ObjectExpectationInput) {
             ObjectExpectationInput expectationInput = (ObjectExpectationInput) object;
             return expectation(expectationInput.object());

@@ -19,9 +19,9 @@ import static java.util.stream.Collectors.toList;
 @ToString
 @EqualsAndHashCode
 class PredicateExpectation implements JsonExpectation {
-    private final Predicate<Object> predicate;
+    private final Predicate<?> predicate;
 
-    PredicateExpectation(Predicate<Object> predicate) {
+    PredicateExpectation(Predicate<?> predicate) {
         this.predicate = checkNotNull(predicate);
     }
 
@@ -56,9 +56,15 @@ class PredicateExpectation implements JsonExpectation {
     }
 
     private MatchResult matchUnwrapped(Actual actual, String path) {
-        return predicate.test(unwrap(actual))
-                ? success()
-                : failure(PredicateMismatch.INSTANCE.at(path));
+        Predicate<Object> objectPredicate = (Predicate<Object>) predicate;
+        try {
+            return objectPredicate.test(unwrap(actual))
+                    ? success()
+                    : failure(PredicateMismatch.INSTANCE.at(path));
+        } catch (ClassCastException e) {
+            // TODO pass the exception to Mismatch for the purpose of its stack trace
+            return failure(PredicateMismatch.INSTANCE.at(path));
+        }
     }
 
     private Map<String, Object> unwrapObject(ActualJsonObject actualObject) {

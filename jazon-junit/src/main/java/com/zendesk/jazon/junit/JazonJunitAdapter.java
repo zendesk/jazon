@@ -41,6 +41,6 @@ public class JazonJunitAdapter {
             return;
         }
         String mismatchMessageTemplate = "\n-----------------------------------\nJSON MISMATCH:\n%s\n-----------------------------------\n";
-        throw new AssertionError(String.format(mismatchMessageTemplate, matchResult.message()));
+        throw new AssertionError(String.format(mismatchMessageTemplate, matchResult.message()), new RuntimeException());
     }
 }

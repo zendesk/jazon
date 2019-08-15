@@ -19,9 +19,23 @@ public class NicerJunitSpikeExampleTest {
         // then
         assertThat(actualJson).matches(
                 new JazonMap()
-                        .with("first", s -> ((String)s).matches("bl.*"))
+                        .with("first", (String s) -> s.matches("bl.*"))
                         .with("second", s -> ((String)s).matches("bl.*"))
                         .with("third", "red")
+        );
+    }
+
+    @Test
+    public void testRegexTypeMismatch() {
+        // given
+        String actualJson = "{" +
+                "   \"first\": 55" +
+                "}";
+
+        // then
+        assertThat(actualJson).matches(
+                new JazonMap()
+                        .with("first", (String s) -> s.matches("bl.*"))
         );
     }
 }

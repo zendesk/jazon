@@ -2,14 +2,14 @@ package com.zendesk.jazon.junit;
 
 import java.util.function.Predicate;
 
-public class PredicateExpectationInput implements JsonExpectationInput {
-    private final Predicate<Object> predicate;
+public class PredicateExpectationInput<T> implements JsonExpectationInput {
+    private final Predicate<T> predicate;
 
-    public PredicateExpectationInput(Predicate<Object> predicate) {
+    public PredicateExpectationInput(Predicate<T> predicate) {
         this.predicate = predicate;
     }
 
-    public Predicate<Object> predicate() {
+    public Predicate<?> predicate() {
         return predicate;
     }
 }
