@@ -30,8 +30,8 @@ public class ObjectExpectation implements JsonExpectation {
 
     @Override
     public MatchResult match(ActualJsonObject actualObject, String path) {
-        Optional<MismatchOccurrence> mismatchFromExpectedFields = mismatchFromExpectedFields(actualObject, path);
-        Optional<MismatchOccurrence> mismatchFromUnexpected = mismatchFromUnexpected(actualObject, path);
+        Optional<MismatchWithPath> mismatchFromExpectedFields = mismatchFromExpectedFields(actualObject, path);
+        Optional<MismatchWithPath> mismatchFromUnexpected = mismatchFromUnexpected(actualObject, path);
         return firstOf(mismatchFromExpectedFields, mismatchFromUnexpected)
                 .map(MatchResult::failure)
                 .orElseGet(MatchResult::success);
@@ -77,12 +77,12 @@ public class ObjectExpectation implements JsonExpectation {
         return "{" + firstFields + suffix;
     }
 
-    private Optional<MismatchOccurrence> mismatchFromExpectedFields(ActualJsonObject actualObject, String path) {
+    private Optional<MismatchWithPath> mismatchFromExpectedFields(ActualJsonObject actualObject, String path) {
         return new MismatchFactory(actualObject, path)
                 .mismatchFromExpectedFields();
     }
 
-    private Optional<MismatchOccurrence> mismatchFromUnexpected(ActualJsonObject actualObject, String path) {
+    private Optional<MismatchWithPath> mismatchFromUnexpected(ActualJsonObject actualObject, String path) {
         return new MismatchFactory(actualObject, path)
                 .mismatchFromUnexpected();
     }
@@ -94,7 +94,7 @@ public class ObjectExpectation implements JsonExpectation {
         return second;
     }
 
-    private MismatchOccurrence typeMismatch(Class<? extends Actual> actualType, String path) {
+    private MismatchWithPath typeMismatch(Class<? extends Actual> actualType, String path) {
         return new TypeMismatch(ActualJsonObject.class, actualType)
                 .at(path);
     }
@@ -104,7 +104,7 @@ public class ObjectExpectation implements JsonExpectation {
         private final ActualJsonObject actualObject;
         private final String path;
 
-        Optional<MismatchOccurrence> mismatchFromExpectedFields() {
+        Optional<MismatchWithPath> mismatchFromExpectedFields() {
             return expectationMap.entrySet()
                     .stream()
                     .map(e -> matchResult(e.getKey(), e.getValue()))
@@ -113,7 +113,7 @@ public class ObjectExpectation implements JsonExpectation {
                     .findFirst();
         }
 
-        private Optional<MismatchOccurrence> mismatchFromUnexpected() {
+        private Optional<MismatchWithPath> mismatchFromUnexpected() {
             Set<String> unexpectedFields = setsDifference(actualObject.keys(), expectationMap.keySet());
             return unexpectedFields.stream()
                     .map(fieldName ->

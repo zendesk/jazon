@@ -103,7 +103,7 @@ class UnorderedArrayExpectation implements JsonExpectation {
         return "[" + String.join(", ", strings(expectationSet)) + "] (unordered)";
     }
 
-    private MismatchOccurrence typeMismatch(Class<? extends Actual> actualType, String path) {
+    private MismatchWithPath typeMismatch(Class<? extends Actual> actualType, String path) {
         return new TypeMismatch(ActualJsonArray.class, actualType)
                 .at(path);
     }

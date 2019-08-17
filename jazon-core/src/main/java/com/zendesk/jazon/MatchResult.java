@@ -1,6 +1,6 @@
 package com.zendesk.jazon;
 
-import com.zendesk.jazon.mismatch.MismatchOccurrence;
+import com.zendesk.jazon.mismatch.MismatchWithPath;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -9,17 +9,17 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
 public class MatchResult {
-    private final Optional<MismatchOccurrence> mismatch;
+    private final Optional<MismatchWithPath> mismatch;
 
     public static MatchResult success() {
         return new MatchResult(empty());
     }
 
-    public static MatchResult failure(MismatchOccurrence mismatch) {
+    public static MatchResult failure(MismatchWithPath mismatch) {
         return new MatchResult(of(mismatch));
     }
 
-    private MatchResult(Optional<MismatchOccurrence> mismatch) {
+    private MatchResult(Optional<MismatchWithPath> mismatch) {
         this.mismatch = mismatch;
     }
 
@@ -29,11 +29,11 @@ public class MatchResult {
 
     public String message() {
         return mismatch
-                .map(MismatchOccurrence::message)
+                .map(MismatchWithPath::message)
                 .orElseThrow(cannotGetMessageException());
     }
 
-    public MismatchOccurrence mismatch() {
+    public MismatchWithPath mismatch() {
         return mismatch
                 .orElseThrow(cannotGetMismatchException());
     }

@@ -13,7 +13,7 @@ import static java.util.Optional.ofNullable;
 
 @ToString
 @EqualsAndHashCode
-public class TypeMismatch implements Mismatch, MismatchOccurrenceFactory {
+public class TypeMismatch implements Mismatch, MismatchWithPathFactory {
     private static final Map<Class<? extends Actual>, String> JSON_TYPES = jsonTypes();
 
     private final Class<? extends Actual> expectedType;

@@ -8,7 +8,7 @@ import static com.zendesk.jazon.util.Preconditions.checkNotNull;
 
 @EqualsAndHashCode
 @ToString
-public class NoFieldMismatch implements Mismatch, MismatchOccurrenceFactory {
+public class NoFieldMismatch implements Mismatch, MismatchWithPathFactory {
     private final String fieldName;
     private final JsonExpectation expectation;
 

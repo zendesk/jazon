@@ -10,7 +10,7 @@ import static com.zendesk.jazon.util.Preconditions.checkNotNull;
 
 @ToString
 @EqualsAndHashCode
-public class ArrayLackingElementsMismatch implements Mismatch, MismatchOccurrenceFactory {
+public class ArrayLackingElementsMismatch implements Mismatch, MismatchWithPathFactory {
     private final Collection<JsonExpectation> lackingElements;
 
     public ArrayLackingElementsMismatch(Collection<JsonExpectation> lackingElements) {

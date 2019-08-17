@@ -2,7 +2,7 @@ package com.zendesk.jazon.expectation;
 
 import com.zendesk.jazon.MatchResult;
 import com.zendesk.jazon.actual.*;
-import com.zendesk.jazon.mismatch.MismatchOccurrence;
+import com.zendesk.jazon.mismatch.MismatchWithPath;
 import com.zendesk.jazon.mismatch.NullMismatch;
 import com.zendesk.jazon.mismatch.PrimitiveValueMismatch;
 import com.zendesk.jazon.mismatch.TypeMismatch;
@@ -71,7 +71,7 @@ class PrimitiveValueExpectation<T extends Actual> implements JsonExpectation {
         );
     }
 
-    private MismatchOccurrence typeMismatch(Class<? extends Actual> actualType, String path) {
+    private MismatchWithPath typeMismatch(Class<? extends Actual> actualType, String path) {
         return new TypeMismatch(expectedType(), actualType)
                 .at(path);
     }
