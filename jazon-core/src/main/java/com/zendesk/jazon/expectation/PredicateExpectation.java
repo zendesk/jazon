@@ -1,7 +1,14 @@
 package com.zendesk.jazon.expectation;
 
 import com.zendesk.jazon.MatchResult;
-import com.zendesk.jazon.actual.*;
+import com.zendesk.jazon.actual.Actual;
+import com.zendesk.jazon.actual.ActualJsonArray;
+import com.zendesk.jazon.actual.ActualJsonBoolean;
+import com.zendesk.jazon.actual.ActualJsonNull;
+import com.zendesk.jazon.actual.ActualJsonNumber;
+import com.zendesk.jazon.actual.ActualJsonObject;
+import com.zendesk.jazon.actual.ActualJsonString;
+import com.zendesk.jazon.mismatch.PredicateExecutionFailedMismatch;
 import com.zendesk.jazon.mismatch.PredicateMismatch;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -61,9 +68,8 @@ class PredicateExpectation implements JsonExpectation {
             return objectPredicate.test(unwrap(actual))
                     ? success()
                     : failure(PredicateMismatch.INSTANCE.at(path));
-        } catch (ClassCastException e) {
-            // TODO pass the exception to Mismatch for the purpose of its stack trace
-            return failure(PredicateMismatch.INSTANCE.at(path));
+        } catch (Exception e) {
+            return failure(new PredicateExecutionFailedMismatch(e).at(path));
         }
     }
 
