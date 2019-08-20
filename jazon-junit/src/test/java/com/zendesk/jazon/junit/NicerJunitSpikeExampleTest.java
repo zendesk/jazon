@@ -1,14 +1,15 @@
 package com.zendesk.jazon.junit;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static com.zendesk.jazon.junit.JazonJunitAdapter.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
-public class NicerJunitSpikeExampleTest {
+class NicerJunitSpikeExampleTest {
 
     @Test
-    public void testRegex() {
+    void testRegex() {
         // given
         String actualJson = "{" +
                 "   \"first\": \"blue\"," +
@@ -25,32 +26,36 @@ public class NicerJunitSpikeExampleTest {
         );
     }
 
-    @Test(expected = AssertionError.class)
-    public void testRegexTypeMismatch() {
-        // given
-        String actualJson = "{" +
-                "   \"first\": 55" +
-                "}";
+    @Test
+    void testRegexTypeMismatch() {
+        assertThrows(AssertionError.class, () -> {
+            // given
+            String actualJson = "{" +
+                    "   \"first\": 55" +
+                    "}";
 
-        // then
-        assertThat(actualJson).matches(
-                new JazonMap()
-                        .with("first", (String s) -> s.matches("bl.*"))
-        );
+            // then
+            assertThat(actualJson).matches(
+                    new JazonMap()
+                            .with("first", (String s) -> s.matches("bl.*"))
+            );
+        });
     }
 
-    @Test(expected = AssertionError.class)
-    public void testPredicatedWithDeeplyNestedException() {
-        // given
-        String actualJson = "{" +
-                "   \"first\": 55" +
-                "}";
+    @Test
+    void testPredicatedWithDeeplyNestedException() {
+        assertThrows(AssertionError.class, () -> {
+            // given
+            String actualJson = "{" +
+                    "   \"first\": 55" +
+                    "}";
 
-        // then
-        assertThat(actualJson).matches(
-                new JazonMap()
-                        .with("first", this::complexOperation)
-        );
+            // then
+            assertThat(actualJson).matches(
+                    new JazonMap()
+                            .with("first", this::complexOperation)
+            );
+        });
     }
 
     private boolean complexOperation(Integer number) {

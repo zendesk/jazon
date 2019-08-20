@@ -6,14 +6,14 @@ import com.zendesk.jazon.actual.GsonActualFactory;
 import com.zendesk.jazon.actual.ObjectsActualFactory;
 import com.zendesk.jazon.expectation.JunitExpectationFactory;
 import com.zendesk.jazon.mismatch.PredicateExecutionFailedMismatch;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-public class JunitSpecificMatcherTest {
+class JunitSpecificMatcherTest {
 
     private static final GsonActualFactory GSON_ACTUAL_FACTORY = new GsonActualFactory();
     private static final MatcherFactory matcherFactory = new MatcherFactory(
@@ -22,7 +22,7 @@ public class JunitSpecificMatcherTest {
     );
 
     @Test
-    public void testRegex() {
+    void testRegex() {
         // given
         JazonMap expected = new JazonMap()
                 .with("first", (String s) -> s.matches("bl.*"))
@@ -42,7 +42,7 @@ public class JunitSpecificMatcherTest {
     }
 
     @Test
-    public void testRegexTypeMismatch() {
+    void testRegexTypeMismatch() {
         // given
         JazonMap expected = new JazonMap()
                 .with("first", (String s) -> s.matches("bl.*"));
@@ -65,7 +65,7 @@ public class JunitSpecificMatcherTest {
     }
 
     @Test
-    public void testPredicatedWithDeeplyNestedException() {
+    void testPredicatedWithDeeplyNestedException() {
         // given
         JazonMap expected = new JazonMap()
                 .with("first", this::complexOperation);
