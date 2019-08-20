@@ -1,5 +1,7 @@
 package com.zendesk.jazon.junit;
 
+import lombok.EqualsAndHashCode;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -9,6 +11,7 @@ import java.util.function.Predicate;
  * Integer, List, etc. are passed. This is due to the limitation that {@code Object} is not effectively a supertype of
  * lambda expression.
  */
+@EqualsAndHashCode
 public class JazonMap {
     private final Map<String, JsonExpectationInput> map = new HashMap<>();
 
@@ -22,7 +25,7 @@ public class JazonMap {
         return this;
     }
 
-    Map<String, JsonExpectationInput> map() {
+    public Map<String, JsonExpectationInput> map() {
         return map;
     }
 }

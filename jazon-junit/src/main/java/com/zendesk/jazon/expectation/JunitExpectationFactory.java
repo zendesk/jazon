@@ -3,9 +3,11 @@ package com.zendesk.jazon.expectation;
 import com.zendesk.jazon.actual.ActualJsonBoolean;
 import com.zendesk.jazon.actual.ActualJsonNumber;
 import com.zendesk.jazon.actual.ActualJsonString;
+import com.zendesk.jazon.junit.JazonMap;
 import com.zendesk.jazon.junit.ObjectExpectationInput;
 import com.zendesk.jazon.junit.PredicateExpectationInput;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -14,6 +16,7 @@ import java.util.function.Predicate;
 import static com.zendesk.jazon.expectation.ExpectationFactory.expectedOrderedArray;
 import static com.zendesk.jazon.expectation.ExpectationFactory.expectedUnorderedArray;
 import static com.zendesk.jazon.expectation.ExpectationFactory.objectExpectation;
+import static java.util.stream.Collectors.toMap;
 
 public class JunitExpectationFactory implements ExpectationFactory {
 
@@ -41,6 +44,13 @@ public class JunitExpectationFactory implements ExpectationFactory {
         } else if (object instanceof PredicateExpectationInput) {
             PredicateExpectationInput expectationInput = (PredicateExpectationInput) object;
             return new PredicateExpectation(expectationInput.predicate());
+        } else if (object instanceof JazonMap) {
+            JazonMap jazonMap = (JazonMap) object;
+            HashMap<String, Object> map = jazonMap.map()
+                    .entrySet()
+                    .stream()
+                    .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, HashMap::new));
+            return objectExpectation(map, this);
         }
         throw new IllegalArgumentException();
     }
