@@ -29,6 +29,7 @@ subprojects {
     apply plugin: 'maven-publish'
     
     signing {
+        required { !version.endsWith('SNAPSHOT') }
         sign publishing.publications
     }
 
