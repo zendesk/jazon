@@ -46,4 +46,10 @@ subprojects {
             }
         }
     }
+
+    publish {
+        doLast {
+            println "The published version: ${version}"
+        }
+    }
 }

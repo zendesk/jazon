@@ -1,2 +1,4 @@
 language: java
+env:
+  - PROJECT_VERSION=${TRAVIS_BUILD_NUMBER}.${TRAVIS_BRANCH}_${TRAVIS_COMMIT}
 script: ./gradlew publish -PossrhUsername=${SECRET_OSSRH_USERNAME} -PossrhPassword=${SECRET_OSSRH_PASSWORD}
