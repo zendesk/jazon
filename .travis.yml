@@ -1,2 +1,2 @@
 language: java
-script: ./gradlew publish
+script: ./gradlew publish -PossrhUsername=${SECRET_OSSRH_USERNAME} -PossrhPassword=${SECRET_OSSRH_PASSWORD}
