@@ -29,7 +29,7 @@ subprojects {
     apply plugin: 'maven-publish'
     
     signing {
-        required { isRelease() }
+        required { !isSnapshotVersion() }
         sign publishing.publications
     }
 
@@ -38,10 +38,10 @@ subprojects {
             maven {
                 String snapshotUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
                 String releaseUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
-                url = isRelease() ? releaseUrl : snapshotUrl 
+                url = isSnapshotVersion() ? snapshotUrl : releaseUrl 
                 credentials {
-                    username project.hasProperty('ossrhUsername') ? project['ossrhUsername'] : ''
-                    password project.hasProperty('ossrhPassword') ? project['ossrhPassword'] : ''
+                    username project.findProperty('ossrhUsername') ?: ''
+                    password project.findProperty('ossrhPassword') ?: ''
                 }
             }
         }
@@ -54,6 +54,6 @@ subprojects {
     }
 }
 
-boolean isRelease() {
-    !version.endsWith('SNAPSHOT')
+boolean isSnapshotVersion() {
+    version.endsWith('SNAPSHOT')
 }
