@@ -1,6 +1,7 @@
 package com.zendesk.jazon.actual
 
 import spock.lang.Specification
+import spock.lang.Unroll
 
 class ActualJsonNumberSpec extends Specification {
 
@@ -27,6 +28,7 @@ class ActualJsonNumberSpec extends Specification {
         new BigDecimal("1.1") | new BigDecimal("1.1")
     }
 
+    @Unroll
     def "hashCode() differs and equals() returns false"() {
         given:
         def fooNumber = new ActualJsonNumber(foo)
@@ -46,7 +48,6 @@ class ActualJsonNumberSpec extends Specification {
         1 as long                                       | 2 as long
         1 as int                                        | 2 as long
         1 as long                                       | 2 as int
-        ((long) Integer.MAX_VALUE + 1) as long          | Integer.MIN_VALUE as long
         1.2f                                            | 1 as int
         1.2d                                            | 1 as int
         1.2f                                            | 1.4f
@@ -80,5 +81,6 @@ class ActualJsonNumberSpec extends Specification {
         where:
         foo                                    | bar
         ((long) Integer.MAX_VALUE + 1) as long | Integer.MIN_VALUE as int
+        ((long) Integer.MAX_VALUE + 1) as long | Integer.MIN_VALUE as long
     }
 }
