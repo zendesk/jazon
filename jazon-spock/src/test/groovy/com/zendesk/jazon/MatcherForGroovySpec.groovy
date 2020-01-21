@@ -5,6 +5,8 @@ import com.zendesk.jazon.expectation.SpockExpectationFactory
 import com.zendesk.jazon.mismatch.PredicateMismatch
 import spock.lang.Specification
 
+import static com.zendesk.jazon.expectation.Expectations.anyNumberOf
+
 class MatcherForGroovySpec extends Specification {
 
     MatcherFactory matcherFactory = new MatcherFactory(
@@ -157,5 +159,18 @@ class MatcherForGroovySpec extends Specification {
                 { it.name == 'tomato' },
                 { it.color == 'red' },
         ]
+    }
+
+    def "array each element expectation works correctly with lambda-style expectation"() {
+        when:
+        def result = matcherFactory.matcher()
+            .expected([a: anyNumberOf {it -> it > 5}])
+            .actual([a: [6, 7, 8, 9, 0]])
+            .match()
+
+        then:
+        !result.ok()
+        result.mismatch().expectationMismatch() == PredicateMismatch.INSTANCE
+        result.mismatch().path() == '$.a.4'
     }
 }

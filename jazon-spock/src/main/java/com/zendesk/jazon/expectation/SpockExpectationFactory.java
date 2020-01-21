@@ -31,6 +31,9 @@ public class SpockExpectationFactory implements ExpectationFactory {
             return expectedOrderedArray((List<Object>) object, this);
         } else if (object instanceof Set) {
             return expectedUnorderedArray((Set<Object>) object, this);
+        } else if (object instanceof AnyNumberOf) {
+            Object elementExpectation = ((AnyNumberOf) object).getElementExpectation();
+            return new ArrayEachElementExpectation(expectation(elementExpectation));
         } else if (object instanceof Closure) {
             Closure<Boolean> closure = (Closure<Boolean>) object;
             return new PredicateExpectation(closure::call);
