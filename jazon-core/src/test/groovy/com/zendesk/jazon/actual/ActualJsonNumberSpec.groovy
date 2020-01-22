@@ -56,13 +56,13 @@ class ActualJsonNumberSpec extends Specification {
         1.000000000000001d                              | new BigDecimal('1.0000000000000011')
         1.000000000000001f                              | new BigDecimal('1.0000000000000011')
         new BigDecimal('1.000000000000000000000000001') | new BigDecimal('1.0000000000000000000000000011')
-        1.1f                                            | new BigDecimal('1.1')    // Yes it does not match. See comments in `ActualJsonNumber.equals()`
-        1.1d                                            | new BigDecimal('1.1')    // Yes it does not match. See comments in `ActualJsonNumber.equals()`
-        1 as int                                        | 1.0f    // Yes it does not match. See comments in `ActualJsonNumber.equals()`
-        1 as int                                        | 1.0d    // Yes it does not match. See comments in `ActualJsonNumber.equals()`
-        1 as long                                       | 1.0f    // Yes it does not match. See comments in `ActualJsonNumber.equals()`
-        1 as long                                       | 1.0d    // Yes it does not match. See comments in `ActualJsonNumber.equals()`
-        1.1f                                            | 1.1d    // Yes it does not match. See comments in `ActualJsonNumber.equals()`
+        1.1f                                            | new BigDecimal('1.1')    // Doesn't match because the types differ.
+        1.1d                                            | new BigDecimal('1.1')    // Doesn't match because the types differ.
+        1 as int                                        | 1.0f    // Doesn't match because the types differ.
+        1 as int                                        | 1.0d    // Doesn't match because the types differ.
+        1 as long                                       | 1.0f    // Doesn't match because the types differ.
+        1 as long                                       | 1.0d    // Doesn't match because the types differ.
+        1.1f                                            | 1.1d    // Doesn't match because the types differ.
     }
 
     def "hashCode() equals and equals() returns false"() {
