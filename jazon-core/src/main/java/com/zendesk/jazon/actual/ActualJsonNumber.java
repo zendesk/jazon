@@ -14,7 +14,7 @@ public class ActualJsonNumber implements Actual {
 
     public ActualJsonNumber(Number number) {
         checkPreconditions(number);
-        this.number = maybeConvertLongToInt(number);
+        this.number = sanitized(number);
     }
 
     public Number number() {
@@ -57,7 +57,7 @@ public class ActualJsonNumber implements Actual {
                 number instanceof Double;
     }
 
-    private Number maybeConvertLongToInt(Number number) {
+    private Number sanitized(Number number) {
         if (number instanceof Long
                 && number.longValue() <= Integer.MAX_VALUE
                 && number.longValue() >= Integer.MIN_VALUE) {
