@@ -96,6 +96,32 @@ class MatcherSpec extends Specification {
         [a: [1, 2] as Set] | [a: [bb: 10]] | ActualJsonArray.class   | ActualJsonObject.class
     }
 
+    def "matches numbers in object even if they have different types"() {
+        when:
+        def result = match([a: expected], [a: actual])
+
+        then:
+        result.ok()
+
+        where:
+        expected  | actual
+        1 as int  | 1 as long
+        1 as long | 1 as int
+    }
+
+    def "matches numbers in array even if they have different types"() {
+        when:
+        def result = match([a: [1, 2, expected]], [a: [1, 2, actual]])
+
+        then:
+        result.ok()
+
+        where:
+        expected  | actual
+        3 as int  | 3 as long
+        3 as long | 3 as int
+    }
+
     @Unroll
     def "finds null instead of primitive value: #expected"() {
         when:
