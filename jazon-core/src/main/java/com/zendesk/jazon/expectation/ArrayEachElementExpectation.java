@@ -8,7 +8,7 @@ import com.zendesk.jazon.mismatch.TypeMismatch;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
+import java.util.ListIterator;
 
 import static com.zendesk.jazon.MatchResult.failure;
 import static com.zendesk.jazon.MatchResult.success;
@@ -44,9 +44,10 @@ class ArrayEachElementExpectation implements JsonExpectation {
 
     @Override
     public MatchResult match(ActualJsonArray actualArray, String path) {
-        List<Actual> actualValues = actualArray.list();
-        for (int i = 0; i < actualValues.size(); ++i) {
-            MatchResult matchResult = actualValues.get(i).accept(expectationForEachElement, path + "." + i);
+        ListIterator<Actual> actualValues = actualArray.list().listIterator();
+        while (actualValues.hasNext()) {
+            Actual actualValue = actualValues.next();
+            MatchResult matchResult = actualValue.accept(expectationForEachElement, path + "." + actualValues.previousIndex());
             if (!matchResult.ok()) {
                 return matchResult;
             }

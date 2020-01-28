@@ -433,13 +433,15 @@ class MatcherSpec extends Specification {
         match([a: anyNumberOf(expected)], [a: actual]).success()
 
         where:
-        expected                                       | actual
-        '1'                                            | []
-        '1'                                            | ['1']
-        '1'                                            | ['1', '1']
-        true                                           | [true]
-        2                                              | [2]
-        { it -> it > 5 } as Predicate<Integer>  | [6, 7, 8]
+        expected                               | actual
+        '1'                                    | []
+        '1'                                    | ['1']
+        '1'                                    | ['1', '1']
+        true                                   | [true]
+        2                                      | [2]
+        [b: true, c: 1]                        | [[[b: true, c: 1]]]
+        [3, 4, 5]                              | [[3, 4, 5]]
+        { it -> it > 5 } as Predicate<Integer> | [6, 7, 8]
     }
 
     @Unroll
@@ -450,16 +452,18 @@ class MatcherSpec extends Specification {
         then:
         !result.ok()
         result.mismatch().expectationMismatch() == elementMismatch
-        result.mismatch().path() == '$.a.' + elementIndex
+        result.mismatch().path() == '$.a.' + path
 
         where:
-        expected                       | actual          || elementIndex | elementMismatch                                       | _
-        1                              | [1, 3, 1]       || 1            | primitiveValueMismatch(1, 3)                          | _
-        1                              | [1, 1, true]    || 2            | new TypeMismatch(ActualJsonNumber, ActualJsonBoolean) | _
-        true                           | [true, 1, true] || 1            | new TypeMismatch(ActualJsonBoolean, ActualJsonNumber) | _
-        1                              | [1, null, 1]    || 1            | new NullMismatch<>(expectationFactory.expectation(1)) | _
+        expected                       | actual            || path  | elementMismatch                                       | _
+        1                              | [1, 3, 1]         || '1'   | primitiveValueMismatch(1, 3)                          | _
+        1                              | [1, 1, true]      || '2'   | new TypeMismatch(ActualJsonNumber, ActualJsonBoolean) | _
+        true                           | [true, 1, true]   || '1'   | new TypeMismatch(ActualJsonBoolean, ActualJsonNumber) | _
+        1                              | [1, null, 1]      || '1'   | new NullMismatch<>(expectationFactory.expectation(1)) | _
+        [b: true, c: 1]                | [[b: true, c: 2]] || '0.c' | primitiveValueMismatch(1, 2)                          | _
+        [3, 4, 5]                      | [[3, 4, false]]   || '0.2' | new TypeMismatch(ActualJsonNumber, ActualJsonBoolean) | _
         ({ it -> it > 3 }
-                as Predicate<Integer>) | [4, 5, 2]       || 2            | PredicateMismatch.INSTANCE                            | _
+                as Predicate<Integer>) | [4, 5, 2]         || '2'   | PredicateMismatch.INSTANCE                            | _
     }
 
     def "null expectation: fails for any present value"() {
