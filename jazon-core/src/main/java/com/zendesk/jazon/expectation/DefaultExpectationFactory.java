@@ -27,6 +27,9 @@ public class DefaultExpectationFactory implements ExpectationFactory {
             return expectedOrderedArray((List<Object>) object, this);
         } else if (object instanceof Set) {
             return expectedUnorderedArray((Set<Object>) object, this);
+        } else if (object instanceof AnyNumberOf) {
+            Object elementExpectation = ((AnyNumberOf) object).getElementExpectation();
+            return new ArrayEachElementExpectation(expectation(elementExpectation));
         } else if (object == null) {
             return new NullExpectation();
         } else if (object instanceof Predicate) {
