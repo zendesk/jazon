@@ -1,2 +1,9 @@
 language: java
-script: ./gradlew clean build publish -PossrhUsername=${SECRET_OSSRH_USERNAME} -PossrhPassword=${SECRET_OSSRH_PASSWORD}
+script: ./gradlew clean build
+deploy:
+  provider: script
+  script: ./gradlew publish -PossrhUsername=${SECRET_OSSRH_USERNAME} -PossrhPassword=${SECRET_OSSRH_PASSWORD}
+  skip_cleanup: true
+  on:
+    repo: zendesk/jazon
+    all_branches: true
