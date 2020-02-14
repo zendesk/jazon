@@ -9,50 +9,42 @@ import java.util.function.Predicate;
 
 import static com.zendesk.jazon.junit.JazonJunitAdapter.assertThat;
 import static java.util.Arrays.asList;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
-
-class ExampleTest {
+class ExamplesWithGuavaTest {
 
     @Test
     void simpleTest() {
-        assertThrows(AssertionError.class, () -> {
-            // given
-            String actualJson = "{\"value\": 123}";
-            Map<String, Object> expectedJsonAsMap = ImmutableMap.<String, Object>builder()
-                    .put("value", 50)
-                    .build();
+        // given
+        String actualJson = "{\"value\": 123}";
+        Map<String, Object> expectedJsonAsMap = ImmutableMap.<String, Object>builder()
+                .put("value", 50)
+                .build();
 
-            // then
-            assertThat(actualJson).matches(expectedJsonAsMap);
-        });
+        // then
+        assertThat(actualJson).matches(expectedJsonAsMap);
     }
 
     @Test
     void testWithNestedArray() {
-        assertThrows(AssertionError.class, () -> {
-            // given
-            String actualJson = "{" +
-                    "\"value\": 50," +
-                    "\"tags\": [\"blue\", \"black\", \"red\"]" +
-                    "}";
+        // given
+        String actualJson = "{" +
+                "\"value\": 50," +
+                "\"tags\": [\"blue\", \"black\", \"red\"]" +
+                "}";
 
-            // then
-            assertThat(actualJson).matches(
-                    deal(50, asList("blue", "pink", "red"))
-            );
-        });
+        // then
+        assertThat(actualJson).matches(
+                deal(50, asList("blue", "pink", "red"))
+        );
     }
 
     @Test
     void testWithRootArray() {
-        assertThrows(AssertionError.class, () -> {
-            // given
-            String actualJson = "[\"blue\", \"black\", \"red\"]";
+        // given
+        String actualJson = "[\"blue\", \"black\", \"red\"]";
 
-            // then
-            assertThat(actualJson).matches(asList("blue", "pink", "red"));
-        });
+        // then
+        assertThat(actualJson).matches(asList("blue", "pink", "red"));
     }
 
     @Test

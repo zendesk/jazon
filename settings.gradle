@@ -2,4 +2,5 @@ rootProject.name = 'jazon'
 include 'jazon-core'
 include 'jazon-spock'
 include 'jazon-junit'
+include 'examples'
 

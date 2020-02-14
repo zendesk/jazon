@@ -5,8 +5,7 @@ import org.junit.jupiter.api.Test;
 import static com.zendesk.jazon.junit.JazonJunitAdapter.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-
-class NicerJunitSpikeExampleTest {
+class ExampleTest {
 
     @Test
     void testRegex() {
@@ -28,18 +27,16 @@ class NicerJunitSpikeExampleTest {
 
     @Test
     void testRegexTypeMismatch() {
-        assertThrows(AssertionError.class, () -> {
-            // given
-            String actualJson = "{" +
-                    "   \"first\": 55" +
-                    "}";
+        // given
+        String actualJson = "{" +
+                "   \"first\": 55" +
+                "}";
 
-            // then
-            assertThat(actualJson).matches(
-                    new JazonMap()
-                            .with("first", (String s) -> s.matches("bl.*"))
-            );
-        });
+        // then
+        assertThat(actualJson).matches(
+                new JazonMap()
+                        .with("first", (String s) -> s.matches("bl.*"))
+        );
     }
 
     @Test
