@@ -13,7 +13,8 @@ public class ActualJsonNumber implements Actual {
     private final Number number;
 
     public ActualJsonNumber(Number number) {
-        this.number = checkPreconditions(number);
+        checkPreconditions(number);
+        this.number = sanitized(number);
     }
 
     public Number number() {
@@ -30,10 +31,9 @@ public class ActualJsonNumber implements Actual {
         return number.toString();
     }
 
-    private static Number checkPreconditions(Number number) {
+    private static void checkPreconditions(Number number) {
         checkNotNull(number);
         checkSupportedType(number);
-        return number;
     }
 
     private static void checkSupportedType(Number number) {
@@ -55,5 +55,14 @@ public class ActualJsonNumber implements Actual {
                 number instanceof BigDecimal ||
                 number instanceof Float ||
                 number instanceof Double;
+    }
+
+    private Number sanitized(Number number) {
+        if (number instanceof Long
+                && number.longValue() <= Integer.MAX_VALUE
+                && number.longValue() >= Integer.MIN_VALUE) {
+            return number.intValue();
+        }
+        return number;
     }
 }

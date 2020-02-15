@@ -8,6 +8,10 @@ import com.zendesk.jazon.mismatch.*
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import java.util.function.Predicate
+
+import static com.zendesk.jazon.expectation.Expectations.anyNumberOf
+
 class MatcherSpec extends Specification {
 
     static ActualFactory actualFactory = new ObjectsActualFactory()
@@ -94,6 +98,32 @@ class MatcherSpec extends Specification {
         [a: [1, 2] as Set] | [a: 'red']    | ActualJsonArray.class   | ActualJsonString.class
         [a: [1, 2] as Set] | [a: 88]       | ActualJsonArray.class   | ActualJsonNumber.class
         [a: [1, 2] as Set] | [a: [bb: 10]] | ActualJsonArray.class   | ActualJsonObject.class
+    }
+
+    def "matches numbers in object even if they have different types"() {
+        when:
+        def result = match([a: expected], [a: actual])
+
+        then:
+        result.ok()
+
+        where:
+        expected  | actual
+        1 as int  | 1 as long
+        1 as long | 1 as int
+    }
+
+    def "matches numbers in array even if they have different types"() {
+        when:
+        def result = match([a: [1, 2, expected]], [a: [1, 2, actual]])
+
+        then:
+        result.ok()
+
+        where:
+        expected  | actual
+        3 as int  | 3 as long
+        3 as long | 3 as int
     }
 
     @Unroll
@@ -421,6 +451,45 @@ class MatcherSpec extends Specification {
 
         then:
         thrown(IllegalStateException)
+    }
+
+    @Unroll
+    def "array each element expectation: success"() {
+        expect:
+        match([a: anyNumberOf(expected)], [a: actual]).success()
+
+        where:
+        expected                               | actual
+        '1'                                    | []
+        '1'                                    | ['1']
+        '1'                                    | ['1', '1']
+        true                                   | [true]
+        2                                      | [2]
+        [b: true, c: 1]                        | [[[b: true, c: 1]]]
+        [3, 4, 5]                              | [[3, 4, 5]]
+        { it -> it > 5 } as Predicate<Integer> | [6, 7, 8]
+    }
+
+    @Unroll
+    def "array each element expectation - element mismatch"() {
+        when:
+        def result = match([a: anyNumberOf(expected)], [a: actual])
+
+        then:
+        !result.ok()
+        result.mismatch().expectationMismatch() == elementMismatch
+        result.mismatch().path() == '$.a.' + path
+
+        where:
+        expected                       | actual            || path  | elementMismatch                                       | _
+        1                              | [1, 3, 1]         || '1'   | primitiveValueMismatch(1, 3)                          | _
+        1                              | [1, 1, true]      || '2'   | new TypeMismatch(ActualJsonNumber, ActualJsonBoolean) | _
+        true                           | [true, 1, true]   || '1'   | new TypeMismatch(ActualJsonBoolean, ActualJsonNumber) | _
+        1                              | [1, null, 1]      || '1'   | new NullMismatch<>(expectationFactory.expectation(1)) | _
+        [b: true, c: 1]                | [[b: true, c: 2]] || '0.c' | primitiveValueMismatch(1, 2)                          | _
+        [3, 4, 5]                      | [[3, 4, false]]   || '0.2' | new TypeMismatch(ActualJsonNumber, ActualJsonBoolean) | _
+        ({ it -> it > 3 }
+                as Predicate<Integer>) | [4, 5, 2]         || '2'   | PredicateMismatch.INSTANCE                            | _
     }
 
     def "null expectation: fails for any present value"() {
