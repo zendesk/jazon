@@ -88,7 +88,12 @@ class ReadmeExamplesTest {
     @Test
     void utilsExtractionToDomainObjects() {
         // when
-        String response = "{}";
+        String response = "{\n" +
+                "    \"id\": 95478,\n" +
+                "    \"name\": \"Coca Cola\",\n" +
+                "    \"value\": \"10.00\",\n" +
+                "    \"updated_at\": \"1990-06-19T12:19:10Z\"\n" +
+                "}";
 
         // then
         assertThat(response).matches(deal("Coca Cola", "10.00"));
@@ -105,17 +110,19 @@ class ReadmeExamplesTest {
 
     private JazonMap deal(String name, String value) {
         return new JazonMap()
+                .with("id", ANY_ID)
                 .with("name", name)
-                .with("value", value);
+                .with("value", value)
+                .with("updated_at", ANY_ISO_DATETIME);
     }
 
     private Predicate<String> regex(String regex) {
         return val -> val.matches(regex);
     }
 
-    private Set<Object> set(Object... kek) {
-        HashSet<Object> result = new HashSet<>(kek.length);
-        result.addAll(asList(kek));
+    private Set<Object> set(Object... elements) {
+        HashSet<Object> result = new HashSet<>(elements.length);
+        result.addAll(asList(elements));
         return result;
     }
 }
