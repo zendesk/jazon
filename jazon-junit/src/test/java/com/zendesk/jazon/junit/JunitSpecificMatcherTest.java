@@ -6,8 +6,10 @@ import com.zendesk.jazon.actual.GsonActualFactory;
 import com.zendesk.jazon.actual.ObjectsActualFactory;
 import com.zendesk.jazon.expectation.JunitExpectationFactory;
 import com.zendesk.jazon.mismatch.PredicateExecutionFailedMismatch;
+import com.zendesk.jazon.mismatch.PrimitiveValueMismatch;
 import org.junit.jupiter.api.Test;
 
+import static com.zendesk.jazon.expectation.Expectations.anyNumberOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -86,6 +88,40 @@ class JunitSpecificMatcherTest {
                 )
         );
         assertEquals(matchResult.mismatch().path(), "$.first");
+    }
+
+    @Test
+    void testAnyNumberOfExpectationSuccess() {
+        // given
+        JazonMap expected = new JazonMap()
+                .with("animals", anyNumberOf("cat"));
+        String actualJson = "{" +
+                "   \"animals\": [\"cat\", \"cat\", \"cat\", \"cat\", \"cat\", \"cat\", \"cat\"]" +
+                "}";
+
+        // when
+        MatchResult matchResult = match(expected, actualJson);
+
+        // then
+        assertTrue(matchResult.ok());
+    }
+
+    @Test
+    void testAnyNumberOfExpectationFailure() {
+        // given
+        JazonMap expected = new JazonMap()
+                .with("animals", anyNumberOf("cat"));
+        String actualJson = "{" +
+                "   \"animals\": [\"cat\", \"cat\", \"dog\", \"cat\", \"cat\", \"cat\"]" +
+                "}";
+
+        // when
+        MatchResult matchResult = match(expected, actualJson);
+
+        // then
+        assertFalse(matchResult.ok());
+        assertEquals(matchResult.mismatch().expectationMismatch().getClass(), PrimitiveValueMismatch.class);
+        assertEquals(matchResult.mismatch().path(), "$.animals.2");
     }
 
     private boolean complexOperation(Integer number) {

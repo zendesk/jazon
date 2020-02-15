@@ -51,6 +51,10 @@ public class JunitExpectationFactory implements ExpectationFactory {
                     .stream()
                     .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, HashMap::new));
             return objectExpectation(map, this);
+        } else if (object instanceof AnyNumberOf) {
+            Object repeatedObject = ((AnyNumberOf) object).getElementExpectation();
+            JsonExpectation repeatedExpectation = expectation(repeatedObject);
+            return new ArrayEachElementExpectation(repeatedExpectation);
         }
         throw new IllegalArgumentException();
     }
