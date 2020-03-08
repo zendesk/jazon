@@ -1,7 +1,14 @@
 package com.zendesk.jazon.expectation;
 
 import com.zendesk.jazon.MatchResult;
-import com.zendesk.jazon.actual.*;
+import com.zendesk.jazon.actual.Actual;
+import com.zendesk.jazon.actual.ActualJsonArray;
+import com.zendesk.jazon.actual.ActualJsonBoolean;
+import com.zendesk.jazon.actual.ActualJsonNull;
+import com.zendesk.jazon.actual.ActualJsonNumber;
+import com.zendesk.jazon.actual.ActualJsonObject;
+import com.zendesk.jazon.actual.ActualJsonString;
+import com.zendesk.jazon.mismatch.PredicateExecutionFailedMismatch;
 import com.zendesk.jazon.mismatch.PredicateMismatch;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -19,9 +26,9 @@ import static java.util.stream.Collectors.toList;
 @ToString
 @EqualsAndHashCode
 class PredicateExpectation implements JsonExpectation {
-    private final Predicate<Object> predicate;
+    private final Predicate<?> predicate;
 
-    PredicateExpectation(Predicate<Object> predicate) {
+    PredicateExpectation(Predicate<?> predicate) {
         this.predicate = checkNotNull(predicate);
     }
 
@@ -56,9 +63,14 @@ class PredicateExpectation implements JsonExpectation {
     }
 
     private MatchResult matchUnwrapped(Actual actual, String path) {
-        return predicate.test(unwrap(actual))
-                ? success()
-                : failure(PredicateMismatch.INSTANCE.at(path));
+        Predicate<Object> objectPredicate = (Predicate<Object>) predicate;
+        try {
+            return objectPredicate.test(unwrap(actual))
+                    ? success()
+                    : failure(PredicateMismatch.INSTANCE.at(path));
+        } catch (Exception e) {
+            return failure(new PredicateExecutionFailedMismatch(e).at(path));
+        }
     }
 
     private Map<String, Object> unwrapObject(ActualJsonObject actualObject) {

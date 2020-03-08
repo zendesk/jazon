@@ -7,6 +7,9 @@ apply from: '../gradle/publishing.gradle'
 
 dependencies {
     compile project(':jazon-core')
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    testCompile group: 'com.google.guava', name: 'guava', version: '27.1-jre'
+
+    compileOnly 'org.projectlombok:lombok:1.18.12'
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.5.1'
 }

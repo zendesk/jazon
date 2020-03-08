@@ -22,11 +22,10 @@ public void simpleTest() {
     String actualJson = getSteveJobsJson();
 
     // then
-    assertThat(actualJson).matches(
-            ImmutableMap.<String, Object>builder()
-                    .put("firstname", "Steve")
-                    .put("lastname", "Jobs")
-                    .build()
+    assertThat(response).matches(
+        new JazonMap()
+            .with("firstname", "Steve")
+            .with("lastname", "Jobs")
     );
 }
 ```
@@ -46,22 +45,28 @@ The `actualJson`:
 
 The assertion:
 ```java
-assertThat(actualJson).matches(
-        ImmutableMap.<String, Object>builder()
-                .put("id", 95478)
-                .put("name", "Coca Cola")
-                .put("tags", newHashSet("pepsi", "dr pepper", "sprite", "fanta", "7up"))
-                .build()
+assertThat(response).matches(
+    new JazonMap()
+        .with("id", 95478)
+        .with("name", "Coca Cola")
+        .with("tags", set("pepsi", "dr pepper", "sprite", "fanta", "7up"))
 );
+```
+```java
+private Set<Object> set(Object... elements) {
+    HashSet<Object> result = new HashSet<>(elements.length);
+    result.addAll(asList(elements));
+    return result;
+}
 ```
 
 #### Example 3: Custom assertions
 
 If you need, instead of exact-matching, you can define custom assertions using Predicates.
 Here for example, we used custom assertions:
- * to check that a number is in given range - `anyId()`
+ * to check that a number is in given range - `(Integer id) -> id >= 0`
  * to check that a field matches a regex - `regex()`
- * to check that a field just exists, no matter of its value - `notNull()`
+ * to check that a field just exists, no matter of its value - `Objects::nonNull`
 
 The `actualJson`:
 ```json
@@ -75,29 +80,72 @@ The `actualJson`:
 
 The assertion:
 ```java
-assertThat(actualJson).matches(
-        ImmutableMap.<String, Object>builder()
-                .put("id", anyId())
-                .put("name", "Coca Cola")
-                .put("value", regex("\\d+\\.\\d\\d"))
-                .put("updated_at", notNull())
-                .build()
+assertThat(response).matches(
+    new JazonMap()
+        .with("id", (Integer id) -> id >= 0)
+        .with("name", "Coca Cola")
+        .with("value", regex("\\d+\\.\\d\\d"))
+        .with("updated_at", Objects::nonNull)
 );
 ```
 
 ```java
-private Predicate<Integer> anyId() {
-    return value -> value >= 0;
-}
-
-private Predicate<Integer> notNull() {
-    return value -> value != null;
-}
-
 private Predicate<String> regex(String regex) {
     return value -> value.matches(regex);
 }
 ```
+
+#### Example 4: Utils extraction
+
+To avoid code duplication, you can extract your common wildcard-assertions to constants.
+
+```java
+assertThat(response).matches(
+    new JazonMap()
+        .with("id", ANY_ID)         // a constant
+        .with("name", "Coca Cola")
+        .with("value", "133.30")
+        .with("updated_at", ANY_ISO_DATETIME)   // a constant
+);
+```
+```java
+private static final Predicate<Integer> ANY_ID = (id) -> id >= 0;
+private static final Predicate<String> ANY_ISO_DATETIME = 
+        datetime -> datetime.matches("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z");
+```
+
+#### Example 5: Utils extraction to domain objects
+
+To avoid code duplication even more, you can extract the parts of JSON. This will also 
+make your tests more readable.
+Here in the examples we extract `deal()` - a business object from sales domain. 
+
+```java
+assertThat(response).matches(deal("Coca Cola", "10.00"));
+```
+```java
+assertThat(response).matches(
+    asList(
+        deal("Coca Cola", "10.00"),
+        deal("Pepsi", "9.00"),
+        deal("Fanta", "10.00"),
+        deal("Sprite", "10.00"),
+        deal("Dr Pepper", "12.00")
+    )
+);
+```
+```java
+private JazonMap deal(String name, String value) {
+    return new JazonMap()
+        .with("id", ANY_ID)
+        .with("name", name)
+        .with("value", value)
+        .with("updated_at", ANY_ISO_DATETIME);
+}
+```
+
+#### Examples code
+You can check out the example tests [in the code](/examples/src/test/java/com/zendesk/jazon/junit/ReadmeExamplesTest.java) 
 
 ## Copyright and license
 Copyright 2019 Zendesk, Inc.

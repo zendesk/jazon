@@ -1,7 +1,7 @@
 package com.zendesk.jazon.junit;
 
 import com.google.common.collect.ImmutableMap;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
@@ -10,11 +10,13 @@ import java.util.function.Predicate;
 import static com.zendesk.jazon.junit.JazonJunitAdapter.assertThat;
 import static java.util.Arrays.asList;
 
+class ExamplesWithGuavaTest {
 
-public class ExampleTest {
-
-    @Test(expected = AssertionError.class)
-    public void simpleTest() {
+    /**
+     * This is a failing test example.
+     */
+    @Test
+    void simpleTest() {
         // given
         String actualJson = "{\"value\": 123}";
         Map<String, Object> expectedJsonAsMap = ImmutableMap.<String, Object>builder()
@@ -25,8 +27,11 @@ public class ExampleTest {
         assertThat(actualJson).matches(expectedJsonAsMap);
     }
 
-    @Test(expected = AssertionError.class)
-    public void testWithNestedArray() {
+    /**
+     * This is a failing test example.
+     */
+    @Test
+    void testWithNestedArray() {
         // given
         String actualJson = "{" +
                 "\"value\": 50," +
@@ -39,8 +44,11 @@ public class ExampleTest {
         );
     }
 
-    @Test(expected = AssertionError.class)
-    public void testWithRootArray() {
+    /**
+     * This is a failing test example.
+     */
+    @Test
+    void testWithRootArray() {
         // given
         String actualJson = "[\"blue\", \"black\", \"red\"]";
 
@@ -48,8 +56,11 @@ public class ExampleTest {
         assertThat(actualJson).matches(asList("blue", "pink", "red"));
     }
 
+    /**
+     * This is a passing test example.
+     */
     @Test
-    public void testRegex() {
+    void testRegex() {
         // given
         String actualJson = "[\"blue\", \"black\", \"red\"]";
 
