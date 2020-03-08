@@ -108,6 +108,11 @@ assertThat(response).matches(
         .with("updated_at", ANY_ISO_DATETIME)   // a constant
 );
 ```
+```java
+private static final Predicate<Integer> ANY_ID = (id) -> id >= 0;
+private static final Predicate<String> ANY_ISO_DATETIME = 
+        datetime -> datetime.matches("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z");
+```
 
 #### Example 5: Utils extraction to domain objects
 

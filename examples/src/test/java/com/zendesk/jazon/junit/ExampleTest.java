@@ -3,10 +3,12 @@ package com.zendesk.jazon.junit;
 import org.junit.jupiter.api.Test;
 
 import static com.zendesk.jazon.junit.JazonJunitAdapter.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ExampleTest {
 
+    /**
+     * This is a passing test example.
+     */
     @Test
     void testRegex() {
         // given
@@ -20,11 +22,14 @@ class ExampleTest {
         assertThat(actualJson).matches(
                 new JazonMap()
                         .with("first", (String s) -> s.matches("bl.*"))
-                        .with("second", s -> ((String)s).matches("bl.*"))
+                        .with("second", s -> ((String) s).matches("bl.*"))
                         .with("third", "red")
         );
     }
 
+    /**
+     * This is a failing test example.
+     */
     @Test
     void testRegexTypeMismatch() {
         // given
@@ -39,20 +44,21 @@ class ExampleTest {
         );
     }
 
+    /**
+     * This is a failing test example.
+     */
     @Test
     void testPredicatedWithDeeplyNestedException() {
-        assertThrows(AssertionError.class, () -> {
-            // given
-            String actualJson = "{" +
-                    "   \"first\": 55" +
-                    "}";
+        // given
+        String actualJson = "{" +
+                "   \"first\": 55" +
+                "}";
 
-            // then
-            assertThat(actualJson).matches(
-                    new JazonMap()
-                            .with("first", this::complexOperation)
-            );
-        });
+        // then
+        assertThat(actualJson).matches(
+                new JazonMap()
+                        .with("first", this::complexOperation)
+        );
     }
 
     private boolean complexOperation(Integer number) {

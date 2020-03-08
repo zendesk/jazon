@@ -12,6 +12,9 @@ import static java.util.Arrays.asList;
 
 class ExamplesWithGuavaTest {
 
+    /**
+     * This is a failing test example.
+     */
     @Test
     void simpleTest() {
         // given
@@ -24,6 +27,9 @@ class ExamplesWithGuavaTest {
         assertThat(actualJson).matches(expectedJsonAsMap);
     }
 
+    /**
+     * This is a failing test example.
+     */
     @Test
     void testWithNestedArray() {
         // given
@@ -38,6 +44,9 @@ class ExamplesWithGuavaTest {
         );
     }
 
+    /**
+     * This is a failing test example.
+     */
     @Test
     void testWithRootArray() {
         // given
@@ -47,6 +56,9 @@ class ExamplesWithGuavaTest {
         assertThat(actualJson).matches(asList("blue", "pink", "red"));
     }
 
+    /**
+     * This is a passing test example.
+     */
     @Test
     void testRegex() {
         // given

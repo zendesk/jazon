@@ -125,13 +125,13 @@ class JazonListTest {
     @Test
     void allThingsAtOnce() {
         // given
-        JazonMap robert = new JazonMap()
+        JazonMap nestedMap = new JazonMap()
                 .with("firstname", "Robert")
-                .with("firstname", "Kubica");
+                .with("lastname", "Kubica");
         JazonList drinks = new JazonList("pepsi", "coca cola", "sprite");
         JazonList jazonList = new JazonList()
                 .with(150)
-                .with(robert)
+                .with(nestedMap)
                 .with((Integer it) -> it > 100)
                 .with("orange")
                 .with(null)
@@ -144,7 +144,7 @@ class JazonListTest {
         // then
         assertEquals(7, list.size());
         assertEquals(new ObjectExpectationInput(150), list.get(0));
-        assertEquals(new ObjectExpectationInput(robert), list.get(1));
+        assertEquals(new ObjectExpectationInput(nestedMap), list.get(1));
 
         PredicateExpectationInput predicateInput = (PredicateExpectationInput) list.get(2);
         Predicate<Integer> firstPredicate = predicateInput.predicate();

@@ -11,8 +11,9 @@ import static com.zendesk.jazon.junit.JazonJunitAdapter.assertThat;
 import static java.util.Arrays.asList;
 
 class ReadmeExamplesTest {
-    private Predicate<Integer> ANY_ID = id -> id >= 0;
-    private Predicate<String> ANY_ISO_DATETIME = datetime -> datetime.matches("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z");
+    private static final Predicate<Integer> ANY_ID = (id) -> id >= 0;
+    private static final Predicate<String> ANY_ISO_DATETIME =
+            datetime -> datetime.matches("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z");
 
     @Test
     void simpleAssertionPasses() {

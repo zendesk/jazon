@@ -4,6 +4,7 @@ import com.zendesk.jazon.actual.ActualJsonBoolean;
 import com.zendesk.jazon.actual.ActualJsonNumber;
 import com.zendesk.jazon.actual.ActualJsonString;
 import com.zendesk.jazon.junit.JazonMap;
+import com.zendesk.jazon.junit.JsonExpectationInput;
 import com.zendesk.jazon.junit.ObjectExpectationInput;
 import com.zendesk.jazon.junit.PredicateExpectationInput;
 
@@ -46,10 +47,7 @@ public class JunitExpectationFactory implements ExpectationFactory {
             return new PredicateExpectation(expectationInput.predicate());
         } else if (object instanceof JazonMap) {
             JazonMap jazonMap = (JazonMap) object;
-            HashMap<String, Object> map = jazonMap.map()
-                    .entrySet()
-                    .stream()
-                    .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, HashMap::new));
+            HashMap<String, Object> map = copied(jazonMap.map());
             return objectExpectation(map, this);
         } else if (object instanceof AnyNumberOf) {
             Object repeatedObject = ((AnyNumberOf) object).getElementExpectation();
@@ -57,5 +55,15 @@ public class JunitExpectationFactory implements ExpectationFactory {
             return new ArrayEachElementExpectation(repeatedExpectation);
         }
         throw new IllegalArgumentException();
+    }
+
+    /**
+     * Returns Map<String, Object> converted from Map<String, JsonExpectationInput>
+     */
+    private HashMap<String, Object> copied(Map<String, JsonExpectationInput> map) {
+        return map
+                .entrySet()
+                .stream()
+                .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, HashMap::new));
     }
 }
