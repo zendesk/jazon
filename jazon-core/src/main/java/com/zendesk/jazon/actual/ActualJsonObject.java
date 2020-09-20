@@ -3,16 +3,15 @@ package com.zendesk.jazon.actual;
 import com.zendesk.jazon.MatchResult;
 import com.zendesk.jazon.expectation.JsonExpectation;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.zendesk.jazon.util.Preconditions.checkNotNull;
 import static java.util.Collections.unmodifiableMap;
 
-@ToString
 @EqualsAndHashCode
 public class ActualJsonObject implements Actual {
     private final Map<String, Actual> map;
@@ -40,5 +39,19 @@ public class ActualJsonObject implements Actual {
 
     public int size() {
         return map.size();
+    }
+
+    @Override
+    public String toString() {
+        if (map.isEmpty()) {
+            return "{}";
+        }
+        return "{" + fields() + "}";
+    }
+
+    private String fields() {
+        return map.entrySet().stream()
+                .map(e -> String.format("\"%s\": %s", e.getKey(), e.getValue()))
+                .collect(Collectors.joining(", "));
     }
 }

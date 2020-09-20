@@ -1,5 +1,6 @@
 package com.zendesk.jazon.actual;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +33,9 @@ public class ObjectsActualFactory implements ActualFactory<Object> {
                 .collect(
                         toMap(
                                 Map.Entry::getKey,
-                                e -> actual(e.getValue())
+                                e -> actual(e.getValue()),
+                                (a, b) -> a,
+                                LinkedHashMap::new
                         )
                 );
         return new ActualJsonObject(map);

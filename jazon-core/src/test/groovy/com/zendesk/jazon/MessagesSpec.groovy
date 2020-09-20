@@ -157,6 +157,55 @@ class MessagesSpec extends Specification {
         print result
     }
 
+    def "ordered array expectation: unexpected element as object"() {
+        given:
+        def expected = [
+                items: [
+                    [firstname: 'Jack', lastname: 'Bauer'],
+                    [firstname: 'Franz', lastname: 'Beckenbauer']
+                ]
+        ]
+        def actual = [
+                items: [
+                    [firstname: 'Jack', lastname: 'Bauer'],
+                    [firstname: 'Franz', lastname: 'Beckenbauer'],
+                    [firstname: 'Oliver', lastname: 'Twist', position: [x: 1, y: 1]]
+                ]
+        ]
+
+        when:
+        def result = match(expected, actual)
+
+        then:
+        result.message() == 'Mismatch at path: \$.items\nArray contains unexpected items: [{"firstname": "Oliver", "lastname": "Twist", "position": {"x": 1, "y": 1}}]'
+        print result
+    }
+
+    def "ordered array expectation: unexpected element as array"() {
+        given:
+        def expected = [
+                items: [
+                        ['red', 'green', 'blue'],
+                        ['cyan', 'magenta', 'yellow']
+                ]
+        ]
+        def actual = [
+                items: [
+                        ['red', 'green', 'blue'],
+                        ['cyan', 'magenta', 'yellow'],
+                        ['huehue', 'hue', 'alpha', 'saturn', 'jupiter'],
+                        ['finito']
+                ]
+        ]
+
+        when:
+        def result = match(expected, actual)
+
+        then:
+        result.message() == 'Mismatch at path: \$.items\nArray contains unexpected items: [["huehue", "hue", "alpha", "saturn", "jupiter"], ["finito"]]'
+        print result
+    }
+
     MatchResult match(Map expected, Map actual) {
         matcherFactory.matcher()
                 .expected(expected)

@@ -3,6 +3,7 @@ package com.zendesk.jazon.actual;
 import com.google.gson.*;
 
 import java.math.BigDecimal;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -39,7 +40,9 @@ public class GsonActualFactory implements ActualFactory<String> {
                 .collect(
                         toMap(
                                 Map.Entry::getKey,
-                                e -> this.fromJsonElement(e.getValue())
+                                e -> this.fromJsonElement(e.getValue()),
+                                (a, b) -> a,
+                                LinkedHashMap::new
                         )
                 );
         return new ActualJsonObject(map);
