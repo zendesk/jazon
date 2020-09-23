@@ -30,11 +30,11 @@ public class ActualJsonArray implements Actual {
 
     @Override
     public String toString() {
-        return "[" + String.join(", ", strings(list)) + "]";
+        return "[" + String.join(", ", strings()) + "]";
     }
 
-    private static List<String> strings(List<Actual> actuals) {
-        return actuals.stream()
+    private List<String> strings() {
+        return list.stream()
                 .map(Objects::toString)
                 .collect(toList());
     }
