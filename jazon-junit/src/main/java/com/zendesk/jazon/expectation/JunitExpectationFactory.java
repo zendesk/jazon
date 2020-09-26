@@ -47,7 +47,7 @@ public class JunitExpectationFactory implements ExpectationFactory {
             return new PredicateExpectation(expectationInput.predicate());
         } else if (object instanceof JazonMap) {
             JazonMap jazonMap = (JazonMap) object;
-            HashMap<String, Object> map = copied(jazonMap.map());
+            HashMap<CharSequence, Object> map = copied(jazonMap.map());
             return objectExpectation(map, this);
         } else if (object instanceof AnyNumberOf) {
             Object repeatedObject = ((AnyNumberOf) object).getElementExpectation();
@@ -58,9 +58,9 @@ public class JunitExpectationFactory implements ExpectationFactory {
     }
 
     /**
-     * Returns Map<String, Object> converted from Map<String, JsonExpectationInput>
+     * Returns Map<CharSequence, Object> converted from Map<String, JsonExpectationInput>
      */
-    private HashMap<String, Object> copied(Map<String, JsonExpectationInput> map) {
+    private HashMap<CharSequence, Object> copied(Map<String, JsonExpectationInput> map) {
         return map
                 .entrySet()
                 .stream()
