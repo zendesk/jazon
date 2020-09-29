@@ -547,6 +547,18 @@ class MatcherSpec extends Specification {
         [a: 1]           | [a: 9]       || '$.a' | primitiveValueMismatch(1, 9)
     }
 
+    def "Groovy's GString can be a key in expectation"() {
+        given:
+        String key = 'name'
+
+        when:
+        def result = match(["$key": 'Andreas'], [name: 'Andreas'])
+
+        then:
+        noExceptionThrown()
+        result.ok()
+    }
+
     private static MatchResult match(Map expected, Map actual) {
         matcherFactory.matcher()
                 .expected(expected)

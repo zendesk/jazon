@@ -16,7 +16,7 @@ public class DefaultExpectationFactory implements ExpectationFactory {
     @Override
     public JsonExpectation expectation(Object object) {
         if (object instanceof Map) {
-            return objectExpectation((Map<String, Object>) object, this);
+            return objectExpectation((Map<CharSequence, Object>) object, this);
         } else if (object instanceof Number) {
             return new PrimitiveValueExpectation<>(new ActualJsonNumber((Number) object));
         } else if (object instanceof String) {

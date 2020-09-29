@@ -7,12 +7,12 @@ import static java.util.stream.Collectors.*;
 public interface ExpectationFactory {
     JsonExpectation expectation(Object object);
 
-    static ObjectExpectation objectExpectation(Map<String, Object> objectsMap, ExpectationFactory expectationFactory) {
+    static ObjectExpectation objectExpectation(Map<CharSequence, Object> objectsMap, ExpectationFactory expectationFactory) {
         LinkedHashMap<String, JsonExpectation> expectationsMap = objectsMap.entrySet()
                 .stream()
                 .collect(
                         toMap(
-                                Map.Entry::getKey,
+                                e -> e.getKey().toString(),
                                 e -> expectationFactory.expectation(e.getValue()),
                                 (a, b) -> a,
                                 () -> new LinkedHashMap<>(objectsMap.size())
