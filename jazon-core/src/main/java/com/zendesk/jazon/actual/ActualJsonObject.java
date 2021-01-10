@@ -16,7 +16,7 @@ import static java.util.Collections.unmodifiableMap;
 public class ActualJsonObject implements Actual {
     private final Map<String, Actual> map;
 
-    ActualJsonObject(Map<String, Actual> map) {
+    public ActualJsonObject(Map<String, Actual> map) {
         this.map = checkNotNull(map);
     }
 

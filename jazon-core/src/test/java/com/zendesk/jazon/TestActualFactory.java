@@ -1,4 +1,13 @@
-package com.zendesk.jazon.actual;
+package com.zendesk.jazon;
+
+import com.zendesk.jazon.actual.Actual;
+import com.zendesk.jazon.actual.ActualFactory;
+import com.zendesk.jazon.actual.ActualJsonArray;
+import com.zendesk.jazon.actual.ActualJsonBoolean;
+import com.zendesk.jazon.actual.ActualJsonNull;
+import com.zendesk.jazon.actual.ActualJsonNumber;
+import com.zendesk.jazon.actual.ActualJsonObject;
+import com.zendesk.jazon.actual.ActualJsonString;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -7,13 +16,19 @@ import java.util.Map;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
-public class ObjectsActualFactory implements ActualFactory<Object> {
+/**
+ * This class exists to handle assertions in tests when instance of Actual is needed in the assertion-expectation - e.g.
+ * equality-comparing of `Mismatch` instances that store Actual instance inside itself.
+ * Without this class we would have to write lot of verbose constructor-calls like `new ActualJsonArray(...)` etc.
+ */
+public class TestActualFactory implements ActualFactory<Object> {
 
     @Override
     public Actual actual(Object input) {
         if (input instanceof Map) {
             return actualObject((Map<String, Object>) input);
         } else if (input instanceof Number) {
+
             return new ActualJsonNumber((Number) input);
         } else if (input instanceof String) {
             return new ActualJsonString((String) input);

@@ -1,19 +1,16 @@
 package com.zendesk.jazon
 
-import com.zendesk.jazon.actual.ActualFactory
-import com.zendesk.jazon.actual.ObjectsActualFactory
+import com.zendesk.jazon.actual.GsonActualFactory
 import com.zendesk.jazon.expectation.DefaultExpectationFactory
-import com.zendesk.jazon.expectation.ExpectationFactory
 import spock.lang.Specification
 import spock.lang.Unroll
 
-class MessagesSpec extends Specification {
+import static groovy.json.JsonOutput.toJson
 
-    ActualFactory actualFactory = new ObjectsActualFactory()
-    ExpectationFactory expectationFactory = new DefaultExpectationFactory()
-    MatcherFactory matcherFactory = new MatcherFactory(
-            expectationFactory,
-            actualFactory
+class MessagesSpec extends Specification {
+    private static final MatcherFactory matcherFactory = new MatcherFactory(
+            new DefaultExpectationFactory(),
+            new GsonActualFactory()
     )
 
     def "object expectation - primitive field value mismatch"() {
@@ -209,11 +206,11 @@ class MessagesSpec extends Specification {
     MatchResult match(Map expected, Map actual) {
         matcherFactory.matcher()
                 .expected(expected)
-                .actual(actual)
+                .actual(toJson(actual))
                 .match()
     }
 
-    private void print(MatchResult result) {
+    private static void print(MatchResult result) {
         println result.message() + '\n'
     }
 }

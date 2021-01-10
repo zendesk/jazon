@@ -11,14 +11,15 @@ import spock.lang.Unroll
 import java.util.function.Predicate
 
 import static com.zendesk.jazon.expectation.Expectations.anyNumberOf
+import static groovy.json.JsonOutput.toJson
 
 class MatcherSpec extends Specification {
 
-    static ActualFactory actualFactory = new ObjectsActualFactory()
-    static ExpectationFactory expectationFactory = new DefaultExpectationFactory()
-    static MatcherFactory matcherFactory = new MatcherFactory(
+    private static TestActualFactory testActualFactory = new TestActualFactory()
+    private static ExpectationFactory expectationFactory = new DefaultExpectationFactory()
+    private static MatcherFactory matcherFactory = new MatcherFactory(
             expectationFactory,
-            actualFactory
+            new GsonActualFactory()
     )
 
     @Unroll
@@ -34,33 +35,47 @@ class MatcherSpec extends Specification {
         where:
         expected                | actual
         123                     | 10
-        123                     | 130.1f
-        123                     | 1500.13d
         123                     | new BigDecimal("11.05")
         123                     | 12345l
         130.1f                  | 10
-        130.1f                  | 133.3f
-        130.1f                  | 1500.13d
         130.1f                  | new BigDecimal("11.05")
         130.1f                  | 12345l
         1500.13d                | 10
-        1500.13d                | 130.1f
-        1500.13d                | 1555.55d
         1500.13d                | new BigDecimal("11.05")
         1500.13d                | 12345l
         new BigDecimal("11.05") | 10
-        new BigDecimal("11.05") | 130.1f
-        new BigDecimal("11.05") | 1500.13d
         new BigDecimal("11.05") | new BigDecimal("11.11")
         new BigDecimal("11.05") | 12345l
         12345l                  | 10
-        12345l                  | 130.1f
-        12345l                  | 1500.13d
         12345l                  | new BigDecimal("11.05")
         12345l                  | 1234567l
         'green'                 | 'red'
         true                    | false
         false                   | true
+    }
+
+    @Unroll
+    def "primitive value mismatch for floating Actuals (expected: #expected, actual: #actual)"() {
+        when:
+        def result = match([a: expected], [a: actualFloating])
+
+        then:
+        !result.ok()
+        result.mismatch().expectationMismatch() == primitiveValueMismatch(expected, actualDecimal)
+        result.mismatch().path() == '$.a'
+
+        where:
+        expected                | actualFloating | actualDecimal
+        123                     | 130.1f         | new BigDecimal('130.1')
+        123                     | 1500.13d       | new BigDecimal('1500.13')
+        130.1f                  | 133.3f         | new BigDecimal('133.3')
+        130.1f                  | 1500.13d       | new BigDecimal('1500.13')
+        1500.13d                | 130.1f         | new BigDecimal('130.1')
+        1500.13d                | 1555.55d       | new BigDecimal('1555.55')
+        new BigDecimal("11.05") | 130.1f         | new BigDecimal('130.1')
+        new BigDecimal("11.05") | 1500.13d       | new BigDecimal('1500.13')
+        12345l                  | 130.1f         | new BigDecimal('130.1')
+        12345l                  | 1500.13d       | new BigDecimal('1500.13')
     }
 
     def "simple primitive type mismatch"() {
@@ -317,7 +332,7 @@ class MatcherSpec extends Specification {
         then:
         !result.ok()
         result.mismatch().expectationMismatch() == new ArrayUnexpectedElementsMismatch(
-                unexpectedElements.collect(actualFactory.&actual)
+                unexpectedElements.collect(testActualFactory.&actual)
         )
         result.mismatch().path() == '$.a'
 
@@ -404,7 +419,7 @@ class MatcherSpec extends Specification {
         then:
         !result.ok()
         result.mismatch().expectationMismatch() == new ArrayUnexpectedElementsMismatch(
-                unexpectedElements.collect(actualFactory.&actual)
+                unexpectedElements.collect(testActualFactory.&actual)
         )
         result.mismatch().path() == '$.a'
 
@@ -498,15 +513,13 @@ class MatcherSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch().expectationMismatch() == new NotNullMismatch(actualFactory.actual(actual))
+        result.mismatch().expectationMismatch() == new NotNullMismatch(testActualFactory.actual(actual))
         result.mismatch().path() == '$.a'
 
         where:
         actual << [
                 'something',
                 10,
-                130.1f,
-                1555.55d,
                 new BigDecimal("11.05"),
                 12345l,
                 [x: 123],
@@ -514,6 +527,21 @@ class MatcherSpec extends Specification {
                 true,
                 false
         ]
+    }
+
+    def "null expectation: fails for any present float/double"() {
+        when:
+        def result = match([a: null], [a: actualFloating])
+
+        then:
+        !result.ok()
+        result.mismatch().expectationMismatch() == new NotNullMismatch(testActualFactory.actual(actualDecimal))
+        result.mismatch().path() == '$.a'
+
+        where:
+        actualFloating | actualDecimal
+        130.1f         | new BigDecimal('130.1')
+        1555.55d       | new BigDecimal('1555.55')
     }
 
     def "null expectation: succeeds for null"() {
@@ -528,7 +556,7 @@ class MatcherSpec extends Specification {
         when:
         def result = matcherFactory.matcher()
                 .expected(expected)
-                .actual(actual)
+                .actual(toJson(actual))
                 .match()
 
         then:
@@ -543,7 +571,7 @@ class MatcherSpec extends Specification {
         'medicine'       | 'drug'       || '$'   | primitiveValueMismatch('medicine', 'drug')
         100              | 99           || '$'   | primitiveValueMismatch(100, 99)
         true             | false        || '$'   | primitiveValueMismatch(true, false)
-        null             | 'vegetables' || '$'   | new NotNullMismatch(actualFactory.actual('vegetables'))
+        null             | 'vegetables' || '$'   | new NotNullMismatch(testActualFactory.actual('vegetables'))
         [a: 1]           | [a: 9]       || '$.a' | primitiveValueMismatch(1, 9)
     }
 
@@ -562,12 +590,12 @@ class MatcherSpec extends Specification {
     private static MatchResult match(Map expected, Map actual) {
         matcherFactory.matcher()
                 .expected(expected)
-                .actual(actual)
+                .actual(toJson(actual))
                 .match()
     }
 
     private static PrimitiveValueMismatch primitiveValueMismatch(def expected, def actual) {
-        return new PrimitiveValueMismatch(actualFactory.actual(expected), actualFactory.actual(actual))
+        return new PrimitiveValueMismatch(testActualFactory.actual(expected), testActualFactory.actual(actual))
     }
 
     private static JsonExpectation expectation(Object object) {

@@ -1,19 +1,18 @@
 package com.zendesk.jazon
 
-import com.zendesk.jazon.actual.ActualFactory
-import com.zendesk.jazon.actual.ObjectsActualFactory
+
+import com.zendesk.jazon.actual.GsonActualFactory
 import com.zendesk.jazon.expectation.DefaultExpectationFactory
-import com.zendesk.jazon.expectation.ExpectationFactory
 import com.zendesk.jazon.mismatch.PrimitiveValueMismatch
 import spock.lang.Specification
 
-class MismatchPathSpec extends Specification {
+import static groovy.json.JsonOutput.toJson
 
-    ActualFactory actualFactory = new ObjectsActualFactory()
-    ExpectationFactory expectationFactory = new DefaultExpectationFactory()
-    MatcherFactory matcherFactory = new MatcherFactory(
-            expectationFactory,
-            actualFactory
+class MismatchPathSpec extends Specification {
+    private static final TestActualFactory testActualFactory = new TestActualFactory()
+    private static final MatcherFactory matcherFactory = new MatcherFactory(
+            new DefaultExpectationFactory(),
+            new GsonActualFactory()
     )
 
     def "complex case"() {
@@ -58,15 +57,15 @@ class MismatchPathSpec extends Specification {
         result.mismatch().path() == '$.data.1.values.elements.0.value'
     }
 
-    private MatchResult match(Map expected, Map actual) {
+    private static MatchResult match(Map expected, Map actual) {
         matcherFactory.matcher()
                 .expected(expected)
-                .actual(actual)
+                .actual(toJson(actual))
                 .match()
     }
 
-    private PrimitiveValueMismatch primitiveValueMismatch(def expected, def actual) {
-        return new PrimitiveValueMismatch(actualFactory.actual(expected), actualFactory.actual(actual))
+    private static PrimitiveValueMismatch primitiveValueMismatch(def expected, def actual) {
+        return new PrimitiveValueMismatch(testActualFactory.actual(expected), testActualFactory.actual(actual))
     }
 
     private static final VERY_COMPLEX_OBJECT = [

@@ -1,6 +1,6 @@
 package com.zendesk.jazon
 
-import com.zendesk.jazon.actual.ObjectsActualFactory
+import ObjectsActualFactory
 import com.zendesk.jazon.expectation.SpockExpectationFactory
 import com.zendesk.jazon.mismatch.PredicateMismatch
 import spock.lang.Specification

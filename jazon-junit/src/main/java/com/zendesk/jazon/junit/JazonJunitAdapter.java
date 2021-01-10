@@ -3,16 +3,14 @@ package com.zendesk.jazon.junit;
 import com.zendesk.jazon.MatchResult;
 import com.zendesk.jazon.MatcherFactory;
 import com.zendesk.jazon.actual.GsonActualFactory;
-import com.zendesk.jazon.actual.ObjectsActualFactory;
 import com.zendesk.jazon.expectation.JunitExpectationFactory;
 
 import static com.zendesk.jazon.util.Preconditions.checkNotNull;
 
 public class JazonJunitAdapter {
-    private static final GsonActualFactory GSON_ACTUAL_FACTORY = new GsonActualFactory();
     private static final MatcherFactory matcherFactory = new MatcherFactory(
             new JunitExpectationFactory(),
-            new ObjectsActualFactory()
+            new GsonActualFactory()
     );
     private final String actualJson;
 
@@ -35,7 +33,7 @@ public class JazonJunitAdapter {
     private void matchExpectedObject(Object expected) {
         MatchResult matchResult = matcherFactory.matcher()
                 .expected(expected)
-                .actual(GSON_ACTUAL_FACTORY.actual(actualJson))
+                .actual(actualJson)
                 .match();
         if (matchResult.ok()) {
             return;
