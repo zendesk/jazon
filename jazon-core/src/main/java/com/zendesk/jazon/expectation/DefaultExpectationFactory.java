@@ -6,35 +6,34 @@ import com.zendesk.jazon.actual.ActualJsonString;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import static com.zendesk.jazon.expectation.ExpectationFactory.*;
+import static java.util.Optional.of;
 
 public class DefaultExpectationFactory implements ExpectationFactory {
 
     @Override
-    public JsonExpectation expectation(Object object) {
+    public Optional<JsonExpectation> expectationKek(Object object) {
         if (object instanceof Map) {
-            return objectExpectation((Map<CharSequence, Object>) object, this);
+            // here we need the whole main ExpectationFactory (translator)
+            return of(ExpectationFactory.objectExpectation((Map<CharSequence, Object>) object, this));
         } else if (object instanceof Number) {
-            return new PrimitiveValueExpectation<>(new ActualJsonNumber((Number) object));
+            return of(new PrimitiveValueExpectation<>(new ActualJsonNumber((Number) object)));
         } else if (object instanceof String) {
-            return new PrimitiveValueExpectation<>(new ActualJsonString((String) object));
+            return of(new PrimitiveValueExpectation<>(new ActualJsonString((String) object)));
         } else if (object instanceof Boolean) {
-            return new PrimitiveValueExpectation<>(new ActualJsonBoolean((Boolean) object));
+            return of(new PrimitiveValueExpectation<>(new ActualJsonBoolean((Boolean) object)));
         } else if (object instanceof List) {
-            return expectedOrderedArray((List<Object>) object, this);
+            return of(ExpectationFactory.expectedOrderedArray((List<Object>) object, this));
         } else if (object instanceof Set) {
-            return expectedUnorderedArray((Set<Object>) object, this);
-        } else if (object instanceof AnyNumberOf) {
-            Object elementExpectation = ((AnyNumberOf) object).getElementExpectation();
-            return new ArrayEachElementExpectation(expectation(elementExpectation));
+            return of(ExpectationFactory.expectedUnorderedArray((Set<Object>) object, this));
         } else if (object == null) {
-            return new NullExpectation();
+            return of(new NullExpectation());
         } else if (object instanceof Predicate) {
-            return new PredicateExpectation((Predicate<Object>) object);
+            return of(new PredicateExpectation((Predicate<Object>) object));
         }
-        throw new IllegalArgumentException();
+        return Optional.empty();
     }
 }

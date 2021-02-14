@@ -2,9 +2,6 @@ package com.zendesk.jazon.junit;
 
 import com.zendesk.jazon.MatchResult;
 import com.zendesk.jazon.MatcherFactory;
-import com.zendesk.jazon.actual.GsonActualFactory;
-import com.zendesk.jazon.actual.ObjectsActualFactory;
-import com.zendesk.jazon.expectation.JunitExpectationFactory;
 import com.zendesk.jazon.mismatch.PredicateExecutionFailedMismatch;
 import com.zendesk.jazon.mismatch.PrimitiveValueMismatch;
 import org.junit.jupiter.api.Test;
@@ -17,11 +14,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class JunitSpecificMatcherTest {
 
-    private static final GsonActualFactory GSON_ACTUAL_FACTORY = new GsonActualFactory();
-    private static final MatcherFactory matcherFactory = new MatcherFactory(
-            new JunitExpectationFactory(),
-            new ObjectsActualFactory()
-    );
+//    private static final GsonActualFactory GSON_ACTUAL_FACTORY = new GsonActualFactory();
+    private static final MatcherFactory matcherFactory = null;
+//    private static final MatcherFactory matcherFactory = new MatcherFactory(
+//            new JunitExpectationFactory(),
+//            new ObjectsActualFactory()
+//    );
 
     @Test
     void testRegex() {
@@ -135,7 +133,7 @@ class JunitSpecificMatcherTest {
     private MatchResult match(JazonMap expected, String actualJson) {
         return matcherFactory.matcher()
                 .expected(expected.map())
-                .actual(GSON_ACTUAL_FACTORY.actual(actualJson))
+                .actual(actualJson)
                 .match();
     }
 }

@@ -5,7 +5,10 @@ import java.util.*;
 import static java.util.stream.Collectors.*;
 
 public interface ExpectationFactory {
-    JsonExpectation expectation(Object object);
+    default JsonExpectation expectation(Object object) {
+        return expectationKek(object).get();    //FIXME
+    }
+    Optional<JsonExpectation> expectationKek(Object object);
 
     static ObjectExpectation objectExpectation(Map<CharSequence, Object> objectsMap, ExpectationFactory expectationFactory) {
         LinkedHashMap<String, JsonExpectation> expectationsMap = objectsMap.entrySet()

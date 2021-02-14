@@ -3,11 +3,15 @@ package com.zendesk.jazon.spock
 import com.zendesk.jazon.MatchResult
 import com.zendesk.jazon.MatcherFactory
 import com.zendesk.jazon.actual.GsonActualFactory
-import com.zendesk.jazon.expectation.SpockExpectationFactory
+import com.zendesk.jazon.expectation.DefaultTranslators
+import com.zendesk.jazon.expectation.JazonTypesTranslators
+import com.zendesk.jazon.expectation.SpockTranslators
+import com.zendesk.jazon.expectation.TranslatorToExpectation
+import com.zendesk.jazon.expectation.TranslatorWrapper
 
 class JazonSpockAdapter {
     private static final MatcherFactory MATCHER_FACTORY = new MatcherFactory(
-            new SpockExpectationFactory(),
+            new TranslatorToExpectation(translators()),
             new GsonActualFactory()
     )
     private final String json
@@ -41,5 +45,9 @@ class JazonSpockAdapter {
 
     private static GString errorMessage(MatchResult matchResult) {
         "\n-----------------------------------\nJSON MISMATCH:\n${matchResult.message()}\n-----------------------------------\n"
+    }
+
+    private static List<TranslatorWrapper> translators() {
+        DefaultTranslators.translators() + JazonTypesTranslators.translators() + SpockTranslators.translators()
     }
 }

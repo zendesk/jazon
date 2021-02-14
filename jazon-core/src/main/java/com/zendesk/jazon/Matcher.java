@@ -2,17 +2,17 @@ package com.zendesk.jazon;
 
 import com.zendesk.jazon.actual.Actual;
 import com.zendesk.jazon.actual.ActualFactory;
-import com.zendesk.jazon.expectation.ExpectationFactory;
 import com.zendesk.jazon.expectation.JsonExpectation;
+import com.zendesk.jazon.expectation.TranslatorToExpectation;
 
 public class Matcher {
-    private final ExpectationFactory expectationFactory;
+    private final TranslatorToExpectation translator;
     private final ActualFactory<String> actualFactory;
     private JsonExpectation expectation;
     private Actual actual;
 
-    Matcher(ExpectationFactory expectationFactory, ActualFactory<String> actualFactory) {
-        this.expectationFactory = expectationFactory;
+    Matcher(TranslatorToExpectation translator, ActualFactory<String> actualFactory) {
+        this.translator = translator;
         this.actualFactory = actualFactory;
     }
 
@@ -21,7 +21,7 @@ public class Matcher {
     }
 
     public Matcher expected(Object expectation) {
-        this.expectation = expectationFactory.expectation(expectation);
+        this.expectation = translator.expectation(expectation);
         return this;
     }
 

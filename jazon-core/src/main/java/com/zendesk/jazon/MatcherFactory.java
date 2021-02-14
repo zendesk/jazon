@@ -1,18 +1,18 @@
 package com.zendesk.jazon;
 
 import com.zendesk.jazon.actual.ActualFactory;
-import com.zendesk.jazon.expectation.ExpectationFactory;
+import com.zendesk.jazon.expectation.TranslatorToExpectation;
 
 public class MatcherFactory {
-    private final ExpectationFactory expectationFactory;
+    private final TranslatorToExpectation translator;
     private final ActualFactory<String> actualFactory;
 
-    public MatcherFactory(ExpectationFactory expectationFactory, ActualFactory<String> actualFactory) {
-        this.expectationFactory = expectationFactory;
+    public MatcherFactory(TranslatorToExpectation translator, ActualFactory<String> actualFactory) {
+        this.translator = translator;
         this.actualFactory = actualFactory;
     }
 
     public Matcher matcher() {
-        return new Matcher(expectationFactory, actualFactory);
+        return new Matcher(translator, actualFactory);
     }
 }
