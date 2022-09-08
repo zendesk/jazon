@@ -12,7 +12,7 @@ import java.util.function.Predicate;
 
 import static java.util.Optional.of;
 
-public class DefaultExpectationFactory implements ExpectationFactory {
+class DefaultExpectationFactory implements ExpectationFactory {
 
     @Override
     public Optional<JsonExpectation> expectationKek(Object object) {

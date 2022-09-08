@@ -1,15 +1,27 @@
 package com.zendesk.jazon
 
-import com.zendesk.jazon.actual.*
-import com.zendesk.jazon.expectation.CompoundExpectationFactory
-import com.zendesk.jazon.expectation.DefaultExpectationFactory
+import com.zendesk.jazon.actual.ActualJsonArray
+import com.zendesk.jazon.actual.ActualJsonBoolean
+import com.zendesk.jazon.actual.ActualJsonNull
+import com.zendesk.jazon.actual.ActualJsonNumber
+import com.zendesk.jazon.actual.ActualJsonObject
+import com.zendesk.jazon.actual.ActualJsonString
+import com.zendesk.jazon.actual.GsonActualFactory
 import com.zendesk.jazon.expectation.DefaultTranslators
 import com.zendesk.jazon.expectation.ExpectationFactory
-import com.zendesk.jazon.expectation.JazonTypesExpectationFactory
 import com.zendesk.jazon.expectation.JazonTypesTranslators
 import com.zendesk.jazon.expectation.JsonExpectation
+import com.zendesk.jazon.expectation.TestExpectationFactory
 import com.zendesk.jazon.expectation.TranslatorToExpectation
-import com.zendesk.jazon.mismatch.*
+import com.zendesk.jazon.mismatch.ArrayLackingElementsMismatch
+import com.zendesk.jazon.mismatch.ArrayUnexpectedElementsMismatch
+import com.zendesk.jazon.mismatch.NoFieldMismatch
+import com.zendesk.jazon.mismatch.NotNullMismatch
+import com.zendesk.jazon.mismatch.NullMismatch
+import com.zendesk.jazon.mismatch.PredicateMismatch
+import com.zendesk.jazon.mismatch.PrimitiveValueMismatch
+import com.zendesk.jazon.mismatch.TypeMismatch
+import com.zendesk.jazon.mismatch.UnexpectedFieldMismatch
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -21,10 +33,7 @@ import static groovy.json.JsonOutput.toJson
 class MatcherSpec extends Specification {
 
     private static TestActualFactory testActualFactory = new TestActualFactory()
-    private static ExpectationFactory expectationFactory = new CompoundExpectationFactory([
-            new DefaultExpectationFactory(),
-            new JazonTypesExpectationFactory()
-    ])
+    private static ExpectationFactory expectationFactory = new TestExpectationFactory()
     private static MatcherFactory matcherFactory = new MatcherFactory(
             new TranslatorToExpectation(DefaultTranslators.translators() + JazonTypesTranslators.translators()),
             new GsonActualFactory()
@@ -484,13 +493,13 @@ class MatcherSpec extends Specification {
         where:
         expected                               | actual
         '1'                                    | []
-//        '1'                                    | ['1']
-//        '1'                                    | ['1', '1']
-//        true                                   | [true]
-//        2                                      | [2]
-//        [b: true, c: 1]                        | [[[b: true, c: 1]]]
-//        [3, 4, 5]                              | [[3, 4, 5]]
-//        { it -> it > 5 } as Predicate<Integer> | [6, 7, 8]
+        '1'                                    | ['1']
+        '1'                                    | ['1', '1']
+        true                                   | [true]
+        2                                      | [2]
+        [b: true, c: 1]                        | [[[b: true, c: 1]]]
+        [3, 4, 5]                              | [[3, 4, 5]]
+        { it -> it > 5 } as Predicate<Integer> | [6, 7, 8]
     }
 
     @Unroll

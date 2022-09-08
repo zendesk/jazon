@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import static java.util.Optional.of;
 
-public class JazonTypesExpectationFactory implements ExpectationFactory {
+class JazonTypesExpectationFactory implements ExpectationFactory {
 
     @Override
     public Optional<JsonExpectation> expectationKek(Object object) {
