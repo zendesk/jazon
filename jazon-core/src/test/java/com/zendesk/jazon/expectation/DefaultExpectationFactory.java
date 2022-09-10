@@ -15,7 +15,7 @@ import static java.util.Optional.of;
 class DefaultExpectationFactory implements ExpectationFactory {
 
     @Override
-    public Optional<JsonExpectation> expectationKek(Object object) {
+    public Optional<JsonExpectation> expectationMaybe(Object object) {
         if (object instanceof Map) {
             // here we need the whole main ExpectationFactory (translator)
             return of(ExpectationFactory.objectExpectation((Map<CharSequence, Object>) object, this));

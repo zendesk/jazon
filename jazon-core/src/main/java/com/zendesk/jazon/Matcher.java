@@ -25,16 +25,6 @@ public class Matcher {
         return this;
     }
 
-//    public Matcher actual(Actual actual) {
-//        this.actual = checkNotNull(actual);
-//        return this;
-//    }
-
-//    public Matcher actual(Object actual) {
-//        this.actual = actualFactory.actual(actual);
-//        return this;
-//    }
-
     public Matcher actual(String actualJsonString) {
         this.actual = actualFactory.actual(actualJsonString);
         return this;

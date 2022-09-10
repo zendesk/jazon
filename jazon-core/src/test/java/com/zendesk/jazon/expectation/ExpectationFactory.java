@@ -1,14 +1,21 @@
 package com.zendesk.jazon.expectation;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toSet;
 
 public interface ExpectationFactory {
     default JsonExpectation expectation(Object object) {
-        return expectationKek(object).get();    //FIXME
+        return expectationMaybe(object).get();
     }
-    Optional<JsonExpectation> expectationKek(Object object);
+
+    Optional<JsonExpectation> expectationMaybe(Object object);
 
     static ObjectExpectation objectExpectation(Map<CharSequence, Object> objectsMap, ExpectationFactory expectationFactory) {
         LinkedHashMap<String, JsonExpectation> expectationsMap = objectsMap.entrySet()

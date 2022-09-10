@@ -29,6 +29,7 @@ public class DefaultTranslators {
         );
     }
 
+    @SuppressWarnings("rawtypes")
     private static class MapTranslator implements Translator<Map<CharSequence, Object>> {
         static Translator<Map> wrapper() {
             return new Translator<Map>() {
@@ -57,6 +58,7 @@ public class DefaultTranslators {
         }
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private static class ListTranslator implements Translator<List> {
         @Override
         public JsonExpectation jsonExpectation(List objectsList, TranslatorFacade translator) {
@@ -67,6 +69,7 @@ public class DefaultTranslators {
         }
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private static class SetTranslator implements Translator<Set> {
         @Override
         public JsonExpectation jsonExpectation(Set objectsSet, TranslatorFacade translator) {
@@ -77,6 +80,7 @@ public class DefaultTranslators {
         }
     }
 
+    @SuppressWarnings("rawtypes")
     private static class PredicateTranslator implements Translator<Predicate> {
         @Override
         public JsonExpectation jsonExpectation(Predicate predicate, TranslatorFacade translator) {

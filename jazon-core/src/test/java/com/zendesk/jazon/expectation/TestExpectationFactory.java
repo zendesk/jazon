@@ -20,9 +20,9 @@ public class TestExpectationFactory implements ExpectationFactory {
     }
 
     @Override
-    public Optional<JsonExpectation> expectationKek(Object object) {
+    public Optional<JsonExpectation> expectationMaybe(Object object) {
         for (ExpectationFactory factory : factories) {
-            Optional<JsonExpectation> expectation = factory.expectationKek(object);
+            Optional<JsonExpectation> expectation = factory.expectationMaybe(object);
             if (expectation.isPresent()) {
                 return expectation;
             }

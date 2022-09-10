@@ -2,24 +2,37 @@ package com.zendesk.jazon.junit;
 
 import com.zendesk.jazon.MatchResult;
 import com.zendesk.jazon.MatcherFactory;
+import com.zendesk.jazon.actual.GsonActualFactory;
+import com.zendesk.jazon.expectation.DefaultTranslators;
+import com.zendesk.jazon.expectation.JazonTypesTranslators;
+import com.zendesk.jazon.expectation.JunitTranslators;
+import com.zendesk.jazon.expectation.TranslatorFacade;
 import com.zendesk.jazon.mismatch.PredicateExecutionFailedMismatch;
 import com.zendesk.jazon.mismatch.PrimitiveValueMismatch;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.zendesk.jazon.expectation.Expectations.anyNumberOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
 class JunitSpecificMatcherTest {
-
-//    private static final GsonActualFactory GSON_ACTUAL_FACTORY = new GsonActualFactory();
-    private static final MatcherFactory matcherFactory = null;
-//    private static final MatcherFactory matcherFactory = new MatcherFactory(
-//            new JunitExpectationFactory(),
-//            new ObjectsActualFactory()
-//    );
+    private static final MatcherFactory matcherFactory = new MatcherFactory(
+            new TranslatorFacade(
+                    Stream.of(
+                            DefaultTranslators.translators(),
+                            JazonTypesTranslators.translators(),
+                            JunitTranslators.translators()
+                    )
+                            .flatMap(List::stream)
+                            .collect(Collectors.toList())
+            ),
+            new GsonActualFactory()
+    );
 
     @Test
     void testRegex() {

@@ -9,10 +9,6 @@ public class TranslatorFacade {
     private final List<TranslatorMapping<?>> translatorMappings;
 
     public JsonExpectation expectation(Object object) {
-        // give me the expectation-factory for this object
-        // use the expectation factory to craft the expecattion giving it: the object, this translator
-        // NOPE
-
         if (object == null) {
             return new NullExpectation();
         }

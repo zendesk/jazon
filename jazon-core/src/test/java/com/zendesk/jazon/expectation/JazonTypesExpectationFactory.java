@@ -7,7 +7,7 @@ import static java.util.Optional.of;
 class JazonTypesExpectationFactory implements ExpectationFactory {
 
     @Override
-    public Optional<JsonExpectation> expectationKek(Object object) {
+    public Optional<JsonExpectation> expectationMaybe(Object object) {
         if (object instanceof AnyNumberOf) {
             Object repeatedObject = ((AnyNumberOf) object).getElementExpectation();
             JsonExpectation repeatedExpectation = expectation(repeatedObject);
