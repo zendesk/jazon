@@ -13,10 +13,10 @@ import static com.zendesk.jazon.MatchResult.failure;
 import static com.zendesk.jazon.MatchResult.success;
 
 @EqualsAndHashCode
-class PrimitiveValueExpectation<T extends Actual> implements JsonExpectation {
+public class PrimitiveValueExpectation<T extends Actual> implements JsonExpectation {
     private final T expectedValue;
 
-    PrimitiveValueExpectation(T expectedValue) {
+    public PrimitiveValueExpectation(T expectedValue) {
         this.expectedValue = checkNotNull(expectedValue);
     }
 

@@ -10,7 +10,7 @@ import static com.zendesk.jazon.MatchResult.failure;
 import static com.zendesk.jazon.MatchResult.success;
 
 @EqualsAndHashCode
-class NullExpectation implements JsonExpectation {
+public class NullExpectation implements JsonExpectation {
     @Override
     public MatchResult match(ActualJsonNumber actualNumber, String path) {
         return failure(notNullMismatch(actualNumber, path));
