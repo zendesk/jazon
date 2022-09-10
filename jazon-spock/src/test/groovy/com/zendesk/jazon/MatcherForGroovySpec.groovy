@@ -4,7 +4,7 @@ import com.zendesk.jazon.actual.GsonActualFactory
 import com.zendesk.jazon.expectation.DefaultTranslators
 import com.zendesk.jazon.expectation.JazonTypesTranslators
 import com.zendesk.jazon.expectation.SpockTranslators
-import com.zendesk.jazon.expectation.TranslatorToExpectation
+import com.zendesk.jazon.expectation.TranslatorFacade
 import com.zendesk.jazon.mismatch.PredicateMismatch
 import spock.lang.Specification
 
@@ -14,7 +14,7 @@ import static groovy.json.JsonOutput.toJson
 class MatcherForGroovySpec extends Specification {
 
     MatcherFactory matcherFactory = new MatcherFactory(
-            new TranslatorToExpectation(
+            new TranslatorFacade(
                     DefaultTranslators.translators() + JazonTypesTranslators.translators() + SpockTranslators.translators()
             ),
             new GsonActualFactory()

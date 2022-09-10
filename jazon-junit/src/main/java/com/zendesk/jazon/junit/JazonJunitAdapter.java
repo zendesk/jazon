@@ -6,8 +6,8 @@ import com.zendesk.jazon.actual.GsonActualFactory;
 import com.zendesk.jazon.expectation.DefaultTranslators;
 import com.zendesk.jazon.expectation.JazonTypesTranslators;
 import com.zendesk.jazon.expectation.JunitTranslators;
-import com.zendesk.jazon.expectation.TranslatorToExpectation;
-import com.zendesk.jazon.expectation.TranslatorWrapper;
+import com.zendesk.jazon.expectation.TranslatorFacade;
+import com.zendesk.jazon.expectation.TranslatorMapping;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -16,7 +16,7 @@ import static com.zendesk.jazon.util.Preconditions.checkNotNull;
 
 public class JazonJunitAdapter {
     private static final MatcherFactory matcherFactory = new MatcherFactory(
-            new TranslatorToExpectation(translators()),
+            new TranslatorFacade(translators()),
             new GsonActualFactory()
     );
 
@@ -50,8 +50,8 @@ public class JazonJunitAdapter {
         throw new AssertionError(String.format(mismatchMessageTemplate, matchResult.message()));
     }
 
-    private static List<TranslatorWrapper> translators() {
-        List<TranslatorWrapper> result = new LinkedList<>();
+    private static List<TranslatorMapping<?>> translators() {
+        List<TranslatorMapping<?>> result = new LinkedList<>();
         result.addAll(DefaultTranslators.translators());
         result.addAll(JazonTypesTranslators.translators());
         result.addAll(JunitTranslators.translators());

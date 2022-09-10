@@ -14,31 +14,31 @@ import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toMap;
 
 public class JunitTranslators {
-    public static List<TranslatorWrapper> translators() {
+    public static List<TranslatorMapping<?>> translators() {
         return asList(
-                new TranslatorWrapper<>(ObjectExpectationInput.class, new ObjectExpectationInputTranslator()),
-                new TranslatorWrapper<>(PredicateExpectationInput.class, new PredicateExpectationInputTranslator()),
-                new TranslatorWrapper<>(JazonMap.class, new JazonMapTranslator())
+                new TranslatorMapping<>(ObjectExpectationInput.class, new ObjectExpectationInputTranslator()),
+                new TranslatorMapping<>(PredicateExpectationInput.class, new PredicateExpectationInputTranslator()),
+                new TranslatorMapping<>(JazonMap.class, new JazonMapTranslator())
         );
     }
 
     private static class ObjectExpectationInputTranslator implements Translator<ObjectExpectationInput> {
         @Override
-        public JsonExpectation jsonExpectation(ObjectExpectationInput objectExpectationInput, TranslatorToExpectation translator) {
+        public JsonExpectation jsonExpectation(ObjectExpectationInput objectExpectationInput, TranslatorFacade translator) {
             return translator.expectation(objectExpectationInput.object());
         }
     }
 
     private static class PredicateExpectationInputTranslator implements Translator<PredicateExpectationInput> {
         @Override
-        public JsonExpectation jsonExpectation(PredicateExpectationInput predicateExpectationInput, TranslatorToExpectation translator) {
+        public JsonExpectation jsonExpectation(PredicateExpectationInput predicateExpectationInput, TranslatorFacade translator) {
             return new PredicateExpectation(predicateExpectationInput.predicate());
         }
     }
 
     private static class JazonMapTranslator implements Translator<JazonMap> {
         @Override
-        public JsonExpectation jsonExpectation(JazonMap jazonMap, TranslatorToExpectation translator) {
+        public JsonExpectation jsonExpectation(JazonMap jazonMap, TranslatorFacade translator) {
             HashMap<CharSequence, Object> map = copied(jazonMap.map());
             //FIXME code duplication
             LinkedHashMap<String, JsonExpectation> expectationsMap = map.entrySet()

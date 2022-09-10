@@ -5,15 +5,15 @@ import java.util.List;
 import static java.util.Collections.singletonList;
 
 public class JazonTypesTranslators {
-    public static List<TranslatorWrapper> translators() {
+    public static List<TranslatorMapping<?>> translators() {
         return singletonList(
-                new TranslatorWrapper<>(AnyNumberOf.class, new AnyNumberOfTranslator())
+                new TranslatorMapping<>(AnyNumberOf.class, new AnyNumberOfTranslator())
         );
     }
 
     private static class AnyNumberOfTranslator implements Translator<AnyNumberOf> {
         @Override
-        public JsonExpectation jsonExpectation(AnyNumberOf anyNumberOf, TranslatorToExpectation translator) {
+        public JsonExpectation jsonExpectation(AnyNumberOf anyNumberOf, TranslatorFacade translator) {
             Object repeatedObject = anyNumberOf.getElementExpectation();
             JsonExpectation repeatedExpectation = translator.expectation(repeatedObject);
             return new ArrayEachElementExpectation(repeatedExpectation);

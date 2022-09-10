@@ -3,15 +3,15 @@ package com.zendesk.jazon;
 import com.zendesk.jazon.actual.Actual;
 import com.zendesk.jazon.actual.ActualFactory;
 import com.zendesk.jazon.expectation.JsonExpectation;
-import com.zendesk.jazon.expectation.TranslatorToExpectation;
+import com.zendesk.jazon.expectation.TranslatorFacade;
 
 public class Matcher {
-    private final TranslatorToExpectation translator;
+    private final TranslatorFacade translator;
     private final ActualFactory<String> actualFactory;
     private JsonExpectation expectation;
     private Actual actual;
 
-    Matcher(TranslatorToExpectation translator, ActualFactory<String> actualFactory) {
+    Matcher(TranslatorFacade translator, ActualFactory<String> actualFactory) {
         this.translator = translator;
         this.actualFactory = actualFactory;
     }

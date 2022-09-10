@@ -3,7 +3,7 @@ package com.zendesk.jazon
 import com.zendesk.jazon.actual.GsonActualFactory
 import com.zendesk.jazon.expectation.DefaultTranslators
 import com.zendesk.jazon.expectation.JazonTypesTranslators
-import com.zendesk.jazon.expectation.TranslatorToExpectation
+import com.zendesk.jazon.expectation.TranslatorFacade
 import com.zendesk.jazon.mismatch.PrimitiveValueMismatch
 import spock.lang.Specification
 
@@ -12,7 +12,7 @@ import static groovy.json.JsonOutput.toJson
 class MismatchPathSpec extends Specification {
     private static final TestActualFactory testActualFactory = new TestActualFactory()
     private static final MatcherFactory matcherFactory = new MatcherFactory(
-            new TranslatorToExpectation(DefaultTranslators.translators() + JazonTypesTranslators.translators()),
+            new TranslatorFacade(DefaultTranslators.translators() + JazonTypesTranslators.translators()),
             new GsonActualFactory()
     )
 

@@ -12,7 +12,7 @@ import com.zendesk.jazon.expectation.ExpectationFactory
 import com.zendesk.jazon.expectation.JazonTypesTranslators
 import com.zendesk.jazon.expectation.JsonExpectation
 import com.zendesk.jazon.expectation.TestExpectationFactory
-import com.zendesk.jazon.expectation.TranslatorToExpectation
+import com.zendesk.jazon.expectation.TranslatorFacade
 import com.zendesk.jazon.mismatch.ArrayLackingElementsMismatch
 import com.zendesk.jazon.mismatch.ArrayUnexpectedElementsMismatch
 import com.zendesk.jazon.mismatch.NoFieldMismatch
@@ -35,7 +35,7 @@ class MatcherSpec extends Specification {
     private static TestActualFactory testActualFactory = new TestActualFactory()
     private static ExpectationFactory expectationFactory = new TestExpectationFactory()
     private static MatcherFactory matcherFactory = new MatcherFactory(
-            new TranslatorToExpectation(DefaultTranslators.translators() + JazonTypesTranslators.translators()),
+            new TranslatorFacade(DefaultTranslators.translators() + JazonTypesTranslators.translators()),
             new GsonActualFactory()
     )
 

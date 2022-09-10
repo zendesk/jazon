@@ -2,9 +2,9 @@ package com.zendesk.jazon.expectation;
 
 import lombok.AllArgsConstructor;
 
-//FIXME this should not be public class
+//FIXME this should not be public class. nope i do not think so as long as user-defined mappings can exist outside of jazon package (should they?)
 @AllArgsConstructor
-public class TranslatorWrapper<T> {
+public class TranslatorMapping<T> {
     private final Class<T> klass;
     private final Translator<T> translator;
 
@@ -12,7 +12,7 @@ public class TranslatorWrapper<T> {
         return klass.isInstance(object);
     }
 
-    JsonExpectation jsonExpectation(Object object, TranslatorToExpectation translator) {
+    JsonExpectation jsonExpectation(Object object, TranslatorFacade translator) {
         return this.translator.jsonExpectation(cast(object), translator);
     }
 

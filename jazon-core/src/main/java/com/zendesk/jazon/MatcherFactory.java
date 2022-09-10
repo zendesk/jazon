@@ -1,13 +1,13 @@
 package com.zendesk.jazon;
 
 import com.zendesk.jazon.actual.ActualFactory;
-import com.zendesk.jazon.expectation.TranslatorToExpectation;
+import com.zendesk.jazon.expectation.TranslatorFacade;
 
 public class MatcherFactory {
-    private final TranslatorToExpectation translator;
+    private final TranslatorFacade translator;
     private final ActualFactory<String> actualFactory;
 
-    public MatcherFactory(TranslatorToExpectation translator, ActualFactory<String> actualFactory) {
+    public MatcherFactory(TranslatorFacade translator, ActualFactory<String> actualFactory) {
         this.translator = translator;
         this.actualFactory = actualFactory;
     }

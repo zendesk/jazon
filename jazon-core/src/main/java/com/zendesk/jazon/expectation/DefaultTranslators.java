@@ -17,15 +17,15 @@ import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 
 public class DefaultTranslators {
-    public static List<TranslatorWrapper> translators() {
+    public static List<TranslatorMapping<?>> translators() {
         return asList(
-                new TranslatorWrapper<>(Map.class, MapTranslator.wrapper()),
-                new TranslatorWrapper<>(List.class, new ListTranslator()),
-                new TranslatorWrapper<>(Set.class, new SetTranslator()),
-                new TranslatorWrapper<>(Predicate.class, new PredicateTranslator()),
-                new TranslatorWrapper<>(Number.class, new NumberTranslator()),
-                new TranslatorWrapper<>(String.class, new StringTranslator()),
-                new TranslatorWrapper<>(Boolean.class, new BooleanTranslator())
+                new TranslatorMapping<>(Map.class, MapTranslator.wrapper()),
+                new TranslatorMapping<>(List.class, new ListTranslator()),
+                new TranslatorMapping<>(Set.class, new SetTranslator()),
+                new TranslatorMapping<>(Predicate.class, new PredicateTranslator()),
+                new TranslatorMapping<>(Number.class, new NumberTranslator()),
+                new TranslatorMapping<>(String.class, new StringTranslator()),
+                new TranslatorMapping<>(Boolean.class, new BooleanTranslator())
         );
     }
 
@@ -35,14 +35,14 @@ public class DefaultTranslators {
                 private final Translator<Map<CharSequence, Object>> mapTranslatorInside = new MapTranslator();
 
                 @Override
-                public JsonExpectation jsonExpectation(Map object, TranslatorToExpectation translator) {
+                public JsonExpectation jsonExpectation(Map object, TranslatorFacade translator) {
                     return mapTranslatorInside.jsonExpectation(object, translator);
                 }
             };
         }
 
         @Override
-        public JsonExpectation jsonExpectation(Map<CharSequence, Object> objectsMap, TranslatorToExpectation translator) {
+        public JsonExpectation jsonExpectation(Map<CharSequence, Object> objectsMap, TranslatorFacade translator) {
             LinkedHashMap<String, JsonExpectation> expectationsMap = objectsMap.entrySet()
                     .stream()
                     .collect(
@@ -59,7 +59,7 @@ public class DefaultTranslators {
 
     private static class ListTranslator implements Translator<List> {
         @Override
-        public JsonExpectation jsonExpectation(List objectsList, TranslatorToExpectation translator) {
+        public JsonExpectation jsonExpectation(List objectsList, TranslatorFacade translator) {
             Stream<JsonExpectation> stream = objectsList.stream()
                     .map(translator::expectation);
             List<JsonExpectation> expectations = stream.collect(toList());
@@ -69,7 +69,7 @@ public class DefaultTranslators {
 
     private static class SetTranslator implements Translator<Set> {
         @Override
-        public JsonExpectation jsonExpectation(Set objectsSet, TranslatorToExpectation translator) {
+        public JsonExpectation jsonExpectation(Set objectsSet, TranslatorFacade translator) {
             Stream<JsonExpectation> stream = objectsSet.stream()
                     .map(translator::expectation);
             Set<JsonExpectation> expectations = stream.collect(toSet());
@@ -79,28 +79,28 @@ public class DefaultTranslators {
 
     private static class PredicateTranslator implements Translator<Predicate> {
         @Override
-        public JsonExpectation jsonExpectation(Predicate predicate, TranslatorToExpectation translator) {
+        public JsonExpectation jsonExpectation(Predicate predicate, TranslatorFacade translator) {
             return new PredicateExpectation(predicate);
         }
     }
 
     private static class NumberTranslator implements Translator<Number> {
         @Override
-        public JsonExpectation jsonExpectation(Number number, TranslatorToExpectation translator) {
+        public JsonExpectation jsonExpectation(Number number, TranslatorFacade translator) {
             return new PrimitiveValueExpectation<>(new ActualJsonNumber(number));
         }
     }
 
     private static class StringTranslator implements Translator<String> {
         @Override
-        public JsonExpectation jsonExpectation(String string, TranslatorToExpectation translator) {
+        public JsonExpectation jsonExpectation(String string, TranslatorFacade translator) {
             return new PrimitiveValueExpectation<>(new ActualJsonString(string));
         }
     }
 
     private static class BooleanTranslator implements Translator<Boolean> {
         @Override
-        public JsonExpectation jsonExpectation(Boolean bool, TranslatorToExpectation translator) {
+        public JsonExpectation jsonExpectation(Boolean bool, TranslatorFacade translator) {
             return new PrimitiveValueExpectation<>(new ActualJsonBoolean(bool));
         }
     }
