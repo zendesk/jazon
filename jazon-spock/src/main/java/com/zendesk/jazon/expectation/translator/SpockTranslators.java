@@ -2,8 +2,8 @@ package com.zendesk.jazon.expectation.translator;
 
 import com.zendesk.jazon.actual.ActualJsonString;
 import com.zendesk.jazon.expectation.JsonExpectation;
-import com.zendesk.jazon.expectation.PredicateExpectation;
-import com.zendesk.jazon.expectation.PrimitiveValueExpectation;
+import com.zendesk.jazon.expectation.impl.PredicateExpectation;
+import com.zendesk.jazon.expectation.impl.PrimitiveValueExpectation;
 import groovy.lang.Closure;
 import groovy.lang.GString;
 

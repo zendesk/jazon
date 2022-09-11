@@ -1,7 +1,7 @@
 package com.zendesk.jazon.expectation.translator;
 
-import com.zendesk.jazon.expectation.AnyNumberOf;
-import com.zendesk.jazon.expectation.ArrayEachElementExpectation;
+import com.zendesk.jazon.expectation.impl.AnyNumberOf;
+import com.zendesk.jazon.expectation.impl.ArrayEachElementExpectation;
 import com.zendesk.jazon.expectation.JsonExpectation;
 
 import java.util.List;

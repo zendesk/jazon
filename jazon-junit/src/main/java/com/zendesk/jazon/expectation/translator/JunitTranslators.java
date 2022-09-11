@@ -1,8 +1,8 @@
 package com.zendesk.jazon.expectation.translator;
 
 import com.zendesk.jazon.expectation.JsonExpectation;
-import com.zendesk.jazon.expectation.ObjectExpectation;
-import com.zendesk.jazon.expectation.PredicateExpectation;
+import com.zendesk.jazon.expectation.impl.ObjectExpectation;
+import com.zendesk.jazon.expectation.impl.PredicateExpectation;
 import com.zendesk.jazon.junit.JazonMap;
 import com.zendesk.jazon.junit.JsonExpectationInput;
 import com.zendesk.jazon.junit.ObjectExpectationInput;

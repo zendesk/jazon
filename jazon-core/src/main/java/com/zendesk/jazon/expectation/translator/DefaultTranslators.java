@@ -4,11 +4,11 @@ import com.zendesk.jazon.actual.ActualJsonBoolean;
 import com.zendesk.jazon.actual.ActualJsonNumber;
 import com.zendesk.jazon.actual.ActualJsonString;
 import com.zendesk.jazon.expectation.JsonExpectation;
-import com.zendesk.jazon.expectation.ObjectExpectation;
-import com.zendesk.jazon.expectation.OrderedArrayExpectation;
-import com.zendesk.jazon.expectation.PredicateExpectation;
-import com.zendesk.jazon.expectation.PrimitiveValueExpectation;
-import com.zendesk.jazon.expectation.UnorderedArrayExpectation;
+import com.zendesk.jazon.expectation.impl.ObjectExpectation;
+import com.zendesk.jazon.expectation.impl.OrderedArrayExpectation;
+import com.zendesk.jazon.expectation.impl.PredicateExpectation;
+import com.zendesk.jazon.expectation.impl.PrimitiveValueExpectation;
+import com.zendesk.jazon.expectation.impl.UnorderedArrayExpectation;
 
 import java.util.LinkedHashMap;
 import java.util.List;

@@ -1,7 +1,8 @@
-package com.zendesk.jazon.expectation;
+package com.zendesk.jazon.expectation.impl;
 
 import com.zendesk.jazon.MatchResult;
 import com.zendesk.jazon.actual.*;
+import com.zendesk.jazon.expectation.JsonExpectation;
 import com.zendesk.jazon.mismatch.*;
 import lombok.EqualsAndHashCode;
 

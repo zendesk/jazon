@@ -1,4 +1,4 @@
-package com.zendesk.jazon.expectation;
+package com.zendesk.jazon.expectation.impl;
 
 import com.zendesk.jazon.MatchResult;
 import com.zendesk.jazon.actual.Actual;
@@ -8,6 +8,7 @@ import com.zendesk.jazon.actual.ActualJsonNull;
 import com.zendesk.jazon.actual.ActualJsonNumber;
 import com.zendesk.jazon.actual.ActualJsonObject;
 import com.zendesk.jazon.actual.ActualJsonString;
+import com.zendesk.jazon.expectation.JsonExpectation;
 import com.zendesk.jazon.mismatch.PredicateExecutionFailedMismatch;
 import com.zendesk.jazon.mismatch.PredicateMismatch;
 import lombok.EqualsAndHashCode;

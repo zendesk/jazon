@@ -11,8 +11,8 @@ import com.zendesk.jazon.actual.factory.GsonActualFactory
 import com.zendesk.jazon.expectation.translator.DefaultTranslators
 import com.zendesk.jazon.expectation.translator.JazonTypesTranslators
 import com.zendesk.jazon.expectation.JsonExpectation
-import com.zendesk.jazon.expectation.NullExpectation
-import com.zendesk.jazon.expectation.PrimitiveValueExpectation
+import com.zendesk.jazon.expectation.impl.NullExpectation
+import com.zendesk.jazon.expectation.impl.PrimitiveValueExpectation
 import com.zendesk.jazon.expectation.translator.TranslatorFacade
 import com.zendesk.jazon.mismatch.ArrayLackingElementsMismatch
 import com.zendesk.jazon.mismatch.ArrayUnexpectedElementsMismatch
