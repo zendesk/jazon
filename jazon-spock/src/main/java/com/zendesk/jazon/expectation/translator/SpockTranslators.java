@@ -1,6 +1,9 @@
-package com.zendesk.jazon.expectation;
+package com.zendesk.jazon.expectation.translator;
 
 import com.zendesk.jazon.actual.ActualJsonString;
+import com.zendesk.jazon.expectation.JsonExpectation;
+import com.zendesk.jazon.expectation.PredicateExpectation;
+import com.zendesk.jazon.expectation.PrimitiveValueExpectation;
 import groovy.lang.Closure;
 import groovy.lang.GString;
 
@@ -9,7 +12,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 
 public class SpockTranslators {
-    public static List<TranslatorMapping> translators() {
+    public static List<TranslatorMapping<?>> translators() {
         return asList(
                 new TranslatorMapping<>(GString.class, new GStringTranslator()),
                 new TranslatorMapping<>(Closure.class, new ClosureTranslator())
@@ -23,6 +26,7 @@ public class SpockTranslators {
         }
     }
 
+    @SuppressWarnings("rawtypes")
     private static class ClosureTranslator extends KekWrapper<Closure, Closure<Boolean>> {
         @Override
         JsonExpectation jsonExpectationKek(Closure<Boolean> closure, TranslatorFacade translator) {

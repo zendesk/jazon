@@ -8,12 +8,12 @@ import com.zendesk.jazon.actual.ActualJsonNumber
 import com.zendesk.jazon.actual.ActualJsonObject
 import com.zendesk.jazon.actual.ActualJsonString
 import com.zendesk.jazon.actual.factory.GsonActualFactory
-import com.zendesk.jazon.expectation.DefaultTranslators
-import com.zendesk.jazon.expectation.JazonTypesTranslators
+import com.zendesk.jazon.expectation.translator.DefaultTranslators
+import com.zendesk.jazon.expectation.translator.JazonTypesTranslators
 import com.zendesk.jazon.expectation.JsonExpectation
 import com.zendesk.jazon.expectation.NullExpectation
 import com.zendesk.jazon.expectation.PrimitiveValueExpectation
-import com.zendesk.jazon.expectation.TranslatorFacade
+import com.zendesk.jazon.expectation.translator.TranslatorFacade
 import com.zendesk.jazon.mismatch.ArrayLackingElementsMismatch
 import com.zendesk.jazon.mismatch.ArrayUnexpectedElementsMismatch
 import com.zendesk.jazon.mismatch.NoFieldMismatch

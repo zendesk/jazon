@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class AnyNumberOf {
-
-    @Getter(AccessLevel.PACKAGE)
+    @Getter
     private final Object elementExpectation;
 }

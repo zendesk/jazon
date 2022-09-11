@@ -1,5 +1,6 @@
-package com.zendesk.jazon.expectation;
+package com.zendesk.jazon.expectation.translator;
 
+import com.zendesk.jazon.expectation.JsonExpectation;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor

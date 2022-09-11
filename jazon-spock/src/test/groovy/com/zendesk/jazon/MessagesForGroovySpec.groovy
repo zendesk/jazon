@@ -2,10 +2,10 @@ package com.zendesk.jazon
 
 
 import com.zendesk.jazon.actual.factory.GsonActualFactory
-import com.zendesk.jazon.expectation.DefaultTranslators
-import com.zendesk.jazon.expectation.JazonTypesTranslators
-import com.zendesk.jazon.expectation.SpockTranslators
-import com.zendesk.jazon.expectation.TranslatorFacade
+import com.zendesk.jazon.expectation.translator.DefaultTranslators
+import com.zendesk.jazon.expectation.translator.JazonTypesTranslators
+import com.zendesk.jazon.expectation.translator.SpockTranslators
+import com.zendesk.jazon.expectation.translator.TranslatorFacade
 import spock.lang.Specification
 
 import static groovy.json.JsonOutput.toJson

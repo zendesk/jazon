@@ -3,7 +3,7 @@ package com.zendesk.jazon;
 import com.zendesk.jazon.actual.Actual;
 import com.zendesk.jazon.actual.factory.ActualFactory;
 import com.zendesk.jazon.expectation.JsonExpectation;
-import com.zendesk.jazon.expectation.TranslatorFacade;
+import com.zendesk.jazon.expectation.translator.TranslatorFacade;
 
 public class Matcher {
     private final TranslatorFacade translator;

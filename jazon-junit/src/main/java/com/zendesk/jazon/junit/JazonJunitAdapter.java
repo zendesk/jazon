@@ -3,11 +3,11 @@ package com.zendesk.jazon.junit;
 import com.zendesk.jazon.MatchResult;
 import com.zendesk.jazon.MatcherFactory;
 import com.zendesk.jazon.actual.factory.GsonActualFactory;
-import com.zendesk.jazon.expectation.DefaultTranslators;
-import com.zendesk.jazon.expectation.JazonTypesTranslators;
-import com.zendesk.jazon.expectation.JunitTranslators;
-import com.zendesk.jazon.expectation.TranslatorFacade;
-import com.zendesk.jazon.expectation.TranslatorMapping;
+import com.zendesk.jazon.expectation.translator.DefaultTranslators;
+import com.zendesk.jazon.expectation.translator.JazonTypesTranslators;
+import com.zendesk.jazon.expectation.translator.JunitTranslators;
+import com.zendesk.jazon.expectation.translator.TranslatorFacade;
+import com.zendesk.jazon.expectation.translator.TranslatorMapping;
 
 import java.util.LinkedList;
 import java.util.List;

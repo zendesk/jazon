@@ -1,5 +1,7 @@
-package com.zendesk.jazon.expectation;
+package com.zendesk.jazon.expectation.translator;
 
+import com.zendesk.jazon.expectation.JsonExpectation;
+import com.zendesk.jazon.expectation.NullExpectation;
 import lombok.AllArgsConstructor;
 
 import java.util.List;

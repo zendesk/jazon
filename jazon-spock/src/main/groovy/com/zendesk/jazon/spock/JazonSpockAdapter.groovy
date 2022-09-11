@@ -3,11 +3,11 @@ package com.zendesk.jazon.spock
 import com.zendesk.jazon.MatchResult
 import com.zendesk.jazon.MatcherFactory
 import com.zendesk.jazon.actual.factory.GsonActualFactory
-import com.zendesk.jazon.expectation.DefaultTranslators
-import com.zendesk.jazon.expectation.JazonTypesTranslators
-import com.zendesk.jazon.expectation.SpockTranslators
-import com.zendesk.jazon.expectation.TranslatorFacade
-import com.zendesk.jazon.expectation.TranslatorMapping
+import com.zendesk.jazon.expectation.translator.DefaultTranslators
+import com.zendesk.jazon.expectation.translator.JazonTypesTranslators
+import com.zendesk.jazon.expectation.translator.SpockTranslators
+import com.zendesk.jazon.expectation.translator.TranslatorFacade
+import com.zendesk.jazon.expectation.translator.TranslatorMapping
 
 class JazonSpockAdapter {
     private static final MatcherFactory MATCHER_FACTORY = new MatcherFactory(
