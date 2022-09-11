@@ -25,7 +25,7 @@ import static java.util.stream.Collectors.toSet;
 public class DefaultTranslators {
     public static List<TranslatorMapping<?>> translators() {
         return asList(
-                new TranslatorMapping<>(Map.class, MapTranslator.wrapper()),
+                new TranslatorMapping<>(Map.class, new MapTranslator()),
                 new TranslatorMapping<>(List.class, new ListTranslator()),
                 new TranslatorMapping<>(Set.class, new SetTranslator()),
                 new TranslatorMapping<>(Predicate.class, new PredicateTranslator()),
@@ -35,21 +35,11 @@ public class DefaultTranslators {
         );
     }
 
-    @SuppressWarnings("rawtypes")
-    private static class MapTranslator implements Translator<Map<CharSequence, Object>> {
-        static Translator<Map> wrapper() {
-            return new Translator<Map>() {
-                private final Translator<Map<CharSequence, Object>> mapTranslatorInside = new MapTranslator();
-
-                @Override
-                public JsonExpectation jsonExpectation(Map object, TranslatorFacade translator) {
-                    return mapTranslatorInside.jsonExpectation(object, translator);
-                }
-            };
-        }
-
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private static class MapTranslator implements Translator<Map> {
         @Override
-        public JsonExpectation jsonExpectation(Map<CharSequence, Object> objectsMap, TranslatorFacade translator) {
+        public JsonExpectation jsonExpectation(Map object, TranslatorFacade translator) {
+            Map<CharSequence, Object> objectsMap = (Map<CharSequence, Object>) object;
             LinkedHashMap<String, JsonExpectation> expectationsMap = objectsMap.entrySet()
                     .stream()
                     .collect(
@@ -61,6 +51,7 @@ public class DefaultTranslators {
                             )
                     );
             return new ObjectExpectation(expectationsMap);
+
         }
     }
 

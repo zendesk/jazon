@@ -26,20 +26,12 @@ public class SpockTranslators {
         }
     }
 
-    @SuppressWarnings("rawtypes")
-    private static class ClosureTranslator extends KekWrapper<Closure, Closure<Boolean>> {
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private static class ClosureTranslator implements Translator<Closure> {
         @Override
-        JsonExpectation jsonExpectationKek(Closure<Boolean> closure, TranslatorFacade translator) {
-            return new PredicateExpectation(closure::call);
-        }
-    }
-
-    private static abstract class KekWrapper<T, T_GENERIC extends T> implements Translator<T> {
-        abstract JsonExpectation jsonExpectationKek(T_GENERIC object, TranslatorFacade translator);
-
-        @Override
-        public JsonExpectation jsonExpectation(T object, TranslatorFacade translator) {
-            return jsonExpectationKek((T_GENERIC) object, translator);
+        public JsonExpectation jsonExpectation(Closure object, TranslatorFacade translator) {
+            Closure<Boolean> booleanClosure = (Closure<Boolean>) object;
+            return new PredicateExpectation(booleanClosure::call);
         }
     }
 }
