@@ -20,9 +20,12 @@ import java.util.ListIterator;
 import static com.zendesk.jazon.MatchResult.failure;
 import static com.zendesk.jazon.MatchResult.success;
 
+/**
+ * Previously known as {@code ArrayEachElementExpectation}
+ */
 @RequiredArgsConstructor
 @EqualsAndHashCode
-public class ArrayEachElementExpectation implements JsonExpectation {
+public class AnyNumberOfExpectation implements JsonExpectation {
     private final JsonExpectation expectationForEachElement;
 
     @Override

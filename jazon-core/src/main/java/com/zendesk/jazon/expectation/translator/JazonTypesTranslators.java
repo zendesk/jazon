@@ -1,7 +1,7 @@
 package com.zendesk.jazon.expectation.translator;
 
 import com.zendesk.jazon.expectation.impl.AnyNumberOf;
-import com.zendesk.jazon.expectation.impl.ArrayEachElementExpectation;
+import com.zendesk.jazon.expectation.impl.AnyNumberOfExpectation;
 import com.zendesk.jazon.expectation.JsonExpectation;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public class JazonTypesTranslators {
         public JsonExpectation jsonExpectation(AnyNumberOf anyNumberOf, TranslatorFacade translator) {
             Object repeatedObject = anyNumberOf.getElementExpectation();
             JsonExpectation repeatedExpectation = translator.expectation(repeatedObject);
-            return new ArrayEachElementExpectation(repeatedExpectation);
+            return new AnyNumberOfExpectation(repeatedExpectation);
         }
     }
 }
