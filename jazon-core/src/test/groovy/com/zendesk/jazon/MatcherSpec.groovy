@@ -7,7 +7,7 @@ import com.zendesk.jazon.actual.ActualJsonNull
 import com.zendesk.jazon.actual.ActualJsonNumber
 import com.zendesk.jazon.actual.ActualJsonObject
 import com.zendesk.jazon.actual.ActualJsonString
-import com.zendesk.jazon.actual.GsonActualFactory
+import com.zendesk.jazon.actual.factory.GsonActualFactory
 import com.zendesk.jazon.expectation.DefaultTranslators
 import com.zendesk.jazon.expectation.JazonTypesTranslators
 import com.zendesk.jazon.expectation.JsonExpectation

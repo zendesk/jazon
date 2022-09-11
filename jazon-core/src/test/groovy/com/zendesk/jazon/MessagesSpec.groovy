@@ -1,6 +1,6 @@
 package com.zendesk.jazon
 
-import com.zendesk.jazon.actual.GsonActualFactory
+import com.zendesk.jazon.actual.factory.GsonActualFactory
 import com.zendesk.jazon.expectation.DefaultTranslators
 import com.zendesk.jazon.expectation.JazonTypesTranslators
 import com.zendesk.jazon.expectation.TranslatorFacade

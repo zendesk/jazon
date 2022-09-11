@@ -1,7 +1,7 @@
 package com.zendesk.jazon;
 
 import com.zendesk.jazon.actual.Actual;
-import com.zendesk.jazon.actual.ActualFactory;
+import com.zendesk.jazon.actual.factory.ActualFactory;
 import com.zendesk.jazon.actual.ActualJsonArray;
 import com.zendesk.jazon.actual.ActualJsonBoolean;
 import com.zendesk.jazon.actual.ActualJsonNull;

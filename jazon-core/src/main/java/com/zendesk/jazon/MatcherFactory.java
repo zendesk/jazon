@@ -1,6 +1,6 @@
 package com.zendesk.jazon;
 
-import com.zendesk.jazon.actual.ActualFactory;
+import com.zendesk.jazon.actual.factory.ActualFactory;
 import com.zendesk.jazon.expectation.TranslatorFacade;
 
 public class MatcherFactory {

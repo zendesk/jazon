@@ -1,6 +1,14 @@
-package com.zendesk.jazon.actual;
+package com.zendesk.jazon.actual.factory;
 
 import com.google.gson.*;
+import com.zendesk.jazon.actual.Actual;
+import com.zendesk.jazon.actual.ActualJsonArray;
+import com.zendesk.jazon.actual.ActualJsonBoolean;
+import com.zendesk.jazon.actual.ActualJsonNull;
+import com.zendesk.jazon.actual.ActualJsonNumber;
+import com.zendesk.jazon.actual.ActualJsonObject;
+import com.zendesk.jazon.actual.ActualJsonString;
+import com.zendesk.jazon.actual.factory.ActualFactory;
 
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;
