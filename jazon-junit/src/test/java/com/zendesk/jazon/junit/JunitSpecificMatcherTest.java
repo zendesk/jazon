@@ -2,25 +2,36 @@ package com.zendesk.jazon.junit;
 
 import com.zendesk.jazon.MatchResult;
 import com.zendesk.jazon.MatcherFactory;
-import com.zendesk.jazon.actual.GsonActualFactory;
-import com.zendesk.jazon.actual.ObjectsActualFactory;
-import com.zendesk.jazon.expectation.JunitExpectationFactory;
-import com.zendesk.jazon.mismatch.PredicateExecutionFailedMismatch;
-import com.zendesk.jazon.mismatch.PrimitiveValueMismatch;
+import com.zendesk.jazon.actual.factory.GsonActualFactory;
+import com.zendesk.jazon.expectation.translator.DefaultTranslators;
+import com.zendesk.jazon.expectation.translator.JazonTypesTranslators;
+import com.zendesk.jazon.expectation.translator.JunitTranslators;
+import com.zendesk.jazon.expectation.translator.TranslatorFacade;
+import com.zendesk.jazon.mismatch.impl.PredicateExecutionFailedMismatch;
+import com.zendesk.jazon.mismatch.impl.PrimitiveValueMismatch;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.zendesk.jazon.expectation.Expectations.anyNumberOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
 class JunitSpecificMatcherTest {
-
-    private static final GsonActualFactory GSON_ACTUAL_FACTORY = new GsonActualFactory();
     private static final MatcherFactory matcherFactory = new MatcherFactory(
-            new JunitExpectationFactory(),
-            new ObjectsActualFactory()
+            new TranslatorFacade(
+                    Stream.of(
+                            DefaultTranslators.translators(),
+                            JazonTypesTranslators.translators(),
+                            JunitTranslators.translators()
+                    )
+                            .flatMap(List::stream)
+                            .collect(Collectors.toList())
+            ),
+            new GsonActualFactory()
     );
 
     @Test
@@ -135,7 +146,7 @@ class JunitSpecificMatcherTest {
     private MatchResult match(JazonMap expected, String actualJson) {
         return matcherFactory.matcher()
                 .expected(expected.map())
-                .actual(GSON_ACTUAL_FACTORY.actual(actualJson))
+                .actual(actualJson)
                 .match();
     }
 }

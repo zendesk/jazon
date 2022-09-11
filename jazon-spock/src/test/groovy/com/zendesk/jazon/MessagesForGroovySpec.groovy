@@ -1,14 +1,22 @@
 package com.zendesk.jazon
 
-import com.zendesk.jazon.actual.ObjectsActualFactory
-import com.zendesk.jazon.expectation.SpockExpectationFactory
+
+import com.zendesk.jazon.actual.factory.GsonActualFactory
+import com.zendesk.jazon.expectation.translator.DefaultTranslators
+import com.zendesk.jazon.expectation.translator.JazonTypesTranslators
+import com.zendesk.jazon.expectation.translator.SpockTranslators
+import com.zendesk.jazon.expectation.translator.TranslatorFacade
 import spock.lang.Specification
+
+import static groovy.json.JsonOutput.toJson
 
 class MessagesForGroovySpec extends Specification {
 
     MatcherFactory matcherFactory = new MatcherFactory(
-            new SpockExpectationFactory(),
-            new ObjectsActualFactory()
+            new TranslatorFacade(
+                    DefaultTranslators.translators() + JazonTypesTranslators.translators() + SpockTranslators.translators()
+            ),
+            new GsonActualFactory()
     )
 
     def "predicate expectation: fails"() {
@@ -18,7 +26,7 @@ class MessagesForGroovySpec extends Specification {
         when:
         def result = matcherFactory.matcher()
                 .expected([a: closure])
-                .actual([a: 'rosemary'])
+                .actual(toJson([a: 'rosemary']))
                 .match()
 
         then:

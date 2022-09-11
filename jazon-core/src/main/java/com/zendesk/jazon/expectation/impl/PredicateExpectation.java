@@ -1,4 +1,4 @@
-package com.zendesk.jazon.expectation;
+package com.zendesk.jazon.expectation.impl;
 
 import com.zendesk.jazon.MatchResult;
 import com.zendesk.jazon.actual.Actual;
@@ -8,8 +8,9 @@ import com.zendesk.jazon.actual.ActualJsonNull;
 import com.zendesk.jazon.actual.ActualJsonNumber;
 import com.zendesk.jazon.actual.ActualJsonObject;
 import com.zendesk.jazon.actual.ActualJsonString;
-import com.zendesk.jazon.mismatch.PredicateExecutionFailedMismatch;
-import com.zendesk.jazon.mismatch.PredicateMismatch;
+import com.zendesk.jazon.expectation.JsonExpectation;
+import com.zendesk.jazon.mismatch.impl.PredicateExecutionFailedMismatch;
+import com.zendesk.jazon.mismatch.impl.PredicateMismatch;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -25,10 +26,10 @@ import static java.util.stream.Collectors.toList;
 
 @ToString
 @EqualsAndHashCode
-class PredicateExpectation implements JsonExpectation {
+public class PredicateExpectation implements JsonExpectation {
     private final Predicate<?> predicate;
 
-    PredicateExpectation(Predicate<?> predicate) {
+    public PredicateExpectation(Predicate<?> predicate) {
         this.predicate = checkNotNull(predicate);
     }
 

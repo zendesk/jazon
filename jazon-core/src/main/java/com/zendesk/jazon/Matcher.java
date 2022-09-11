@@ -1,20 +1,18 @@
 package com.zendesk.jazon;
 
 import com.zendesk.jazon.actual.Actual;
-import com.zendesk.jazon.actual.ActualFactory;
-import com.zendesk.jazon.expectation.ExpectationFactory;
+import com.zendesk.jazon.actual.factory.ActualFactory;
 import com.zendesk.jazon.expectation.JsonExpectation;
-
-import static com.zendesk.jazon.util.Preconditions.checkNotNull;
+import com.zendesk.jazon.expectation.translator.TranslatorFacade;
 
 public class Matcher {
-    private final ExpectationFactory expectationFactory;
-    private final ActualFactory<Object> actualFactory;
+    private final TranslatorFacade translator;
+    private final ActualFactory<String> actualFactory;
     private JsonExpectation expectation;
     private Actual actual;
 
-    Matcher(ExpectationFactory expectationFactory, ActualFactory<Object> actualFactory) {
-        this.expectationFactory = expectationFactory;
+    Matcher(TranslatorFacade translator, ActualFactory<String> actualFactory) {
+        this.translator = translator;
         this.actualFactory = actualFactory;
     }
 
@@ -22,23 +20,13 @@ public class Matcher {
         return actual.accept(expectation, "$");
     }
 
-    public Matcher expected(JsonExpectation expectation) {
-        this.expectation = checkNotNull(expectation);
-        return this;
-    }
-
     public Matcher expected(Object expectation) {
-        this.expectation = expectationFactory.expectation(expectation);
+        this.expectation = translator.expectation(expectation);
         return this;
     }
 
-    public Matcher actual(Actual actual) {
-        this.actual = checkNotNull(actual);
-        return this;
-    }
-
-    public Matcher actual(Object actual) {
-        this.actual = actualFactory.actual(actual);
+    public Matcher actual(String actualJsonString) {
+        this.actual = actualFactory.actual(actualJsonString);
         return this;
     }
 }

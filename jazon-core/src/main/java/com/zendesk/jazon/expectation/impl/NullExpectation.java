@@ -1,16 +1,17 @@
-package com.zendesk.jazon.expectation;
+package com.zendesk.jazon.expectation.impl;
 
 import com.zendesk.jazon.MatchResult;
 import com.zendesk.jazon.actual.*;
+import com.zendesk.jazon.expectation.JsonExpectation;
 import com.zendesk.jazon.mismatch.MismatchWithPath;
-import com.zendesk.jazon.mismatch.NotNullMismatch;
+import com.zendesk.jazon.mismatch.impl.NotNullMismatch;
 import lombok.EqualsAndHashCode;
 
 import static com.zendesk.jazon.MatchResult.failure;
 import static com.zendesk.jazon.MatchResult.success;
 
 @EqualsAndHashCode
-class NullExpectation implements JsonExpectation {
+public class NullExpectation implements JsonExpectation {
     @Override
     public MatchResult match(ActualJsonNumber actualNumber, String path) {
         return failure(notNullMismatch(actualNumber, path));

@@ -1,10 +1,17 @@
-package com.zendesk.jazon.expectation;
+package com.zendesk.jazon.expectation.impl;
 
 import com.zendesk.jazon.MatchResult;
-import com.zendesk.jazon.actual.*;
+import com.zendesk.jazon.actual.Actual;
+import com.zendesk.jazon.actual.ActualJsonArray;
+import com.zendesk.jazon.actual.ActualJsonBoolean;
+import com.zendesk.jazon.actual.ActualJsonNull;
+import com.zendesk.jazon.actual.ActualJsonNumber;
+import com.zendesk.jazon.actual.ActualJsonObject;
+import com.zendesk.jazon.actual.ActualJsonString;
+import com.zendesk.jazon.expectation.JsonExpectation;
 import com.zendesk.jazon.mismatch.MismatchWithPath;
-import com.zendesk.jazon.mismatch.NullMismatch;
-import com.zendesk.jazon.mismatch.TypeMismatch;
+import com.zendesk.jazon.mismatch.impl.NullMismatch;
+import com.zendesk.jazon.mismatch.impl.TypeMismatch;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 
@@ -13,10 +20,12 @@ import java.util.ListIterator;
 import static com.zendesk.jazon.MatchResult.failure;
 import static com.zendesk.jazon.MatchResult.success;
 
+/**
+ * Previously known as {@code ArrayEachElementExpectation}
+ */
 @RequiredArgsConstructor
 @EqualsAndHashCode
-class ArrayEachElementExpectation implements JsonExpectation {
-
+public class AnyNumberOfExpectation implements JsonExpectation {
     private final JsonExpectation expectationForEachElement;
 
     @Override

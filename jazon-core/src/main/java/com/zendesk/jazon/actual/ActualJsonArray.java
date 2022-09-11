@@ -15,7 +15,7 @@ import static java.util.stream.Collectors.toList;
 public class ActualJsonArray implements Actual {
     private final List<Actual> list;
 
-    ActualJsonArray(List<Actual> list) {
+    public ActualJsonArray(List<Actual> list) {
         this.list = checkNotNull(list);
     }
 

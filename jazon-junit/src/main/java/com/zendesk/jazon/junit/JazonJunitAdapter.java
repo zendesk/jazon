@@ -2,18 +2,24 @@ package com.zendesk.jazon.junit;
 
 import com.zendesk.jazon.MatchResult;
 import com.zendesk.jazon.MatcherFactory;
-import com.zendesk.jazon.actual.GsonActualFactory;
-import com.zendesk.jazon.actual.ObjectsActualFactory;
-import com.zendesk.jazon.expectation.JunitExpectationFactory;
+import com.zendesk.jazon.actual.factory.GsonActualFactory;
+import com.zendesk.jazon.expectation.translator.DefaultTranslators;
+import com.zendesk.jazon.expectation.translator.JazonTypesTranslators;
+import com.zendesk.jazon.expectation.translator.JunitTranslators;
+import com.zendesk.jazon.expectation.translator.TranslatorFacade;
+import com.zendesk.jazon.expectation.translator.TranslatorMapping;
+
+import java.util.LinkedList;
+import java.util.List;
 
 import static com.zendesk.jazon.util.Preconditions.checkNotNull;
 
 public class JazonJunitAdapter {
-    private static final GsonActualFactory GSON_ACTUAL_FACTORY = new GsonActualFactory();
     private static final MatcherFactory matcherFactory = new MatcherFactory(
-            new JunitExpectationFactory(),
-            new ObjectsActualFactory()
+            new TranslatorFacade(translators()),
+            new GsonActualFactory()
     );
+
     private final String actualJson;
 
     public JazonJunitAdapter(String actualJson) {
@@ -35,12 +41,20 @@ public class JazonJunitAdapter {
     private void matchExpectedObject(Object expected) {
         MatchResult matchResult = matcherFactory.matcher()
                 .expected(expected)
-                .actual(GSON_ACTUAL_FACTORY.actual(actualJson))
+                .actual(actualJson)
                 .match();
         if (matchResult.ok()) {
             return;
         }
         String mismatchMessageTemplate = "\n-----------------------------------\nJSON MISMATCH:\n%s\n-----------------------------------\n";
         throw new AssertionError(String.format(mismatchMessageTemplate, matchResult.message()));
+    }
+
+    private static List<TranslatorMapping<?>> translators() {
+        List<TranslatorMapping<?>> result = new LinkedList<>();
+        result.addAll(DefaultTranslators.translators());
+        result.addAll(JazonTypesTranslators.translators());
+        result.addAll(JunitTranslators.translators());
+        return result;
     }
 }

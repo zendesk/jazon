@@ -1,6 +1,8 @@
-package com.zendesk.jazon.mismatch;
+package com.zendesk.jazon.mismatch.impl;
 
 import com.zendesk.jazon.expectation.JsonExpectation;
+import com.zendesk.jazon.mismatch.Mismatch;
+import com.zendesk.jazon.mismatch.MismatchWithPathFactory;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 

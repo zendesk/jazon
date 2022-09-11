@@ -1,11 +1,12 @@
-package com.zendesk.jazon.expectation;
+package com.zendesk.jazon.expectation.impl;
 
 import com.zendesk.jazon.MatchResult;
 import com.zendesk.jazon.actual.*;
+import com.zendesk.jazon.expectation.JsonExpectation;
 import com.zendesk.jazon.mismatch.MismatchWithPath;
-import com.zendesk.jazon.mismatch.NullMismatch;
-import com.zendesk.jazon.mismatch.PrimitiveValueMismatch;
-import com.zendesk.jazon.mismatch.TypeMismatch;
+import com.zendesk.jazon.mismatch.impl.NullMismatch;
+import com.zendesk.jazon.mismatch.impl.PrimitiveValueMismatch;
+import com.zendesk.jazon.mismatch.impl.TypeMismatch;
 import lombok.EqualsAndHashCode;
 
 import static com.zendesk.jazon.util.Preconditions.checkNotNull;
@@ -13,10 +14,10 @@ import static com.zendesk.jazon.MatchResult.failure;
 import static com.zendesk.jazon.MatchResult.success;
 
 @EqualsAndHashCode
-class PrimitiveValueExpectation<T extends Actual> implements JsonExpectation {
+public class PrimitiveValueExpectation<T extends Actual> implements JsonExpectation {
     private final T expectedValue;
 
-    PrimitiveValueExpectation(T expectedValue) {
+    public PrimitiveValueExpectation(T expectedValue) {
         this.expectedValue = checkNotNull(expectedValue);
     }
 

@@ -1,8 +1,13 @@
-package com.zendesk.jazon.expectation;
+package com.zendesk.jazon.expectation.impl;
 
 import com.zendesk.jazon.MatchResult;
 import com.zendesk.jazon.actual.*;
+import com.zendesk.jazon.expectation.JsonExpectation;
 import com.zendesk.jazon.mismatch.*;
+import com.zendesk.jazon.mismatch.impl.ArrayLackingElementsMismatch;
+import com.zendesk.jazon.mismatch.impl.ArrayUnexpectedElementsMismatch;
+import com.zendesk.jazon.mismatch.impl.NullMismatch;
+import com.zendesk.jazon.mismatch.impl.TypeMismatch;
 import lombok.EqualsAndHashCode;
 
 import java.util.ArrayList;
@@ -25,7 +30,7 @@ import static java.util.Arrays.asList;
  *      {@code SUPPORTED_EXPECTATION_TYPES} defines which types of expectation classes are supported.
  */
 @EqualsAndHashCode
-class UnorderedArrayExpectation implements JsonExpectation {
+public class UnorderedArrayExpectation implements JsonExpectation {
     private static final Set<Class<? extends JsonExpectation>> SUPPORTED_EXPECTATION_TYPES = new HashSet<>(asList(
             PrimitiveValueExpectation.class,
             ObjectExpectation.class,
@@ -33,7 +38,7 @@ class UnorderedArrayExpectation implements JsonExpectation {
     ));
     private final Set<JsonExpectation> expectationSet;
 
-    UnorderedArrayExpectation(Set<JsonExpectation> expectationSet) {
+    public UnorderedArrayExpectation(Set<JsonExpectation> expectationSet) {
         expectationSet.forEach(this::verifyExpectationSupported);
         this.expectationSet = expectationSet;
     }

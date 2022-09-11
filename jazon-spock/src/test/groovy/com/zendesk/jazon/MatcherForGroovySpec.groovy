@@ -1,17 +1,23 @@
 package com.zendesk.jazon
 
-import com.zendesk.jazon.actual.ObjectsActualFactory
-import com.zendesk.jazon.expectation.SpockExpectationFactory
-import com.zendesk.jazon.mismatch.PredicateMismatch
+import com.zendesk.jazon.actual.factory.GsonActualFactory
+import com.zendesk.jazon.expectation.translator.DefaultTranslators
+import com.zendesk.jazon.expectation.translator.JazonTypesTranslators
+import com.zendesk.jazon.expectation.translator.SpockTranslators
+import com.zendesk.jazon.expectation.translator.TranslatorFacade
+import com.zendesk.jazon.mismatch.impl.PredicateMismatch
 import spock.lang.Specification
 
 import static com.zendesk.jazon.expectation.Expectations.anyNumberOf
+import static groovy.json.JsonOutput.toJson
 
 class MatcherForGroovySpec extends Specification {
 
     MatcherFactory matcherFactory = new MatcherFactory(
-            new SpockExpectationFactory(),
-            new ObjectsActualFactory()
+            new TranslatorFacade(
+                    DefaultTranslators.translators() + JazonTypesTranslators.translators() + SpockTranslators.translators()
+            ),
+            new GsonActualFactory()
     )
 
     def "predicate expectation: succeeds"() {
@@ -21,7 +27,7 @@ class MatcherForGroovySpec extends Specification {
         when:
         def result = matcherFactory.matcher()
                 .expected([a: closure])
-                .actual([a: stringToMatch])
+                .actual(toJson([a: stringToMatch]))
                 .match()
 
         then:
@@ -43,7 +49,7 @@ class MatcherForGroovySpec extends Specification {
         when:
         def result = matcherFactory.matcher()
                 .expected([a: closure])
-                .actual([a: stringToMatch])
+                .actual(toJson([a: stringToMatch]))
                 .match()
 
         then:
@@ -82,7 +88,7 @@ class MatcherForGroovySpec extends Specification {
         when:
         def result = matcherFactory.matcher()
                 .expected([a: gstring])
-                .actual([a: 'this is interpolated string with 123'])
+                .actual(toJson([a: 'this is interpolated string with 123']))
                 .match()
 
         then:
@@ -93,7 +99,7 @@ class MatcherForGroovySpec extends Specification {
         when:
         def result = matcherFactory.matcher()
                 .expected([a: predicate])
-                .actual([a: ['chips', 'ketchup', 'fish']])
+                .actual(toJson([a: ['chips', 'ketchup', 'fish']]))
                 .match()
 
         then:
@@ -112,7 +118,7 @@ class MatcherForGroovySpec extends Specification {
         when:
         def result = matcherFactory.matcher()
                 .expected([a: predicate])
-                .actual([a: ['chips', 'ketchup', 'fish']])
+                .actual(toJson([a: ['chips', 'ketchup', 'fish']]))
                 .match()
 
         then:
@@ -129,7 +135,7 @@ class MatcherForGroovySpec extends Specification {
         when:
         def result = matcherFactory.matcher()
                 .expected([a: predicate])
-                .actual([a: [name: 'tomato', color: 'red']])
+                .actual(toJson([a: [name: 'tomato', color: 'red']]))
                 .match()
 
         then:
@@ -148,7 +154,7 @@ class MatcherForGroovySpec extends Specification {
         when:
         def result = matcherFactory.matcher()
                 .expected([a: predicate])
-                .actual([a: [name: 'tomato', color: 'red']])
+                .actual(toJson([a: [name: 'tomato', color: 'red']]))
                 .match()
 
         then:
@@ -165,7 +171,7 @@ class MatcherForGroovySpec extends Specification {
         when:
         def result = matcherFactory.matcher()
             .expected([a: anyNumberOf {it -> it > 5}])
-            .actual([a: [6, 7, 8, 9, 0]])
+            .actual(toJson([a: [6, 7, 8, 9, 0]]))
             .match()
 
         then:

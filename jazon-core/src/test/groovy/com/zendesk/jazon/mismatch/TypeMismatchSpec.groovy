@@ -5,6 +5,7 @@ import com.zendesk.jazon.actual.ActualJsonBoolean
 import com.zendesk.jazon.actual.ActualJsonNumber
 import com.zendesk.jazon.actual.ActualJsonObject
 import com.zendesk.jazon.actual.ActualJsonString
+import com.zendesk.jazon.mismatch.impl.TypeMismatch
 import spock.lang.Specification
 
 class TypeMismatchSpec extends Specification {

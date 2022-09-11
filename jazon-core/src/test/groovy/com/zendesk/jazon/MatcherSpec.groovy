@@ -1,24 +1,41 @@
 package com.zendesk.jazon
 
-import com.zendesk.jazon.actual.*
-import com.zendesk.jazon.expectation.DefaultExpectationFactory
-import com.zendesk.jazon.expectation.ExpectationFactory
+
+import com.zendesk.jazon.actual.ActualJsonArray
+import com.zendesk.jazon.actual.ActualJsonBoolean
+import com.zendesk.jazon.actual.ActualJsonNull
+import com.zendesk.jazon.actual.ActualJsonNumber
+import com.zendesk.jazon.actual.ActualJsonObject
+import com.zendesk.jazon.actual.ActualJsonString
+import com.zendesk.jazon.actual.factory.GsonActualFactory
+import com.zendesk.jazon.expectation.translator.DefaultTranslators
+import com.zendesk.jazon.expectation.translator.JazonTypesTranslators
 import com.zendesk.jazon.expectation.JsonExpectation
-import com.zendesk.jazon.mismatch.*
+import com.zendesk.jazon.expectation.impl.NullExpectation
+import com.zendesk.jazon.expectation.impl.PrimitiveValueExpectation
+import com.zendesk.jazon.expectation.translator.TranslatorFacade
+import com.zendesk.jazon.mismatch.impl.ArrayLackingElementsMismatch
+import com.zendesk.jazon.mismatch.impl.ArrayUnexpectedElementsMismatch
+import com.zendesk.jazon.mismatch.impl.NoFieldMismatch
+import com.zendesk.jazon.mismatch.impl.NotNullMismatch
+import com.zendesk.jazon.mismatch.impl.NullMismatch
+import com.zendesk.jazon.mismatch.impl.PredicateMismatch
+import com.zendesk.jazon.mismatch.impl.PrimitiveValueMismatch
+import com.zendesk.jazon.mismatch.impl.TypeMismatch
+import com.zendesk.jazon.mismatch.impl.UnexpectedFieldMismatch
 import spock.lang.Specification
 import spock.lang.Unroll
 
 import java.util.function.Predicate
 
 import static com.zendesk.jazon.expectation.Expectations.anyNumberOf
+import static groovy.json.JsonOutput.toJson
 
 class MatcherSpec extends Specification {
-
-    static ActualFactory actualFactory = new ObjectsActualFactory()
-    static ExpectationFactory expectationFactory = new DefaultExpectationFactory()
-    static MatcherFactory matcherFactory = new MatcherFactory(
-            expectationFactory,
-            actualFactory
+    private static TestActualFactory testActualFactory = new TestActualFactory()
+    private static MatcherFactory matcherFactory = new MatcherFactory(
+            new TranslatorFacade(DefaultTranslators.translators() + JazonTypesTranslators.translators()),
+            new GsonActualFactory()
     )
 
     @Unroll
@@ -34,33 +51,47 @@ class MatcherSpec extends Specification {
         where:
         expected                | actual
         123                     | 10
-        123                     | 130.1f
-        123                     | 1500.13d
         123                     | new BigDecimal("11.05")
         123                     | 12345l
         130.1f                  | 10
-        130.1f                  | 133.3f
-        130.1f                  | 1500.13d
         130.1f                  | new BigDecimal("11.05")
         130.1f                  | 12345l
         1500.13d                | 10
-        1500.13d                | 130.1f
-        1500.13d                | 1555.55d
         1500.13d                | new BigDecimal("11.05")
         1500.13d                | 12345l
         new BigDecimal("11.05") | 10
-        new BigDecimal("11.05") | 130.1f
-        new BigDecimal("11.05") | 1500.13d
         new BigDecimal("11.05") | new BigDecimal("11.11")
         new BigDecimal("11.05") | 12345l
         12345l                  | 10
-        12345l                  | 130.1f
-        12345l                  | 1500.13d
         12345l                  | new BigDecimal("11.05")
         12345l                  | 1234567l
         'green'                 | 'red'
         true                    | false
         false                   | true
+    }
+
+    @Unroll
+    def "primitive value mismatch for floating Actuals (expected: #expected, actual: #actual)"() {
+        when:
+        def result = match([a: expected], [a: actualFloating])
+
+        then:
+        !result.ok()
+        result.mismatch().expectationMismatch() == primitiveValueMismatch(expected, actualDecimal)
+        result.mismatch().path() == '$.a'
+
+        where:
+        expected                | actualFloating | actualDecimal
+        123                     | 130.1f         | new BigDecimal('130.1')
+        123                     | 1500.13d       | new BigDecimal('1500.13')
+        130.1f                  | 133.3f         | new BigDecimal('133.3')
+        130.1f                  | 1500.13d       | new BigDecimal('1500.13')
+        1500.13d                | 130.1f         | new BigDecimal('130.1')
+        1500.13d                | 1555.55d       | new BigDecimal('1555.55')
+        new BigDecimal("11.05") | 130.1f         | new BigDecimal('130.1')
+        new BigDecimal("11.05") | 1500.13d       | new BigDecimal('1500.13')
+        12345l                  | 130.1f         | new BigDecimal('130.1')
+        12345l                  | 1500.13d       | new BigDecimal('1500.13')
     }
 
     def "simple primitive type mismatch"() {
@@ -133,18 +164,18 @@ class MatcherSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch().expectationMismatch() == new NullMismatch(expectationFactory.expectation(expected))
+        result.mismatch().expectationMismatch() == new NullMismatch(expectationInstance)
         result.mismatch().path() == '$.a'
 
         where:
-        expected                | expectedType
-        123                     | ActualJsonNumber
-        130.1f                  | ActualJsonNumber
-        1500.13d                | ActualJsonNumber
-        new BigDecimal("11.05") | ActualJsonNumber
-        12345l                  | ActualJsonNumber
-        "sting"                 | ActualJsonString
-        true                    | ActualJsonBoolean
+        expected                | expectationInstance
+        123                     | primitive(123)
+        130.1f                  | primitive(130.1f)
+        1500.13d                | primitive(1500.13d)
+        new BigDecimal("11.05") | primitive(new BigDecimal("11.05"))
+        12345l                  | primitive(12345l)
+        "sting"                 | primitive("sting")
+        true                    | primitive(true)
     }
 
     @Unroll
@@ -170,7 +201,7 @@ class MatcherSpec extends Specification {
         where:
         expectedFieldValue | actualFieldValue || mismatchPath | foundMismatch
         'vegetable'        | 'meat'           || '$.b'        | primitiveValueMismatch('vegetable', 'meat')
-        'vegetable'        | null             || '$.b'        | new NullMismatch<>(expectationFactory.expectation('vegetable'))
+        'vegetable'        | null             || '$.b'        | new NullMismatch<>(primitive('vegetable'))
         'vegetable'        | 150              || '$.b'        | new TypeMismatch(ActualJsonString, ActualJsonNumber)
         77                 | 'rosemary'       || '$.b'        | new TypeMismatch(ActualJsonNumber, ActualJsonString)
         []                 | 'car'            || '$.b'        | new TypeMismatch(ActualJsonArray, ActualJsonString)
@@ -191,7 +222,7 @@ class MatcherSpec extends Specification {
         !result.ok()
         result.mismatch().expectationMismatch() == new NoFieldMismatch(
                 'b',
-                expectationFactory.expectation('some value')
+                new PrimitiveValueExpectation<>(new ActualJsonString('some value'))
         )
         result.mismatch().path() == '$'
 
@@ -242,8 +273,8 @@ class MatcherSpec extends Specification {
     def "object expectation - type mismatch for #actualType"() {
         given:
         def theObject = [
-                id: 1,
-                name: "Leo",
+                id         : 1,
+                name       : "Leo",
                 nationality: "Argentinian"
         ]
         def expected = [a: theObject]
@@ -282,7 +313,7 @@ class MatcherSpec extends Specification {
         [1, 2, true] | [1, 2, 3]    || 2            | new TypeMismatch(ActualJsonBoolean, ActualJsonNumber)
         [1, 2, 3]    | [1, 2, true] || 2            | new TypeMismatch(ActualJsonNumber, ActualJsonBoolean)
         [1, null, 3] | [1, 2, 3]    || 1            | new NotNullMismatch(new ActualJsonNumber(2))
-        [1, 2, 3]    | [1, null, 3] || 1            | new NullMismatch<>(expectationFactory.expectation(2))
+        [1, 2, 3]    | [1, null, 3] || 1            | new NullMismatch<>(primitive(2))
         [1, 2, 3]    | [1, 2, 4, 5] || 2            | primitiveValueMismatch(3, 4)
     }
 
@@ -294,7 +325,7 @@ class MatcherSpec extends Specification {
         then:
         !result.ok()
         result.mismatch().expectationMismatch() == new ArrayLackingElementsMismatch(
-                lackingElements.collect(expectationFactory.&expectation)
+                lackingElements.collect(this.&expectation)
         )
         result.mismatch().path() == '$.a'
 
@@ -317,7 +348,7 @@ class MatcherSpec extends Specification {
         then:
         !result.ok()
         result.mismatch().expectationMismatch() == new ArrayUnexpectedElementsMismatch(
-                unexpectedElements.collect(actualFactory.&actual)
+                unexpectedElements.collect(testActualFactory.&actual)
         )
         result.mismatch().path() == '$.a'
 
@@ -378,7 +409,7 @@ class MatcherSpec extends Specification {
         then:
         !result.ok()
         result.mismatch().expectationMismatch() == new ArrayLackingElementsMismatch(
-                lackingElements.collect(expectationFactory.&expectation) as Set
+                lackingElements.collect(this.&expectation) as Set
         )
         result.mismatch().path() == '$.a'
 
@@ -404,7 +435,7 @@ class MatcherSpec extends Specification {
         then:
         !result.ok()
         result.mismatch().expectationMismatch() == new ArrayUnexpectedElementsMismatch(
-                unexpectedElements.collect(actualFactory.&actual)
+                unexpectedElements.collect(testActualFactory.&actual)
         )
         result.mismatch().path() == '$.a'
 
@@ -444,10 +475,9 @@ class MatcherSpec extends Specification {
         given:
         def unsupportedExpectation = [1, 2, 3] as Set
         def unorderedArrayExpectationWrapping = ['fish', 'chips', unsupportedExpectation] as Set
-        def theWholeExpectation = [a: unorderedArrayExpectationWrapping]
 
         when:
-        expectationFactory.expectation(theWholeExpectation)
+        match([a: unorderedArrayExpectationWrapping], [a: unorderedArrayExpectationWrapping])
 
         then:
         thrown(IllegalStateException)
@@ -485,7 +515,7 @@ class MatcherSpec extends Specification {
         1                              | [1, 3, 1]         || '1'   | primitiveValueMismatch(1, 3)                          | _
         1                              | [1, 1, true]      || '2'   | new TypeMismatch(ActualJsonNumber, ActualJsonBoolean) | _
         true                           | [true, 1, true]   || '1'   | new TypeMismatch(ActualJsonBoolean, ActualJsonNumber) | _
-        1                              | [1, null, 1]      || '1'   | new NullMismatch<>(expectationFactory.expectation(1)) | _
+        1                              | [1, null, 1]      || '1'   | new NullMismatch<>(expectation(1))                    | _
         [b: true, c: 1]                | [[b: true, c: 2]] || '0.c' | primitiveValueMismatch(1, 2)                          | _
         [3, 4, 5]                      | [[3, 4, false]]   || '0.2' | new TypeMismatch(ActualJsonNumber, ActualJsonBoolean) | _
         ({ it -> it > 3 }
@@ -498,15 +528,13 @@ class MatcherSpec extends Specification {
 
         then:
         !result.ok()
-        result.mismatch().expectationMismatch() == new NotNullMismatch(actualFactory.actual(actual))
+        result.mismatch().expectationMismatch() == new NotNullMismatch(testActualFactory.actual(actual))
         result.mismatch().path() == '$.a'
 
         where:
         actual << [
                 'something',
                 10,
-                130.1f,
-                1555.55d,
                 new BigDecimal("11.05"),
                 12345l,
                 [x: 123],
@@ -514,6 +542,21 @@ class MatcherSpec extends Specification {
                 true,
                 false
         ]
+    }
+
+    def "null expectation: fails for any present float/double"() {
+        when:
+        def result = match([a: null], [a: actualFloating])
+
+        then:
+        !result.ok()
+        result.mismatch().expectationMismatch() == new NotNullMismatch(testActualFactory.actual(actualDecimal))
+        result.mismatch().path() == '$.a'
+
+        where:
+        actualFloating | actualDecimal
+        130.1f         | new BigDecimal('130.1')
+        1555.55d       | new BigDecimal('1555.55')
     }
 
     def "null expectation: succeeds for null"() {
@@ -528,7 +571,7 @@ class MatcherSpec extends Specification {
         when:
         def result = matcherFactory.matcher()
                 .expected(expected)
-                .actual(actual)
+                .actual(toJson(actual))
                 .match()
 
         then:
@@ -543,7 +586,7 @@ class MatcherSpec extends Specification {
         'medicine'       | 'drug'       || '$'   | primitiveValueMismatch('medicine', 'drug')
         100              | 99           || '$'   | primitiveValueMismatch(100, 99)
         true             | false        || '$'   | primitiveValueMismatch(true, false)
-        null             | 'vegetables' || '$'   | new NotNullMismatch(actualFactory.actual('vegetables'))
+        null             | 'vegetables' || '$'   | new NotNullMismatch(testActualFactory.actual('vegetables'))
         [a: 1]           | [a: 9]       || '$.a' | primitiveValueMismatch(1, 9)
     }
 
@@ -562,15 +605,22 @@ class MatcherSpec extends Specification {
     private static MatchResult match(Map expected, Map actual) {
         matcherFactory.matcher()
                 .expected(expected)
-                .actual(actual)
+                .actual(toJson(actual))
                 .match()
     }
 
     private static PrimitiveValueMismatch primitiveValueMismatch(def expected, def actual) {
-        return new PrimitiveValueMismatch(actualFactory.actual(expected), actualFactory.actual(actual))
+        return new PrimitiveValueMismatch(testActualFactory.actual(expected), testActualFactory.actual(actual))
     }
 
     private static JsonExpectation expectation(Object object) {
-        expectationFactory.expectation(object)
+        if (object == null) {
+            return new NullExpectation()
+        }
+        return primitive(object)
+    }
+
+    private static PrimitiveValueExpectation primitive(Object object) {
+        return new PrimitiveValueExpectation(testActualFactory.actual(object))
     }
 }
