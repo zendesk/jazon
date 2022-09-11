@@ -25,10 +25,10 @@ import static java.util.stream.Collectors.toList;
 
 @ToString
 @EqualsAndHashCode
-class PredicateExpectation implements JsonExpectation {
+public class PredicateExpectation implements JsonExpectation {
     private final Predicate<?> predicate;
 
-    PredicateExpectation(Predicate<?> predicate) {
+    public PredicateExpectation(Predicate<?> predicate) {
         this.predicate = checkNotNull(predicate);
     }
 

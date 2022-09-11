@@ -25,7 +25,7 @@ import static java.util.Arrays.asList;
  *      {@code SUPPORTED_EXPECTATION_TYPES} defines which types of expectation classes are supported.
  */
 @EqualsAndHashCode
-class UnorderedArrayExpectation implements JsonExpectation {
+public class UnorderedArrayExpectation implements JsonExpectation {
     private static final Set<Class<? extends JsonExpectation>> SUPPORTED_EXPECTATION_TYPES = new HashSet<>(asList(
             PrimitiveValueExpectation.class,
             ObjectExpectation.class,
@@ -33,7 +33,7 @@ class UnorderedArrayExpectation implements JsonExpectation {
     ));
     private final Set<JsonExpectation> expectationSet;
 
-    UnorderedArrayExpectation(Set<JsonExpectation> expectationSet) {
+    public UnorderedArrayExpectation(Set<JsonExpectation> expectationSet) {
         expectationSet.forEach(this::verifyExpectationSupported);
         this.expectationSet = expectationSet;
     }

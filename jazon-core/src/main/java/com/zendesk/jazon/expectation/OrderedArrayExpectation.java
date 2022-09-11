@@ -16,10 +16,10 @@ import static com.zendesk.jazon.MatchResult.failure;
 import static com.zendesk.jazon.MatchResult.success;
 
 @EqualsAndHashCode
-class OrderedArrayExpectation implements JsonExpectation {
+public class OrderedArrayExpectation implements JsonExpectation {
     private final List<JsonExpectation> expectationList;
 
-    OrderedArrayExpectation(List<JsonExpectation> expectationList) {
+    public OrderedArrayExpectation(List<JsonExpectation> expectationList) {
         this.expectationList = checkNotNull(expectationList);
     }
 
