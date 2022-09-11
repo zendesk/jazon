@@ -4,7 +4,7 @@ import com.zendesk.jazon.actual.factory.GsonActualFactory
 import com.zendesk.jazon.expectation.translator.DefaultTranslators
 import com.zendesk.jazon.expectation.translator.JazonTypesTranslators
 import com.zendesk.jazon.expectation.translator.TranslatorFacade
-import com.zendesk.jazon.mismatch.PrimitiveValueMismatch
+import com.zendesk.jazon.mismatch.impl.PrimitiveValueMismatch
 import spock.lang.Specification
 
 import static groovy.json.JsonOutput.toJson

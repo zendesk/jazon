@@ -4,7 +4,7 @@ import com.zendesk.jazon.MatchResult;
 import com.zendesk.jazon.actual.*;
 import com.zendesk.jazon.expectation.JsonExpectation;
 import com.zendesk.jazon.mismatch.MismatchWithPath;
-import com.zendesk.jazon.mismatch.NotNullMismatch;
+import com.zendesk.jazon.mismatch.impl.NotNullMismatch;
 import lombok.EqualsAndHashCode;
 
 import static com.zendesk.jazon.MatchResult.failure;

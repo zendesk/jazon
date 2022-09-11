@@ -4,6 +4,10 @@ import com.zendesk.jazon.MatchResult;
 import com.zendesk.jazon.actual.*;
 import com.zendesk.jazon.expectation.JsonExpectation;
 import com.zendesk.jazon.mismatch.*;
+import com.zendesk.jazon.mismatch.impl.ArrayLackingElementsMismatch;
+import com.zendesk.jazon.mismatch.impl.ArrayUnexpectedElementsMismatch;
+import com.zendesk.jazon.mismatch.impl.NullMismatch;
+import com.zendesk.jazon.mismatch.impl.TypeMismatch;
 import lombok.EqualsAndHashCode;
 
 import java.util.ArrayList;

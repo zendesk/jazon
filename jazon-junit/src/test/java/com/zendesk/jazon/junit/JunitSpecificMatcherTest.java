@@ -7,8 +7,8 @@ import com.zendesk.jazon.expectation.translator.DefaultTranslators;
 import com.zendesk.jazon.expectation.translator.JazonTypesTranslators;
 import com.zendesk.jazon.expectation.translator.JunitTranslators;
 import com.zendesk.jazon.expectation.translator.TranslatorFacade;
-import com.zendesk.jazon.mismatch.PredicateExecutionFailedMismatch;
-import com.zendesk.jazon.mismatch.PrimitiveValueMismatch;
+import com.zendesk.jazon.mismatch.impl.PredicateExecutionFailedMismatch;
+import com.zendesk.jazon.mismatch.impl.PrimitiveValueMismatch;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

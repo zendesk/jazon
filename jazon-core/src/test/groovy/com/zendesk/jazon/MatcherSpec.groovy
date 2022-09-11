@@ -14,15 +14,15 @@ import com.zendesk.jazon.expectation.JsonExpectation
 import com.zendesk.jazon.expectation.impl.NullExpectation
 import com.zendesk.jazon.expectation.impl.PrimitiveValueExpectation
 import com.zendesk.jazon.expectation.translator.TranslatorFacade
-import com.zendesk.jazon.mismatch.ArrayLackingElementsMismatch
-import com.zendesk.jazon.mismatch.ArrayUnexpectedElementsMismatch
-import com.zendesk.jazon.mismatch.NoFieldMismatch
-import com.zendesk.jazon.mismatch.NotNullMismatch
-import com.zendesk.jazon.mismatch.NullMismatch
-import com.zendesk.jazon.mismatch.PredicateMismatch
-import com.zendesk.jazon.mismatch.PrimitiveValueMismatch
-import com.zendesk.jazon.mismatch.TypeMismatch
-import com.zendesk.jazon.mismatch.UnexpectedFieldMismatch
+import com.zendesk.jazon.mismatch.impl.ArrayLackingElementsMismatch
+import com.zendesk.jazon.mismatch.impl.ArrayUnexpectedElementsMismatch
+import com.zendesk.jazon.mismatch.impl.NoFieldMismatch
+import com.zendesk.jazon.mismatch.impl.NotNullMismatch
+import com.zendesk.jazon.mismatch.impl.NullMismatch
+import com.zendesk.jazon.mismatch.impl.PredicateMismatch
+import com.zendesk.jazon.mismatch.impl.PrimitiveValueMismatch
+import com.zendesk.jazon.mismatch.impl.TypeMismatch
+import com.zendesk.jazon.mismatch.impl.UnexpectedFieldMismatch
 import spock.lang.Specification
 import spock.lang.Unroll
 

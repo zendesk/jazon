@@ -4,9 +4,9 @@ import com.zendesk.jazon.MatchResult;
 import com.zendesk.jazon.actual.*;
 import com.zendesk.jazon.expectation.JsonExpectation;
 import com.zendesk.jazon.mismatch.MismatchWithPath;
-import com.zendesk.jazon.mismatch.NullMismatch;
-import com.zendesk.jazon.mismatch.PrimitiveValueMismatch;
-import com.zendesk.jazon.mismatch.TypeMismatch;
+import com.zendesk.jazon.mismatch.impl.NullMismatch;
+import com.zendesk.jazon.mismatch.impl.PrimitiveValueMismatch;
+import com.zendesk.jazon.mismatch.impl.TypeMismatch;
 import lombok.EqualsAndHashCode;
 
 import static com.zendesk.jazon.util.Preconditions.checkNotNull;

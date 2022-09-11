@@ -5,7 +5,7 @@ import com.zendesk.jazon.expectation.translator.DefaultTranslators
 import com.zendesk.jazon.expectation.translator.JazonTypesTranslators
 import com.zendesk.jazon.expectation.translator.SpockTranslators
 import com.zendesk.jazon.expectation.translator.TranslatorFacade
-import com.zendesk.jazon.mismatch.PredicateMismatch
+import com.zendesk.jazon.mismatch.impl.PredicateMismatch
 import spock.lang.Specification
 
 import static com.zendesk.jazon.expectation.Expectations.anyNumberOf

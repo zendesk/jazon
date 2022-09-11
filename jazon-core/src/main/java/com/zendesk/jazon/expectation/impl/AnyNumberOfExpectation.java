@@ -10,8 +10,8 @@ import com.zendesk.jazon.actual.ActualJsonObject;
 import com.zendesk.jazon.actual.ActualJsonString;
 import com.zendesk.jazon.expectation.JsonExpectation;
 import com.zendesk.jazon.mismatch.MismatchWithPath;
-import com.zendesk.jazon.mismatch.NullMismatch;
-import com.zendesk.jazon.mismatch.TypeMismatch;
+import com.zendesk.jazon.mismatch.impl.NullMismatch;
+import com.zendesk.jazon.mismatch.impl.TypeMismatch;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 
