@@ -15,9 +15,9 @@ jobs:
       matrix:
         java: [ '8', '11', '15' ]
     steps:
-    - uses: actions/checkout@v2
+    - uses: zendesk/checkout@v2
     - name: Set up JDK
-      uses: actions/setup-java@v1
+      uses: zendesk/setup-java@v1
       with:
         java-version: ${{ matrix.java }}
     - name: print Java version
