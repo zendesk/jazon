@@ -1,4 +1,6 @@
 # Jazon
+![CI status](https://github.com/zendesk/jazon/actions/workflows/ci.yml/badge.svg)
+
 A library for test assertions on JSON payloads. 
 
 Supports Spock and JUnit. Easy to extend for other test frameworks and languages.
