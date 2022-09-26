@@ -10,10 +10,10 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
-        java: [ '8', '11', '15' ]
+        java: ['8']
     steps:
     - uses: zendesk/checkout@v2
     - name: Set up JDK
