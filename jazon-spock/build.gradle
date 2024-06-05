@@ -6,8 +6,8 @@ ext {
 apply from: '../gradle/publishing.gradle'
 
 dependencies {
-    compile project(':jazon-core')
-    compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.12'
+    implementation project(':jazon-core')
+    implementation 'org.apache.groovy:groovy-all:4.0.21'
 
-    testCompile group: 'org.spockframework', name: 'spock-core', version: '1.2-groovy-2.4'
+    testImplementation 'org.spockframework:spock-core:2.4-M4-groovy-4.0'
 }
