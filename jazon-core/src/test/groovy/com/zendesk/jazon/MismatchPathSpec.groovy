@@ -7,7 +7,7 @@ import com.zendesk.jazon.expectation.translator.TranslatorFacade
 import com.zendesk.jazon.mismatch.impl.PrimitiveValueMismatch
 import spock.lang.Specification
 
-import static groovy.json.JsonOutput.toJson
+import static groovy.json.JsonOutput.toJson;
 
 class MismatchPathSpec extends Specification {
     private static final TestActualFactory testActualFactory = new TestActualFactory()

@@ -489,16 +489,21 @@ class MatcherSpec extends Specification {
         match([a: anyNumberOf(expected)], [a: actual]).success()
 
         where:
-        expected                               | actual
-        '1'                                    | []
-        '1'                                    | ['1']
-        '1'                                    | ['1', '1']
-        true                                   | [true]
-        2                                      | [2]
-        [b: true, c: 1]                        | [[[b: true, c: 1]]]
-        [3, 4, 5]                              | [[3, 4, 5]]
-        { it -> it > 5 } as Predicate<Integer> | [6, 7, 8]
+        [expected, actual] << () -> {
+            return [
+                    ['1', []],
+                    ['1', ['1']],
+                    ['1', ['1', '1']],
+                    [true, [true]],
+                    [2, [2]],
+                    [[b: true, c: 1], [[[b: true, c: 1]]]],
+                    [[3, 4, 5], [[[3, 4, 5]]]],
+                    [{ it -> it > 5 } as Predicate<Integer>, [6, 7, 8]]
+            ]
+        }
     }
+
+
 
     @Unroll
     def "array each element expectation - element mismatch"() {

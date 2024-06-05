@@ -6,10 +6,11 @@ ext {
 apply from: '../gradle/publishing.gradle'
 
 dependencies {
-    compile group: 'com.google.code.gson', name: 'gson', version: '2.9.1'
+    compileOnly 'com.google.code.gson:gson:2.11.0'
+    implementation 'org.apache.groovy:groovy-json:4.0.21'
 
-    compileOnly 'org.projectlombok:lombok:1.18.12'
-    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+    compileOnly 'org.projectlombok:lombok:1.18.32'
+    annotationProcessor 'org.projectlombok:lombok:1.18.32'
 
-    testCompile group: 'org.spockframework', name: 'spock-core', version: '1.2-groovy-2.4'
+    testImplementation 'org.spockframework:spock-core:2.4-M4-groovy-4.0'
 }
