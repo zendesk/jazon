@@ -32,7 +32,7 @@ Depending on the framework you use, pick the adapter library that is applicable 
 ##### Gradle: 
 ```groovy
 dependencies {
-    testCompile 'com.zendesk.jazon:jazon-spock:0.4.0'
+    testCompile 'com.zendesk.jazon:jazon-spock:0.4.1'
 }
 ```
 ##### Maven:
@@ -40,7 +40,7 @@ dependencies {
 <dependency>
     <groupId>com.zendesk.jazon</groupId>
     <artifactId>jazon-spock</artifactId>
-    <version>0.4.0</version>
+    <version>0.4.1</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -52,7 +52,7 @@ dependencies {
 ##### Gradle: 
 ```groovy
 dependencies {
-    testCompile 'com.zendesk.jazon:jazon-junit:0.4.0'
+    testCompile 'com.zendesk.jazon:jazon-junit:0.4.1'
 }
 ```
 ##### Maven:
@@ -60,7 +60,7 @@ dependencies {
 <dependency>
     <groupId>com.zendesk.jazon</groupId>
     <artifactId>jazon-junit</artifactId>
-    <version>0.4.0</version>
+    <version>0.4.1</version>
     <scope>test</scope>
 </dependency>
 ```
