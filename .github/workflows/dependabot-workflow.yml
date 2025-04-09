@@ -1,0 +1,26 @@
+name: Update dependency graph
+
+on:
+  push:
+    branches: [ 'master' ]
+
+permissions:
+  contents: write
+
+env: []
+
+jobs:
+  update-dependency-graph:
+    runs-on: [self-hosted, zendesk-stable]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4.7.0
+        with:
+          distribution: 'corretto'
+          java-version: 11.0.26
+
+      - name: Generate and submit dependency graph
+        uses: gradle/actions/dependency-submission@v4.3.0
