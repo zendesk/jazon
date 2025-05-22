@@ -6,15 +6,6 @@ on:
 permissions:
   contents: write
 
-env:
-  "ARTIFACTORY_PASSWORD": "${{ secrets.SELL_ARTIFACTORY_PASSWORD }}"
-  "ARTIFACTORY_USER": "${{ secrets.SELL_ARTIFACTORY_USER }}"
-  "BUILD_DOCKER_IMAGE": "713408432298.dkr.ecr.us-west-2.amazonaws.com/base/zendesk/sell-docker-images-base/sell-corretto-build"
-  "BUILD_DOCKER_IMAGETAG": "17-jammy"
-  "ZDREPO_ARTIFACTORY_API_KEY": "${{ secrets.ARTIFACTORY_API_KEY }}"
-  "ZDREPO_ARTIFACTORY_USERNAME": "${{ secrets.ARTIFACTORY_USERNAME }}"
-  "BASE_MAVEN_REPO_ALL_URL": "${{ secrets.BASE_MAVEN_REPO_ALL_URL || 'https://zdrepo.jfrog.io/zdrepo/zen-libs-m2/' }}"
-
 jobs:
   update-dependency-graph:
     runs-on: [self-hosted, zendesk-stable]
